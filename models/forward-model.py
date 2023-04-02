@@ -1,5 +1,5 @@
 """This python script depicts a forward model based on the work of
-Lee et al. (1998, 1997),
+Lee et al. (1998, 1999),
 Brando et al. (2009),
 Giardino et al. (2012), and
 Petit et al. (2017)"""
