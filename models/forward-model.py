@@ -12,22 +12,40 @@ import pandas as pd
 # Access the absorption, backscattering, and benthic reflectance data
 sites = ['ONE02', 'ONE03', 'ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
          'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
+
+
 def read_csv_data(filename):
     dataset = pd.read_csv(filename)
     return dataset
 
+
 benthic_reflectance = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance.csv')
+total_absorption = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_a.csv')
+total_backscattering = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
 
 
-total_bb = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
-total_bb = total_bb.rename({'ONE09_Kd': 'ONE09_bb'}, axis='columns')
-ONE09_bb = list(total_bb['ONE09_bb'])
-print(ONE09_bb)
+# Create a new class
+class Site:
+    """A sampling site in the study."""
+    def __init__(self, name):
+        self.name = name
+        self.measurements = {}
+# Add a new measurement dataset to a Site instance
 
-rrs_benthic = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance.csv')
-rrs_benthic = rrs_benthic.rename({'ONE09_MGT': 'ONE09_rrs_benthic'}, axis='columns')
-ONE09_rrs_benthic = list(rrs_benthic['ONE09_rrs_benthic'])
-print(ONE09_rrs_benthic)
+    def add_measurement(self, measurement_id, data):
+        if measurement_id in self.measurements.keys():
+            self.measurements[measurement_id] = \
+                pd.concat([self.measurements[measurement_id], data])
+
+        else:
+            self.measurements[measurement_id] = data
+            self.measurements[measurement_id].name = measurement_id
+
+
+ONE02 = Site('ONE02')
+ONE02.add_measurement('benthic_reflectance', pd.Series(benthic_reflectance['ONE02']))
+print(ONE02.measurements.keys())
+print(ONE02.measurements['benthic_reflectance'])
 
 # Sub-surface solar zenith angle in radians
 # Refractive index of seawater (temperature = 20C, salinity = 25g/kg, light wavelength = 589.3 nm)
@@ -81,7 +99,6 @@ rrs_ONE09 = [(rrsdp[x] * (1.0 - np.exp(-(inv_cos_theta_w + du_water[x]) * kappa_
 
 rrs_data = pd.DataFrame()
 rrs_data['ONE09'] = rrs_ONE09
-print(rrs_data)
 
 # Save the dataframe to a csv
 rrs_data.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/forward_model_results.csv')
