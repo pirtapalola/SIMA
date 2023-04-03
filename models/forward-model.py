@@ -22,6 +22,8 @@ def read_csv_data(filename):
 benthic_reflectance = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance.csv')
 total_absorption = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_a.csv')
 total_backscattering = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
+wavelength = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/wavelength.csv')
+wavelength_range = list(wavelength['wavelength'])
 
 
 # Create a new class
@@ -43,9 +45,16 @@ class Site:
 
 
 ONE02 = Site('ONE02')
+
+
 ONE02.add_measurement('benthic_reflectance', pd.Series(benthic_reflectance['ONE02']))
 print(ONE02.measurements.keys())
-print(ONE02.measurements['benthic_reflectance'])
+print(list(ONE02.measurements['benthic_reflectance']))
+ONE02_benthic = list(ONE02.measurements['benthic_reflectance'])
+ONE02.add_measurement('absorption', pd.Series(total_absorption['ONE02']))
+ONE02.add_measurement('backscatter', pd.Series(total_backscattering['ONE02']))
+ONE02_a = list(ONE02.measurements['absorption'])
+ONE02_bb = list(ONE02.measurements['backscatter'])
 
 # Sub-surface solar zenith angle in radians
 # Refractive index of seawater (temperature = 20C, salinity = 25g/kg, light wavelength = 589.3 nm)
@@ -66,6 +75,7 @@ theta_air = 38.28285
 theta_w = math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
 
 # Lee et al. (1999) Eqs.(6)
+
 
 kappa = [ONE09_a[x] + ONE09_bb[x] for x in range(len(ONE09_a))]
 u_var = [ONE09_bb[x]/kappa[x] for x in range(len(ONE09_bb))]
