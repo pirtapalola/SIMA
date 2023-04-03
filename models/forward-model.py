@@ -10,11 +10,14 @@ import math
 import pandas as pd
 
 # Access the absorption, backscattering, and benthic reflectance data
+sites = ['ONE02', 'ONE03', 'ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
+         'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
+def read_csv_data(filename):
+    dataset = pd.read_csv(filename)
+    return dataset
 
-total_a = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/data/total_a.csv')
-total_a = total_a.rename({'ONE09_r_rs': 'ONE09_a'}, axis='columns')
-ONE09_a = list(total_a['ONE09_a'])
-print(ONE09_a)
+benthic_reflectance = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance.csv')
+
 
 total_bb = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
 total_bb = total_bb.rename({'ONE09_Kd': 'ONE09_bb'}, axis='columns')
