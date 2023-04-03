@@ -45,16 +45,146 @@ class Site:
 
 
 ONE02 = Site('ONE02')
+ONE02_benthic = []
+ONE02_a = []
+ONE02_bb = []
+
+ONE03 = Site('ONE03')
+ONE03_benthic = []
+ONE03_a = []
+ONE03_bb = []
+
+ONE07 = Site('ONE07')
+ONE07_benthic = []
+ONE07_a = []
+ONE07_bb = []
+
+ONE08 = Site('ONE08')
+ONE08_benthic = []
+ONE08_a = []
+ONE08_bb = []
+
+ONE09 = Site('ONE09')
+ONE09_benthic = []
+ONE09_a = []
+ONE09_bb = []
+
+ONE10 = Site('ONE10')
+ONE10_benthic = []
+ONE10_a = []
+ONE10_bb = []
+
+ONE11 = Site('ONE11')
+ONE11_benthic = []
+ONE11_a = []
+ONE11_bb = []
+
+ONE12 = Site('ONE12')
+ONE12_benthic = []
+ONE12_a = []
+ONE12_bb = []
+
+RIM01 = Site('RIM01')
+RIM01_benthic = []
+RIM01_a = []
+RIM01_bb = []
+
+RIM02 = Site('RIM02')
+RIM02_benthic = []
+RIM02_a = []
+RIM02_bb = []
+
+RIM03 = Site('RIM03')
+RIM03_benthic = []
+RIM03_a = []
+RIM03_bb = []
+
+RIM04 = Site('RIM04')
+RIM04_benthic = []
+RIM04_a = []
+RIM04_bb = []
+
+RIM05 = Site('RIM05')
+RIM05_benthic = []
+RIM05_a = []
+RIM05_bb = []
+
+RIM06 = Site('RIM06')
+RIM06_benthic = []
+RIM06_a = []
+RIM06_bb = []
 
 
-ONE02.add_measurement('benthic_reflectance', pd.Series(benthic_reflectance['ONE02']))
-print(ONE02.measurements.keys())
-print(list(ONE02.measurements['benthic_reflectance']))
-ONE02_benthic = list(ONE02.measurements['benthic_reflectance'])
-ONE02.add_measurement('absorption', pd.Series(total_absorption['ONE02']))
-ONE02.add_measurement('backscatter', pd.Series(total_backscattering['ONE02']))
-ONE02_a = list(ONE02.measurements['absorption'])
-ONE02_bb = list(ONE02.measurements['backscatter'])
+def adding_data(site_variable, site_str, empty_list_benthic, empty_list_absorption, empty_list_backscatter):
+    site_variable.add_measurement('benthic_reflectance', pd.Series(benthic_reflectance[site_str]))
+    site_variable.add_measurement('absorption', pd.Series(total_absorption[site_str]))
+    site_variable.add_measurement('backscatter', pd.Series(total_backscattering[site_str]))
+    empty_list_benthic.append(list(site_variable.measurements['benthic_reflectance']))
+    empty_list_absorption.append(list(site_variable.measurements['absorption']))
+    empty_list_backscatter.append(list(site_variable.measurements['backscatter']))
+
+
+adding_data(ONE02, 'ONE02', ONE02_benthic, ONE02_a, ONE02_bb)
+adding_data(ONE03, 'ONE03', ONE03_benthic, ONE03_a, ONE03_bb)
+adding_data(ONE07, 'ONE07', ONE07_benthic, ONE07_a, ONE07_bb)
+adding_data(ONE08, 'ONE08', ONE08_benthic, ONE08_a, ONE08_bb)
+adding_data(ONE09, 'ONE09', ONE09_benthic, ONE09_a, ONE09_bb)
+adding_data(ONE10, 'ONE10', ONE10_benthic, ONE10_a, ONE10_bb)
+adding_data(ONE11, 'ONE11', ONE11_benthic, ONE11_a, ONE11_bb)
+adding_data(ONE12, 'ONE12', ONE12_benthic, ONE12_a, ONE12_bb)
+adding_data(RIM01, 'RIM01', RIM01_benthic, RIM01_a, RIM01_bb)
+adding_data(RIM02, 'RIM02', RIM02_benthic, RIM02_a, RIM02_bb)
+adding_data(RIM03, 'RIM03', RIM03_benthic, RIM03_a, RIM03_bb)
+adding_data(RIM04, 'RIM04', RIM04_benthic, RIM04_a, RIM04_bb)
+adding_data(RIM05, 'RIM05', RIM05_benthic, RIM05_a, RIM05_bb)
+adding_data(RIM06, 'RIM06', RIM06_benthic, RIM06_a, RIM06_bb)
+
+ONE02_benthic = ONE02_benthic[0]
+ONE03_benthic = ONE03_benthic[0]
+ONE07_benthic = ONE07_benthic[0]
+ONE08_benthic = ONE08_benthic[0]
+ONE09_benthic = ONE09_benthic[0]
+ONE10_benthic = ONE10_benthic[0]
+ONE11_benthic = ONE11_benthic[0]
+ONE12_benthic = ONE12_benthic[0]
+RIM01_benthic = RIM01_benthic[0]
+RIM02_benthic = RIM02_benthic[0]
+RIM03_benthic = RIM03_benthic[0]
+RIM04_benthic = RIM04_benthic[0]
+RIM05_benthic = RIM05_benthic[0]
+RIM06_benthic = RIM06_benthic[0]
+
+ONE02_a = ONE02_a[0]
+ONE03_a = ONE03_a[0]
+ONE07_a = ONE07_a[0]
+ONE08_a = ONE08_a[0]
+ONE09_a = ONE09_a[0]
+ONE10_a = ONE10_a[0]
+ONE11_a = ONE11_a[0]
+ONE12_a = ONE12_a[0]
+RIM01_a = RIM01_a[0]
+RIM02_a = RIM02_a[0]
+RIM03_a = RIM03_a[0]
+RIM04_a = RIM04_a[0]
+RIM05_a = RIM05_a[0]
+RIM06_a = RIM06_a[0]
+
+ONE02_bb = ONE02_bb[0]
+ONE03_bb = ONE03_bb[0]
+ONE07_bb = ONE07_bb[0]
+ONE08_bb = ONE08_bb[0]
+ONE09_bb = ONE09_bb[0]
+ONE10_bb = ONE10_bb[0]
+ONE11_bb = ONE11_bb[0]
+ONE12_bb = ONE12_bb[0]
+RIM01_bb = RIM01_bb[0]
+RIM02_bb = RIM02_bb[0]
+RIM03_bb = RIM03_bb[0]
+RIM04_bb = RIM04_bb[0]
+RIM05_bb = RIM05_bb[0]
+RIM06_bb = RIM06_bb[0]
+
+
 
 # Sub-surface solar zenith angle in radians
 # Refractive index of seawater (temperature = 20C, salinity = 25g/kg, light wavelength = 589.3 nm)
@@ -102,7 +232,7 @@ kappa_d = [n * depth for n in kappa]
 # Assumption: nadir-viewing sensor
 
 rrs_ONE09 = [(rrsdp[x] * (1.0 - np.exp(-(inv_cos_theta_w + du_water[x]) * kappa_d[x])) +
-              ((1.0 / math.pi) * ONE09_rrs_benthic[x] *
+              ((1.0 / math.pi) * ONE09_benthic[x] *
                np.exp(-(inv_cos_theta_w + du_bottom[x]) * kappa_d[x]))) for x in range(len(rrsdp))]
 
 # Save the results in a pandas dataframe
