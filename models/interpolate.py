@@ -7,7 +7,7 @@ from scipy.interpolate import CubicSpline
 import numpy as np
 import matplotlib.pylab as plt
 
-trios_reflectance = pd.read_excel('C:/Users/pirtapalola/Documents/iop_data/reflectance/benthic_reflectance.xlsx')
+trios_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/reflectance/trios_reflectance.csv')
 
 ONE02_array = trios_reflectance['ONE02_MGT'].to_numpy()
 ONE03_array = trios_reflectance['ONE03_MGT'].to_numpy()
@@ -232,3 +232,16 @@ RIM06_refl = benthic_reflectance_function(RIM06_reflectance, RIM06_benthic)
 
 
 ONE02_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE02_trios.csv')
+ONE03_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE03_trios.csv')
+ONE07_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE07_trios.csv')
+ONE08_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE08_trios.csv')
+ONE09_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE09_trios.csv')
+ONE10_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE10_trios.csv')
+ONE11_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE11_trios.csv')
+ONE12_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE12_trios.csv')
+RIM01_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM01_trios.csv')
+RIM02_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM02_trios.csv')
+RIM03_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM03_trios.csv')
+RIM04_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM04_trios.csv')
+RIM05_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM05_trios.csv')
+RIM06_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM06_trios.csv')
