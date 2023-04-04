@@ -31,7 +31,7 @@ class Site:
     """A sampling site in the study."""
     def __init__(self, name):
         self.name = name
-        self.measurements = {}
+        self.measurements = {}  # You could add self.benthic = [] jne with absorption and backscatter
 # Add a new measurement dataset to a Site instance
 
     def add_measurement(self, measurement_id, data):
@@ -43,6 +43,9 @@ class Site:
             self.measurements[measurement_id] = data
             self.measurements[measurement_id].name = measurement_id
 
+
+dict_sites = {k: Site(k) for k in sites}
+# dict_sites['ONE02']
 
 ONE02 = Site('ONE02')
 ONE02_benthic = []
@@ -203,7 +206,6 @@ theta_air = 38.28285
 
 theta_w = math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
 inv_cos_theta_w = 1.0 / math.cos(theta_w)
-depth = 0.9
 
 
 def forward_model(site_name, absorption_list, backscattering_list, benthic, depth_var, inv_cos_theta_w_var):
