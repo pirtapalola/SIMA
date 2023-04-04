@@ -185,7 +185,6 @@ RIM05_bb = RIM05_bb[0]
 RIM06_bb = RIM06_bb[0]
 
 
-
 # Sub-surface solar zenith angle in radians
 # Refractive index of seawater (temperature = 20C, salinity = 25g/kg, light wavelength = 589.3 nm)
 
@@ -203,42 +202,46 @@ theta_air = 38.28285
 # Sub-surface viewing angle in radians
 
 theta_w = math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
-
-# Lee et al. (1999) Eqs.(6)
-
-
-kappa = [ONE09_a[x] + ONE09_bb[x] for x in range(len(ONE09_a))]
-u_var = [ONE09_bb[x]/kappa[x] for x in range(len(ONE09_bb))]
-
-# Lee et al. (1999) Eqs. (5)
-# Optical path-elongation factors for scattered photons
-
-du_water = [1.03 * np.power((1.00 + (2.40 * n)), 0.50) for n in u_var]  # from the water column
-du_bottom = [1.04 * np.power((1.00 + (5.40 * n)), 0.50) for n in u_var]  # from the bottom
-
-# Lee et al. (1999) Eq. (4)
-# Remotely sensed sub-surface reflectance for optically deep water
-
-rrsdp = [(0.084 + 0.17 * n) * n for n in u_var]
-
-# Define variables
-
 inv_cos_theta_w = 1.0 / math.cos(theta_w)
 depth = 0.9
-kappa_d = [n * depth for n in kappa]
 
-# Lee et al. (1999) Eq. (3)
-# Remote sensing reflectance
-# Assumption: nadir-viewing sensor
 
-rrs_ONE09 = [(rrsdp[x] * (1.0 - np.exp(-(inv_cos_theta_w + du_water[x]) * kappa_d[x])) +
-              ((1.0 / math.pi) * ONE09_benthic[x] *
-               np.exp(-(inv_cos_theta_w + du_bottom[x]) * kappa_d[x]))) for x in range(len(rrsdp))]
+def forward_model(site_name, absorption_list, backscattering_list, benthic, depth_var, inv_cos_theta_w_var):
+    kappa = [absorption_list[x] + backscattering_list[x]
+             for x in range(len(absorption_list))]  # Lee et al. (1999) Eqs.(6)
+    u_var = [backscattering_list[x] / kappa[x] for x in range(len(backscattering_list))]
+    # Lee et al. (1999) Eqs. (5)
+    # Optical path-elongation factors for scattered photons
+    du_water = [1.03 * np.power((1.00 + (2.40 * n)), 0.50) for n in u_var]  # from the water column
+    du_bottom = [1.04 * np.power((1.00 + (5.40 * n)), 0.50) for n in u_var]  # from the bottom
+    # Lee et al. (1999) Eq. (4)
+    # Remotely sensed sub-surface reflectance for optically deep water
+    rrsdp = [(0.084 + 0.17 * n) * n for n in u_var]
+    kappa_d = [n * depth_var for n in kappa]
+    # Lee et al. (1999) Eq. (3)
+    # Remote sensing reflectance
+    # Assumption: nadir-viewing sensor
+    rrs = [(rrsdp[x] * (1.0 - np.exp(-(inv_cos_theta_w_var + du_water[x]) * kappa_d[x]))
+            + ((1.0 / math.pi) * benthic[x]
+               * np.exp(-(inv_cos_theta_w_var + du_bottom[x]) * kappa_d[x]))) for x in range(len(rrsdp))]
+    # Save the results in a pandas dataframe
+    rrs_data = pd.DataFrame()
+    rrs_data[site_name] = rrs
+    # Save the dataframe to a csv
+    rrs_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/'+site_name+'.csv'))
 
-# Save the results in a pandas dataframe
 
-rrs_data = pd.DataFrame()
-rrs_data['ONE09'] = rrs_ONE09
-
-# Save the dataframe to a csv
-rrs_data.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/forward_model_results.csv')
+forward_model('ONE02', ONE02_a, ONE02_bb, ONE02_benthic, 0.90, inv_cos_theta_w)
+forward_model('ONE03', ONE03_a, ONE03_bb, ONE03_benthic, 0.68, inv_cos_theta_w)
+forward_model('ONE07', ONE07_a, ONE07_bb, ONE07_benthic, 1.0, inv_cos_theta_w)
+forward_model('ONE08', ONE08_a, ONE08_bb, ONE08_benthic, 1.2, inv_cos_theta_w)
+forward_model('ONE09', ONE09_a, ONE09_bb, ONE09_benthic, 0.9, inv_cos_theta_w)
+forward_model('ONE10', ONE10_a, ONE10_bb, ONE10_benthic, 1.0, inv_cos_theta_w)
+forward_model('ONE11', ONE11_a, ONE11_bb, ONE11_benthic, 1.0, inv_cos_theta_w)
+forward_model('ONE12', ONE12_a, ONE12_bb, ONE12_benthic, 1.0, inv_cos_theta_w)
+forward_model('RIM01', RIM01_a, RIM01_bb, RIM01_benthic, 1.4, inv_cos_theta_w)
+forward_model('RIM02', RIM02_a, RIM02_bb, RIM02_benthic, 1.3, inv_cos_theta_w)
+forward_model('RIM03', RIM03_a, RIM03_bb, RIM03_benthic, 1.1, inv_cos_theta_w)
+forward_model('RIM04', RIM04_a, RIM04_bb, RIM04_benthic, 1.2, inv_cos_theta_w)
+forward_model('RIM05', RIM05_a, RIM05_bb, RIM05_benthic, 1.15, inv_cos_theta_w)
+forward_model('RIM06', RIM06_a, RIM06_bb, RIM06_benthic, 1.3, inv_cos_theta_w)
