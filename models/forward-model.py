@@ -24,6 +24,8 @@ total_absorption = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/t
 total_backscattering = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
 wavelength = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/wavelength.csv')
 wavelength_range = list(wavelength['wavelength'])
+theta_air_data = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/sun_zenith_angle.csv')
+theta_air_list = list(theta_air_data['SZA'])
 
 
 # Create a new class
@@ -193,7 +195,6 @@ RIM06_bb = RIM06_bb[0]
 
 water_refractive_index = 1.33784
 inv_refractive_index = 1.0 / water_refractive_index
-theta_air = 38.28285
 
 # If the sensors are not nadir-viewing, define the following:
 # Then, use Eq. (9) from Lee et al. (1999) to calculate remote sensing reflectance instead of Eq. (3)
@@ -204,8 +205,8 @@ theta_air = 38.28285
 
 # Sub-surface viewing angle in radians
 
-theta_w = math.asin(inv_refractive_index * math.sin(math.radians(theta_air)))
-inv_cos_theta_w = 1.0 / math.cos(theta_w)
+theta_w = [math.asin(inv_refractive_index * math.sin(math.radians(x))) for x in theta_air_list]
+inv_cos_theta_w = [1.0 / math.cos(x) for x in theta_w]
 
 
 def forward_model(site_name, absorption_list, backscattering_list, benthic, depth_var, inv_cos_theta_w_var):
@@ -233,17 +234,17 @@ def forward_model(site_name, absorption_list, backscattering_list, benthic, dept
     rrs_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/'+site_name+'.csv'))
 
 
-forward_model('ONE02', ONE02_a, ONE02_bb, ONE02_benthic, 0.90, inv_cos_theta_w)
-forward_model('ONE03', ONE03_a, ONE03_bb, ONE03_benthic, 0.68, inv_cos_theta_w)
-forward_model('ONE07', ONE07_a, ONE07_bb, ONE07_benthic, 1.0, inv_cos_theta_w)
-forward_model('ONE08', ONE08_a, ONE08_bb, ONE08_benthic, 1.2, inv_cos_theta_w)
-forward_model('ONE09', ONE09_a, ONE09_bb, ONE09_benthic, 0.9, inv_cos_theta_w)
-forward_model('ONE10', ONE10_a, ONE10_bb, ONE10_benthic, 1.0, inv_cos_theta_w)
-forward_model('ONE11', ONE11_a, ONE11_bb, ONE11_benthic, 1.0, inv_cos_theta_w)
-forward_model('ONE12', ONE12_a, ONE12_bb, ONE12_benthic, 1.0, inv_cos_theta_w)
-forward_model('RIM01', RIM01_a, RIM01_bb, RIM01_benthic, 1.4, inv_cos_theta_w)
-forward_model('RIM02', RIM02_a, RIM02_bb, RIM02_benthic, 1.3, inv_cos_theta_w)
-forward_model('RIM03', RIM03_a, RIM03_bb, RIM03_benthic, 1.1, inv_cos_theta_w)
-forward_model('RIM04', RIM04_a, RIM04_bb, RIM04_benthic, 1.2, inv_cos_theta_w)
-forward_model('RIM05', RIM05_a, RIM05_bb, RIM05_benthic, 1.15, inv_cos_theta_w)
-forward_model('RIM06', RIM06_a, RIM06_bb, RIM06_benthic, 1.3, inv_cos_theta_w)
+forward_model('ONE02', ONE02_a, ONE02_bb, ONE02_benthic, 0.90, inv_cos_theta_w[0])
+forward_model('ONE03', ONE03_a, ONE03_bb, ONE03_benthic, 0.68, inv_cos_theta_w[1])
+forward_model('ONE07', ONE07_a, ONE07_bb, ONE07_benthic, 1.0, inv_cos_theta_w[2])
+forward_model('ONE08', ONE08_a, ONE08_bb, ONE08_benthic, 1.2, inv_cos_theta_w[3])
+forward_model('ONE09', ONE09_a, ONE09_bb, ONE09_benthic, 0.9, inv_cos_theta_w[4])
+forward_model('ONE10', ONE10_a, ONE10_bb, ONE10_benthic, 1.0, inv_cos_theta_w[5])
+forward_model('ONE11', ONE11_a, ONE11_bb, ONE11_benthic, 1.0, inv_cos_theta_w[6])
+forward_model('ONE12', ONE12_a, ONE12_bb, ONE12_benthic, 1.0, inv_cos_theta_w[7])
+forward_model('RIM01', RIM01_a, RIM01_bb, RIM01_benthic, 1.4, inv_cos_theta_w[8])
+forward_model('RIM02', RIM02_a, RIM02_bb, RIM02_benthic, 1.3, inv_cos_theta_w[9])
+forward_model('RIM03', RIM03_a, RIM03_bb, RIM03_benthic, 1.1, inv_cos_theta_w[10])
+forward_model('RIM04', RIM04_a, RIM04_bb, RIM04_benthic, 1.2, inv_cos_theta_w[11])
+forward_model('RIM05', RIM05_a, RIM05_bb, RIM05_benthic, 1.15, inv_cos_theta_w[12])
+forward_model('RIM06', RIM06_a, RIM06_bb, RIM06_benthic, 1.3, inv_cos_theta_w[13])
