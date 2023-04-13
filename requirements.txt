@@ -1,5 +1,6 @@
 affine==2.4.0
 asciitree==0.3.3
+asteval==0.9.29
 attrs==22.2.0
 azure-core==1.26.3
 azure-storage-blob==12.15.0
@@ -36,6 +37,7 @@ fasteners==0.18
 Fiona==1.9.2
 fonttools==4.39.3
 fsspec==2023.3.0
+future==0.18.3
 geographiclib==2.0
 geopandas==0.12.2
 geopy==2.3.0
@@ -58,6 +60,7 @@ isodate==0.6.1
 Jinja2==3.1.2
 jmespath==1.0.1
 kiwisolver==1.4.4
+lmfit==1.2.0
 locket==1.0.0
 lxml==4.9.2
 lz4==4.3.2
@@ -107,6 +110,7 @@ toolz==0.12.0
 tornado==6.2
 tqdm==4.65.0
 typing_extensions==4.5.0
+uncertainties==3.1.7
 uritemplate==4.1.1
 urllib3==1.26.15
 validators==0.20.0
