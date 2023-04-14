@@ -33,18 +33,47 @@ lee99_sites = [x+'_L99' for x in sites]
 maritorena94_sites = [x+'_M94' for x in sites]
 
 
-def make_numpy_arrays(dataframe, column_name):
-    return np.array(dataframe[column_name])
+# This function creates a dictionary with Unique ID as key
+def make_dictionary(dataframe, site_list, column_name):
+    data_dict = {}
+    for i in site_list:
+        for n in column_name:
+            data_dict[i] = np.array(dataframe[n])
+    return data_dict
 
 
-test = make_numpy_arrays(closure_data, benthic_sites[0])
-print(test)
-s0 = np.array(closure_data['ONE07_benthic'])
-s1 = np.array(closure_data['ONE07_surface'])
-s2 = np.array(closure_data['ONE07_L99'])
-s3 = np.array(closure_data['ONE07_M94'])
+# Apply the function to create separate dictionaries for the different datasets
+benthic_dictionary = make_dictionary(closure_data, sites, benthic_sites)
+surface_dictionary = make_dictionary(closure_data, sites, surface_sites)
+lee_dictionary = make_dictionary(closure_data, sites, lee99_sites)
+maritorena_dictionary = make_dictionary(closure_data, sites, maritorena94_sites)
+print(len(benthic_dictionary['ONE07']))
 
-ONE07_L99_SAM = pysptools.distance.SAM(s1, s0)
-ONE07_M94_SAM = pysptools.distance.SAM(s1, s3)
-print(ONE07_L99_SAM)
-print(ONE07_M94_SAM)
+# Create a dataframe to store the results
+spectral_similarity = pd.DataFrame()
+spectral_similarity["Unique_ID"] = sites
+
+# Add the results in the dataframe as a column
+# Comparison of surface measurements and the Lee et al. (1999) forward model results
+surface_lee_comparison = []
+for i in sites:
+    sam_result = pysptools.distance.SAM(surface_dictionary[i], lee_dictionary[i])
+    surface_lee_comparison.append(sam_result)
+spectral_similarity["Surface_Lee"] = surface_lee_comparison
+
+# Comparison of surface measurements and the Maritorena et al. (1994) forward model results
+surface_maritorena_comparison = []
+for i in sites:
+    sam_result = pysptools.distance.SAM(surface_dictionary[i], maritorena_dictionary[i])
+    surface_maritorena_comparison.append(sam_result)
+spectral_similarity["Surface_Maritorena"] = surface_maritorena_comparison
+
+# Comparison of surface measurements and benthic measurements
+surface_benthic_comparison = []
+for i in sites:
+    sam_result = pysptools.distance.SAM(surface_dictionary[i], benthic_dictionary[i])
+    surface_benthic_comparison.append(sam_result)
+spectral_similarity["Surface_Benthic"] = surface_benthic_comparison
+
+print(spectral_similarity)
+spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/spectral_similarity.csv')
