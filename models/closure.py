@@ -22,7 +22,7 @@ import numpy as np
 import pysptools.distance
 
 # Read the csv data into a pandas dataframe
-closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/closure_experiment.csv")
+closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/closure_experiment_600_705nm.csv")
 
 # List containing the unique IDs of the sampling sites
 sites = ['ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
@@ -85,4 +85,4 @@ surface_lee = compare_results(surface_dictionary, lee_dictionary, sites, '_surfa
 spectral_similarity["Surface_Lee"] = surface_lee  # Add the results in the dataframe as a column
 
 print(spectral_similarity)
-spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/spectral_similarity.csv')
+spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/spectral_similarity_600_705nm.csv')
