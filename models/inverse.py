@@ -6,12 +6,7 @@ from lmfit import Parameters, Minimizer
 from matplotlib import rcParams
 
 
-def read_csv_data(filename):
-    dataset = pd.read_csv(filename)
-    return dataset
-
-
-closure_data = read_csv_data("C:/Users/pirtapalola/Documents/iop_data/data/closure_experiment.csv")
+closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/closure_experiment.csv")
 sites = ['ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
          'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
 rrs = closure_data['ONE07_surface']
@@ -19,7 +14,7 @@ plt.plot(rrs)
 # plt.show()
 
 
-def forward1(params, data=None):
+def forward1(params, x, data=None):
     phy = params['phy']
     cdom = params['cdom']
     nap = params['nap']
