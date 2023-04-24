@@ -44,6 +44,7 @@ kd_coefficients = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/kd
 depth_data = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/depth_data.csv')
 
 
+# Define the forward model as per Maritorena et al. (1994) Equation 9a
 def maritorena(site_name, absorption_list, backscattering_list, benthic, diffuse_attenuation, depth_var):
     kappa = [absorption_list[x] + backscattering_list[x] for x in range(len(absorption_list))]
     u_var = [backscattering_list[x] / kappa[x] for x in range(len(backscattering_list))]
