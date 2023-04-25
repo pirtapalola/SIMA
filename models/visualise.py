@@ -4,6 +4,7 @@ import pandas as pd
 os.chdir(r'C:/Users/pirtapalola/Documents/iop_data/data/M94_data')
 the_list = []
 m94_list = []
+kd_list = []
 
 # Create a list that contains the paths of all the csv files in a folder
 for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/data/forward_model'):
@@ -17,6 +18,13 @@ for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/data/
         if file.endswith('.csv'):
             m94_list.append(file)
 print(m94_list)
+
+# Do the same for the folder with the diffuse attenuation coefficient data
+for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/kd_data'):
+    for file in files:
+        if file.endswith('_kd.csv'):
+            kd_list.append(file)
+
 # Define a function that takes a list of paths, reads all the csv files,
 # and adds the first column to a new pandas dataframe
 
@@ -29,7 +37,9 @@ def readdataframe(list_paths):
     return df
 
 
-# fm_reflectance = readdataframe(the_list)
+fm_reflectance = readdataframe(the_list)
 # fm_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/fm_reflectance.csv')
 m94_reflectance = readdataframe(m94_list)
-m94_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/m94_reflectance.csv')
+# m94_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/m94_reflectance.csv')
+kd_dataframe = readdataframe(kd_list)
+# kd_dataframe.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/kd_dataframe.csv')
