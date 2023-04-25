@@ -78,6 +78,6 @@ for i in sites:
     add_data(dict_sites, i)
 
 for i in sites:
-    maritorena(i, dict_sites[i].measurements['absorption'], dict_sites[i].measurements['backscatter'],
-               dict_sites[i].measurements['benthic_reflectance'],
-               dict_sites[i].measurements['kd_coefficients'], dict_sites[i].depth['bottom_depth'])
+    maritorena(i, dict_sites[i].absorption['absorption'], dict_sites[i].absorption['backscatter'],
+               dict_sites[i].absorption['benthic_reflectance'],
+               dict_sites[i].absorption['kd_coefficients'], dict_sites[i].depth['bottom_depth'])
