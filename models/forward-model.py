@@ -124,9 +124,9 @@ def adding_data(site_variable, site_str, empty_list_benthic, empty_list_absorpti
     site_variable.add_measurement('benthic_reflectance', pd.Series(benthic_reflectance[site_str]))
     site_variable.add_measurement('absorption', pd.Series(total_absorption[site_str]))
     site_variable.add_measurement('backscatter', pd.Series(total_backscattering[site_str]))
-    empty_list_benthic.append(list(site_variable.measurements['benthic_reflectance']))
-    empty_list_absorption.append(list(site_variable.measurements['absorption']))
-    empty_list_backscatter.append(list(site_variable.measurements['backscatter']))
+    empty_list_benthic.append(list(site_variable.absorption['benthic_reflectance']))
+    empty_list_absorption.append(list(site_variable.absorption['absorption']))
+    empty_list_backscatter.append(list(site_variable.absorption['backscatter']))
 
 
 adding_data(ONE02, 'ONE02', ONE02_benthic, ONE02_a, ONE02_bb)
