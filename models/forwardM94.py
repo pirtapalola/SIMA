@@ -4,30 +4,8 @@ import numpy as np
 
 
 os.chdir(r'C:/Users/pirtapalola/Documents/iop_data/kd_data')
-kd_list = []
 sites = ['ONE02', 'ONE03', 'ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
          'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
-
-# Create a list that contains the paths of all the csv files in a folder
-for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/kd_data'):
-    for file in files:
-        if file.endswith('_kd.csv'):
-            kd_list.append(file)
-
-# Define a function that takes a list of paths, reads all the csv files,
-# and adds the first column to a new pandas dataframe
-
-
-def readdataframe(list_paths):
-    df = pd.DataFrame()  # define df as an empty pandas DataFrame
-    for element in list_paths:
-        # print(element)
-        df[element] = pd.read_csv(element, sep=',', header=0, usecols=[1])
-    return df
-
-
-kd_dataframe = readdataframe(kd_list)
-kd_dataframe.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/kd_dataframe.csv')
 
 
 def read_csv_data(filename):
