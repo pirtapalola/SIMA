@@ -6,7 +6,8 @@ import pandas as pd
 
 # Access the absorption, backscattering, and benthic reflectance data
 sites = ['ONE02', 'ONE03', 'ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
-         'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
+         'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06',
+         'LAG01B', 'ONE05A', 'ONE05B', 'ONE06A', 'ONE06B', 'RIM07A', 'RIM07B', 'RIM08A', 'RIM08B']
 
 
 def read_csv_data(filename):
@@ -14,12 +15,12 @@ def read_csv_data(filename):
     return dataset
 
 
-benthic_reflectance = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance.csv')
-total_absorption = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_a.csv')
-total_backscattering = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/total_bb.csv')
-wavelength = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/wavelength.csv')
+benthic_reflectance = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/input/benthic_reflectance.csv')
+total_absorption = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/input/total_a.csv')
+total_backscattering = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/input/total_bb.csv')
+wavelength = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/input/wavelength.csv')
 wavelength_range = list(wavelength['wavelength'])
-theta_air_data = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/sun_zenith_angle.csv')
+theta_air_data = read_csv_data('C:/Users/pirtapalola/Documents/iop_data/data/input/sun_zenith_angle.csv')
 theta_air_list = list(theta_air_data['SZA'])
 
 
@@ -83,6 +84,5 @@ def calculate_kd_coefficient(site_str, inv_cos_theta_w_var, absorption_list, bac
 
 
 for i in sites:
-    calculate_kd_coefficient(i, inv_cos_theta_w[0], dict_sites[i].absorption['absorption'],
-                             dict_sites[i].absorption['backscatter'])
-
+    calculate_kd_coefficient(i, inv_cos_theta_w[0], dict_sites[i].measurements['absorption'],
+                             dict_sites[i].measurements['backscatter'])
