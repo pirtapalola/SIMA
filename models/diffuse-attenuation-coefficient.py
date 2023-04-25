@@ -83,6 +83,6 @@ def calculate_kd_coefficient(site_str, inv_cos_theta_w_var, absorption_list, bac
 
 
 for i in sites:
-    calculate_kd_coefficient(i, inv_cos_theta_w[0], dict_sites[i].measurements['absorption'],
-                             dict_sites[i].measurements['backscatter'])
+    calculate_kd_coefficient(i, inv_cos_theta_w[0], dict_sites[i].absorption['absorption'],
+                             dict_sites[i].absorption['backscatter'])
 
