@@ -81,7 +81,7 @@ class Site:
 # Create a dictionary with site IDs as keys
 dict_sites = {k: Site(k) for k in sites}
 print(sites)
-print(dict_sites)
+
 
 # Define a function that applies the add_measurement() function
 def add_data(data_dictionary, site_str):
@@ -98,3 +98,36 @@ def add_data(data_dictionary, site_str):
 # Apply the function to all the sampling sites
 for i in sites:
     add_data(dict_sites, i)
+
+
+# Define a function to calculate total absorption
+def total_absorption(site_name, aw_list, ab_list, as_list, ay_list):
+    total_a = aw_list + ab_list + as_list + ay_list
+    total_absorption_data = pd.DataFrame()
+    total_absorption_data[site_name] = total_a
+    total_absorption_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/Plymouth_iop/plymouth_water_iop/'
+                                  + site_name + 'total_a.csv'))
+
+
+# Define a function to calculate total backscatter
+def total_backscatter(site_name, bbw_list, bbb_list, bbs_list):
+    total_bb = bbw_list + bbb_list + bbs_list
+    total_backscatter_data = pd.DataFrame()
+    total_backscatter_data[site_name] = total_bb
+    total_backscatter_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/Plymouth_iop/plymouth_water_iop/'
+                                  + site_name + 'total_bb.csv'))
+
+
+# Apply the functions to all sampling sites
+for i in sites:
+    total_absorption(i,
+                     dict_sites[i].measurements['aW'],
+                     dict_sites[i].measurements['aB'],
+                     dict_sites[i].measurements['aS'],
+                     dict_sites[i].measurements['aY'])
+
+for i in sites:
+    total_backscatter(i,
+                      dict_sites[i].measurements['bbW'],
+                      dict_sites[i].measurements['bbB'],
+                      dict_sites[i].measurements['bbS'])
