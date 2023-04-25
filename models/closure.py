@@ -22,11 +22,12 @@ import numpy as np
 import pysptools.distance
 
 # Read the csv data into a pandas dataframe
-closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/closure_experiment.csv")
+closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/input/closure_experiment.csv")
 
 # List containing the unique IDs of the sampling sites
 sites = ['ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
-         'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06']
+         'RIM01', 'RIM02', 'RIM03', 'RIM04', 'RIM05', 'RIM06',
+         'LAG01B', 'ONE05A', 'ONE05B', 'ONE06A', 'ONE06B', 'RIM08A', 'RIM08B']
 benthic_sites = [x+'_benthic' for x in sites]
 surface_sites = [x+'_surface' for x in sites]
 lee99_sites = [x+'_L99' for x in sites]
@@ -95,4 +96,4 @@ spectral_similarity["Surface_Lee"] = surface_lee  # Add the results in the dataf
 
 test_spectral_similarity = compare_results(surface_dictionary, surface_dictionary, sites, '_surface', '_surface')
 print(test_spectral_similarity)
-spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/spectral_similarity_NormXCorr.csv')
+spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/output/spectral_similarity_NormXCorr.csv')
