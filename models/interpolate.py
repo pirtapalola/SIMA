@@ -7,7 +7,7 @@ from scipy.interpolate import CubicSpline
 import numpy as np
 import matplotlib.pylab as plt
 
-trios_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/reflectance/trios_reflectance.csv')
+trios_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/iop_data/reflectance/benthic_reflectance.csv')
 
 ONE02_array = trios_reflectance['ONE02_MGT'].to_numpy()
 ONE03_array = trios_reflectance['ONE03_MGT'].to_numpy()

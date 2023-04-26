@@ -56,13 +56,14 @@ def lee(site_name, absorption_list, backscattering_list, benthic, depth_var, inv
     # Remote sensing reflectance
     # Assumption: nadir-viewing sensor
     rrs = [(rrsdp[x] * (1.0 - np.exp(-(inv_cos_theta_w_var + du_water[x]) * kappa_d[x]))
-            + ((1.0 / math.pi) * benthic[x]
-               * np.exp(-(inv_cos_theta_w_var + du_bottom[x]) * kappa_d[x]))) for x in range(len(rrsdp))]
+            + benthic[x]) for x in range(len(rrsdp))]
+    #        ((1.0 / math.pi) * benthic[x]
+    #         * np.exp(-(inv_cos_theta_w_var + du_bottom[x]) * kappa_d[x]))) for x in range(len(rrsdp))]
     # Save the results in a pandas dataframe
     rrs_data = pd.DataFrame()
     rrs_data[(site_name+'_L99')] = rrs
     # Save the dataframe to a csv
-    rrs_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/L99_data/'+site_name+'L99.csv'))
+    rrs_data.to_csv(('C:/Users/pirtapalola/Documents/iop_data/data/L99_data_v2/'+site_name+'_L99.csv'))
 
 
 # Define the forward model as per Maritorena et al. (1994) Equation 9a
@@ -129,11 +130,11 @@ def add_data(data_dictionary, site_str):
 # Apply the function to all the sampling sites
 for i in sites:
     add_data(dict_sites, i)
-
+"""
 for i in sites:
     maritorena(i, dict_sites[i].measurements['absorption'], dict_sites[i].measurements['backscatter'],
                dict_sites[i].measurements['benthic_reflectance'],
-               dict_sites[i].measurements['kd_coefficients'], dict_sites[i].depth['bottom_depth'])
+               dict_sites[i].measurements['kd_coefficients'], dict_sites[i].depth['bottom_depth'])"""
 
 for i in sites:
     lee(i, dict_sites[i].measurements['absorption'], dict_sites[i].measurements['backscatter'],
