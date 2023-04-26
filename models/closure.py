@@ -22,7 +22,7 @@ import numpy as np
 import pysptools.distance
 
 # Read the csv data into a pandas dataframe
-closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/input/closure_experiment.csv")
+closure_data = pd.read_csv("C:/Users/pirtapalola/Documents/iop_data/data/closure/closure_experiment_v2.csv")
 
 # List containing the unique IDs of the sampling sites
 sites = ['ONE07', 'ONE08', 'ONE09', 'ONE10', 'ONE11', 'ONE12',
@@ -62,15 +62,7 @@ lee_dictionary = make_dictionary(closure_data, lee99_sites)
 maritorena_dictionary = make_dictionary(closure_data, maritorena94_sites)
 
 
-# A function that computes SAM
-def compare_results_sam(dict1, dict2, site_list, str1, str2):
-    sam_result_list = []
-    for n in site_list:
-        sam_result_list.append(pysptools.distance.SAM(dict1[(n+str1)], dict2[n+str2]))
-    return sam_result_list
-
-
-# A function that computes SID or NormXCorr
+# A function that computes SAM, SID, or NormXCorr
 def compare_results(dict1, dict2, site_list, str1, str2):
     sam_result_list = []
     for n in site_list:
@@ -96,4 +88,4 @@ spectral_similarity["Surface_Lee"] = surface_lee  # Add the results in the dataf
 
 test_spectral_similarity = compare_results(surface_dictionary, surface_dictionary, sites, '_surface', '_surface')
 print(test_spectral_similarity)
-spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/output/spectral_similarity_NormXCorr.csv')
+spectral_similarity.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/closure/spectral_similarity_NormXCorr_v2.csv')
