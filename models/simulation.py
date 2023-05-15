@@ -3,32 +3,49 @@
 import pandas as pd
 import itertools
 
-# Read the file
-# Specify which row(s) to import
-specific_rows = [6]  # This row specifies the water constituent concentrations
+# Open the file. Each line is saved as a string in a list.
+
+with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/Icorals.txt') as f:
+    concentrations = [line for line in f.readlines()]
+
+# Print the line that specifies water constituent concentrations.
 # 1st element: water
 # 2nd element: phytoplankton
 # 3rd element: CDOM
 # 4th element: SPM
 
-concentrations = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/Icorals.txt',
-                             sep=',', header=None, skiprows=lambda x: x not in specific_rows)
-print(concentrations)
+print(concentrations[6])
 
-# Create lists that contain the different variations.
-set1 = [1, 2, 3]
+# Define lists that contain the different concentrations of each water constituent.
+water = [0]
+phy = [0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10]
+cdom = [0.01, 0.1, 0.25, 0.5, 1, 2, 3, 5]
+spm = [0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 30]
 
-# Define a function that creates all the possible permutations of water constituent concentrations.
+# Create all the possible combinations of water constituent concentrations.
+combinations = list(itertools.product(water, phy, cdom, spm))
+print(len(combinations)) # print the number of combinations
+print(combinations[0])
+print(type(combinations[0]))
+# Creating a string separator/delimiter
+# Here it's a single space
+st = ' '
 
+# Using the Python join() function to convert the tuple to a string
+st = st.join(combinations[0])
+print(st)
 
-def permutations(variations, number_of_var):
-    # Create all the possible permutations
-    list1 = [permutation for permutation in itertools.permutations(variations, number_of_var)]
-    # Remove duplicate permutations
-    list2 = list(set(list1))
-    return list2
+# Save the combinations in a csv file
+# df = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm'])
+# df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/water_constituent_combinations.csv')
 
+new_combination = concentrations
+print(new_combination)
+new_combination[6] = combinations[0]
+print(new_combination)
 
-data = permutations(set1, 3)
-df = pd.DataFrame(data, columns=['phytoplankton', 'CDOM', 'SPM'])
-print(df)
+# open file in write mode
+with open(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/Icorals001.txt', 'w') as fp:
+    for item in new_combination:
+        # write each item on a new line
+        fp.write("\n" % item)
