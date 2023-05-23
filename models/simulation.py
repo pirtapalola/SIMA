@@ -29,7 +29,7 @@ combination_ID = [i for i in range(0, len(combinations))]
 # Save the combinations in a csv file
 df = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm'])
 # print(df)
-df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/water_constituent_combinations.csv')
+# df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/water_constituent_combinations.csv')
 
 
 # Create a new class
