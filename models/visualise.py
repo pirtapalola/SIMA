@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 
-os.chdir(r'C:/Users/pirtapalola/Documents/iop_data/data/L99_data_v2')
+os.chdir(r'C:/Users/pirtapalola/Documents/iop_data/data/trios_benthic_320_950')
 the_list = []
 trios_list = []
 kd_list = []
@@ -41,10 +41,10 @@ for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/data/
             plymouth_backscatter_list.append(file)"""
 
 # Do the same for the folder with the M94/L99 modelling results
-for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/data/L99_data_v2'):
+for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/iop_data/data/trios_benthic_320_950'):
     for file in files:
         if file.endswith('.csv'):
-            l99_list.append(file)
+            trios_list.append(file)
 
 
 # Define a function that takes a list of paths, reads all the csv files,
@@ -55,14 +55,14 @@ def readdataframe(list_paths):
     df = pd.DataFrame()  # define df as an empty pandas DataFrame
     for element in list_paths:
         # print(element)
-        df[element] = pd.read_csv(element, sep=',', header=0, usecols=[1])
+        df[element] = pd.read_csv(element, sep=',', header=0, usecols=[2])
     return df
 
 
 fm_reflectance = readdataframe(the_list)
 # fm_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/fm_reflectance.csv')
-surface_reflectance = readdataframe(trios_list)
-#surface_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/surface_reflectance.csv')
+benthic_reflectance = readdataframe(trios_list)
+benthic_reflectance.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/benthic_reflectance_320_950.csv')
 kd_dataframe = readdataframe(kd_list)
 # kd_dataframe.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/kd_dataframe.csv')
 total_a = readdataframe(plymouth_absorption_list)
@@ -72,4 +72,4 @@ total_b = readdataframe(plymouth_backscatter_list)
 m94_results_df = readdataframe(m94_list)
 # m94_results_df.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/output/M94_output.csv')
 l99_results_df = readdataframe(l99_list)
-l99_results_df.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/output/L99_output_v2.csv')
+#l99_results_df.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/output/L99_output_v2.csv')
