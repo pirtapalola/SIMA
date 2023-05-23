@@ -25,7 +25,7 @@ RIM04_array = trios_reflectance['RIM04_MGT'].to_numpy()
 RIM05_array = trios_reflectance['RIM05_MGT'].to_numpy()
 RIM06_array = trios_reflectance['RIM06_MGT'].to_numpy()
 
-LAG01B_array = trios_reflectance['LAG01B'].to_numpy()
+#LAG01B_array = trios_reflectance['LAG01B'].to_numpy()
 ONE05A_array = trios_reflectance['ONE05A'].to_numpy()
 ONE05B_array = trios_reflectance['ONE05B'].to_numpy()
 ONE06A_array = trios_reflectance['ONE06A'].to_numpy()
@@ -51,7 +51,7 @@ y10 = RIM03_array
 y11 = RIM04_array
 y12 = RIM05_array
 y13 = RIM06_array
-y14 = LAG01B_array
+#y14 = LAG01B_array
 y15 = ONE05A_array
 y16 = ONE05B_array
 y17 = ONE06A_array
@@ -73,7 +73,7 @@ cs10 = CubicSpline(x, y10)
 cs11 = CubicSpline(x, y11)
 cs12 = CubicSpline(x, y12)
 cs13 = CubicSpline(x, y13)
-cs14 = CubicSpline(x, y14)
+#cs14 = CubicSpline(x, y14)
 cs15 = CubicSpline(x, y15)
 cs16 = CubicSpline(x, y16)
 cs17 = CubicSpline(x, y17)
@@ -207,14 +207,14 @@ for i in xs:
     RIM06_list.append(n)
 for element in index_list:
     RIM06_benthic.append(float(RIM06_list[element]))
-
+"""
 LAG01B_list = []
 LAG01B_benthic = []
 for i in xs:
     n = cs14(i)
     LAG01B_list.append(n)
 for element in index_list:
-    LAG01B_benthic.append(float(LAG01B_list[element]))
+    LAG01B_benthic.append(float(LAG01B_list[element]))"""
 
 ONE05A_list = []
 ONE05A_benthic = []
@@ -296,8 +296,8 @@ for q in a:
 def benthic_reflectance_function(reflectance_df, benthic_df):
     reflectance_df['wavelength'] = wavelength_319_951
     reflectance_df['benthic'] = benthic_df
-    reflectance_df = reflectance_df[reflectance_df.wavelength > 404]
-    reflectance_df = reflectance_df[reflectance_df.wavelength < 706]
+    reflectance_df = reflectance_df[reflectance_df.wavelength > 319]
+    reflectance_df = reflectance_df[reflectance_df.wavelength < 951]
     return reflectance_df
 
 
@@ -315,7 +315,7 @@ RIM03_refl = benthic_reflectance_function(RIM03_reflectance, RIM03_benthic)
 RIM04_refl = benthic_reflectance_function(RIM04_reflectance, RIM04_benthic)
 RIM05_refl = benthic_reflectance_function(RIM05_reflectance, RIM05_benthic)
 RIM06_refl = benthic_reflectance_function(RIM06_reflectance, RIM06_benthic)
-LAG01B_refl = benthic_reflectance_function(LAG01B_reflectance, LAG01B_benthic)
+# LAG01B_refl = benthic_reflectance_function(LAG01B_reflectance, LAG01B_benthic)
 ONE05A_refl = benthic_reflectance_function(ONE05A_reflectance, ONE05A_benthic)
 ONE05B_refl = benthic_reflectance_function(ONE05B_reflectance, ONE05B_benthic)
 ONE06A_refl = benthic_reflectance_function(ONE06A_reflectance, ONE06A_benthic)
@@ -337,7 +337,7 @@ RIM03_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM03_trio
 RIM04_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM04_trios.csv')
 RIM05_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM05_trios.csv')
 RIM06_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/RIM06_trios.csv')
-LAG01B_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/LAG01B_trios.csv')
+#LAG01B_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/LAG01B_trios.csv')
 ONE05A_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE05A_trios.csv')
 ONE05B_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE05B_trios.csv')
 ONE06A_refl.to_csv('C:/Users/pirtapalola/Documents/iop_data/data/trios/ONE06A_trios.csv')
