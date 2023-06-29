@@ -22,7 +22,7 @@ spm = [0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 30]
 
 # Create all the possible combinations of water constituent concentrations.
 combinations = list(itertools.product(water, phy, cdom, spm))
-print(len(combinations))  # print the number of combinations
+print(type(combinations[0]))  # print the number of combinations
 # Create a list that contains an ID number for each combination 1, 2, ..., n
 combination_ID = [i for i in range(0, len(combinations))]
 
