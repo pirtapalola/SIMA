@@ -2,6 +2,10 @@ import torch
 import pandas as pd
 
 PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
+# Open the file. Each line is saved as a string in a list.
+
+with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
+    concentrations = [line for line in f.readlines()]
 
 '''Create the priors
     Chl-a range: 0-10 (mg/m-3)
@@ -42,29 +46,41 @@ prior_depth = prior_uniform_distribution('depth', 0.0, 20.0)
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
 prior_spm = prior_spm.tolist()
+prior_wind = prior_wind.tolist()
+prior_depth = prior_depth.tolist()
 
 prior_chl_list = []
 prior_cdom_list = []
 prior_spm_list = []
+prior_wind_list = []
+prior_depth_list = []
 
 
 def change_data_format(data_list, empty_list):
     for i in data_list:
         new_value = i[0]
-        empty_list.append(new_value)
+        empty_list.append(round(new_value, 3))
     return empty_list
+
+
+def change_data_format1(data_list1, empty_list1):
+    for i in data_list1:
+        empty_list1.append(round(i, 2))
+    return empty_list1
 
 
 prior_chl1 = change_data_format(prior_chl, prior_chl_list)
 prior_cdom1 = change_data_format(prior_cdom, prior_cdom_list)
 prior_spm1 = change_data_format(prior_spm, prior_spm_list)
-
+prior_wind1 = change_data_format1(prior_wind, prior_wind_list)
+prior_depth1 = change_data_format1(prior_depth, prior_depth_list)
+print(prior_chl1)
 combinations = []
 for x in range(0, len(prior_chl)):
-    new_combination = (0.0, prior_chl1[x], prior_cdom1[x], prior_spm1[x])
+    new_combination = (0.0, prior_chl1[x], prior_cdom1[x],
+                       prior_spm1[x], prior_wind1[x], prior_depth1[x])
     combinations.append(new_combination)
 
-print(combinations)
 '''
 # Check that the sampled prior distributions look realistic
 chl = []
@@ -119,12 +135,16 @@ combination_ID = [i for i in range(0, len(prior_chl))]
 dict_parameters = {k: HydroLightParameters(k) for k in combination_ID}
 
 
+print(combinations[0])
+
+
 # Create strings that contain information of water constituent combinations
 # The strings will be used to name the files
 def convert_tuple(tup):
     empty_string = ''
     for item in tup:
-        empty_string = empty_string + '_' + str(item)
+        element = round(item, 3)
+        empty_string = empty_string + '_' + str(element)
         new_string = empty_string.replace('.', '')
     return new_string
 
@@ -133,7 +153,7 @@ string_id = []
 for i in combinations:
     string_id.append(convert_tuple(i))
 
-print(string_id)
+print(string_id[0])
 
 
 # Define a function that applies the add_concentration() and add_id() functions
@@ -149,24 +169,35 @@ for i in combination_ID:
 # Check that each combination of concentrations can be accessed from the dictionary using the correct ID number
 # print(dict_parameters[0].concentration['combination'])
 
-# Define the different wind speeds and depths
-wind = [0, 2, 5]
-depth = [1, 2, 3, 5]
+# Check the lines of the input file that specify wind speed, depth, and benthic cover type
 print(concentrations[51])  # The first element on line 51 specifies wind speed
 print(concentrations[53])  # The last element on line 53 specifies depth
+print(concentrations[61])  # Line 61 specifies the benthic cover type
+
+# Create a list that only contains information on water constituents
+
+combinations_water = []
+combinations_wind = []
+combinations_depth = []
+
+for x in combinations:
+    combinations_water.append(x[:-2])
+    combinations_wind.append(x[-2])
+    combinations_depth.append(x[-1])
 
 
-def new_input_files(combination, hydrolight_file, id_string):
-    strcomb = ', '.join(str(n) for n in combination)
-    str0 = strcomb + ', \n'
-    hydrolight_file[6] = str0
-    wind_speed = str(5)  # Change this value to change wind speed
-    water_depth = str(5)  # Change this value to change depth
-    hydrolight_file[51] = (wind_speed + ', 1.34, 20, 35\n')
-    hydrolight_file[53] = ('0, 2, 0, ' + water_depth + ', \n')
+def new_input_files(combination_iop, combination_w, combination_d, hydrolight_file, id_string):
+    str0 = ', '.join(str(n) for n in combination_iop)
+    # strcomb1 = ', '.join(str(n) for n in combination_w)
+    str1 = str(combination_w)
+    # strcomb2 = ', '.join(str(n) for n in combination_d)
+    str2 = str(combination_d)
+    hydrolight_file[6] = str0 + ', \n'
+    hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')
+    hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')
+    hydrolight_file[61] = 'avg_sand.txt' + '\n'
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/Icorals' + id_string \
-           + '_' + wind_speed + '_' + water_depth + '.txt'
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals' + id_string + '_sand' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
@@ -178,12 +209,13 @@ combination_ID_string = [str(i) for i in combination_ID]
 
 # Apply the function to all the data
 for i in combination_ID:
-    new_input_files(dict_parameters[i].concentration['combination'], concentrations, string_id[i])
+    new_input_files(combinations_water[i], combinations_wind[i], combinations_depth[i], concentrations, string_id[i])
 
-# Check that only the 6th line was changed
+# Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/Icorals_00_001_001_001_5_5.txt', 'r')
+f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals'
+          + string_id[100] + '_coral' + '.txt', 'r')
 f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
