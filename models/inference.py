@@ -192,12 +192,18 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     str1 = str(combination_w)
     # strcomb2 = ', '.join(str(n) for n in combination_d)
     str2 = str(combination_d)
-    hydrolight_file[6] = str0 + ', \n'
-    hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')
-    hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')
-    hydrolight_file[61] = 'avg_sand.txt' + '\n'
+    hydrolight_file[2] = 'coral_' + id_string + '\n'  # rename the output file
+    hydrolight_file[6] = str0 + ', \n'  # change the water constituent concentrations
+    hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
+    hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
+    hydrolight_file[61] = 'avg_coral.txt' + '\n'  # specify the benthic reflectance
+    hydrolight_file[12] = r'D:\HE53\data\defaults\apstarchl.txt' + '\n'
+    hydrolight_file[14] = r'D:\HE53\data\defaults\astarmin_average.txt' + '\n'
+    hydrolight_file[22] = r'D:\HE53\data\defaults\bstarmin_average.txt' + '\n'
+    hydrolight_file[65] = r'D:\HE53\data\User\microplastics\MPzdata.txt' + '\n'
+
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals' + id_string + '_sand' + '.txt'
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals' + id_string + '_coral' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
