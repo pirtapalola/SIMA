@@ -1,3 +1,7 @@
+"""Generate the prior distributions of the theta parameters.
+    Sample the prior distributions to create parameterisations for the simulator."""
+
+
 import torch
 import pandas as pd
 
@@ -13,9 +17,6 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_
     SPM range: 0-30 (g m-3)
     wind speed range: 0-10 m/s
     depth range: 0-20 m'''
-
-# Number of dimensions in the parameter space
-num_dim = 5
 
 
 # Define a function that generates and samples the prior assuming a Gamma distribution
