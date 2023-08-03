@@ -82,6 +82,12 @@ for x in range(0, len(prior_chl)):
                        prior_spm1[x], prior_wind1[x], prior_depth1[x])
     combinations.append(new_combination)
 
+# Save the combinations in a csv file
+df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
+# print(df)
+df_combinations.to_csv('C:/Users/pirtapalola/'
+                       'Documents/DPhil/Chapter2/Methods/SBI_water_constituent_combinations.csv')
+
 '''
 # Check that the sampled prior distributions look realistic
 chl = []
@@ -198,10 +204,10 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
     hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
     hydrolight_file[61] = 'avg_coral.txt' + '\n'  # specify the benthic reflectance
-    hydrolight_file[12] = r'D:\HE53\data\defaults\apstarchl.txt' + '\n'
-    hydrolight_file[14] = r'D:\HE53\data\defaults\astarmin_average.txt' + '\n'
-    hydrolight_file[22] = r'D:\HE53\data\defaults\bstarmin_average.txt' + '\n'
-    hydrolight_file[65] = r'D:\HE53\data\User\microplastics\MPzdata.txt' + '\n'
+    hydrolight_file[12] = r'..\data\defaults\apstarchl.txt' + '\n'
+    hydrolight_file[14] = r'..\data\defaults\astarmin_average.txt' + '\n'
+    hydrolight_file[22] = r'..\data\defaults\bstarmin_average.txt' + '\n'
+    hydrolight_file[65] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
     path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals' + id_string + '_coral' + '.txt'
