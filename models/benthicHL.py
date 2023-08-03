@@ -28,5 +28,5 @@ with open(path, "w") as fp:
         for value in reflectance:
             print(line + value, file=fp)
 
-# print(data)
-# print(tetiaroa_data)
+
+print(tetiaroa_data)
