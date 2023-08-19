@@ -34,19 +34,31 @@ num_parameters = 5
 num_output_values = 150
 
 # Specify the path to the folder that contains the simulated data
-folder = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
-files = [f for f in os.listdir(folder) if f.endswith('.txt')]
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
 
-# Open the file. Each line is saved as a string in a list.
-simulator_raw_output = pd.DataFrame()
+# Create a list of all the file names in the folder
+files = [f for f in os.listdir(path) if f.endswith('.txt')]
+
+
+# Open a file. Save each line as a string in a list.
+def open_file(path_string, file_name):
+    with open(path_string + file_name) as f:
+        simulator_raw_output = [line for line in f.readlines()]
+    return simulator_raw_output
+
+
+# Empty list to store the simulator raw data output
+simulator_raw_list = []
 
 for i in files:
-    with open(folder + i) as f:
-        simulator_raw_output.loc[i] = [line for line in f.readlines()]
+    new_row = open_file(path, i)
+    for x in range(0, len(files)):
+        simulator_raw_list.append(new_row)
+
 
 # Empty list to store the simulated reflectance
 storage_list = []
-simulated_reflectance = []
+simulated_reflectance_list = []
 
 
 # Function to extract the simulated reflectance from the raw output
@@ -57,13 +69,26 @@ def get_simulated_reflectance(raw_output, empty_list, empty_list2):
         value1 = empty_list[x].split("   ")  # Separate the columns
         value2 = float(value1[1])  # Select the right column and change the data type from string to float
         empty_list2.append(value2)  # Save the right column into a list
+        if len(empty_list2) != 150:
+            print('Wrong length')
+    return empty_list2
 
 
-get_simulated_reflectance(simulator_raw_output, storage_list, simulated_reflectance)
-print(simulated_reflectance)
+# Create column names
+wavelength_range = [str(x) for x in range(401, 700, 2)]
+print(len(wavelength_range))
+# Create an empty dataframe to store the simulated reflectances
+simulated_reflectance_df = pd.DataFrame(columns=wavelength_range)
 
+for n in simulator_raw_list:
+    new_datapoint = get_simulated_reflectance(n, storage_list, simulated_reflectance_list)
+    print(len(new_datapoint))
+    for x in range(0, len(files)):
+        simulated_reflectance_df.loc[x] = new_datapoint
+
+print(simulated_reflectance_df)
 plt.figure(figsize=(10, 6))
-plt.plot(range(0, 150), simulated_reflectance, label='Simulated reflectance')
+plt.plot(range(0, 150), simulated_reflectance_df.loc[1], label='Simulated reflectance')
 plt.show()
 
 presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
