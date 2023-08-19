@@ -1,4 +1,15 @@
-""" Apply simulation-based inference"""
+"""
+
+Simulation-based inference
+
+STEP 1. Prepare the simulated data.
+STEP 2. Split the data into training and validation sets.
+STEP 3. Define the amortized neural network architecture.
+STEP 4. Instantiate the amortized neural network.
+STEP 5. Train and validate the neural network.
+STEP 6. Evaluate the neural network with field-collected data.
+
+"""
 
 # Import libraries
 
@@ -6,6 +17,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import matplotlib.pyplot as plt
 
 """
 STEP 1. Prepare the simulated data
@@ -23,15 +35,16 @@ num_output_values = 150
 PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
 
 # Open the file. Each line is saved as a string in a list.
-with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
-    concentrations = [line for line in f.readlines()]
+#with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
+ #   concentrations = [line for line in f.readlines()]
 
 presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
 
 input_parameters = presimulated_data[:, :num_parameters]
 output_values = presimulated_data[:, num_parameters:]
 
-# Split the data into training and validation sets
+"""STEP 2. Split the data into training and validation datasets."""
+
 train_size = int(0.8 * num_simulation_runs)  # 80% for training
 train_input = input_parameters[:train_size]
 train_output = output_values[:train_size]
@@ -40,7 +53,9 @@ val_input = input_parameters[train_size:]
 val_output = output_values[train_size:]
 
 
-# Define the amortized neural network architecture
+"""STEP 3. Define the amortized neural network architecture."""
+
+
 class AmortizedPosterior(nn.Module):
     def __init__(self, input_dim, output_dim, hidden_dim=256):
         super(AmortizedPosterior, self).__init__()
@@ -63,12 +78,14 @@ class AmortizedPosterior(nn.Module):
         return posterior_estimate
 
 
-# Instantiate the amortized neural network
+"""STEP 4. Instantiate the amortized neural network."""
+
 input_dim = num_parameters
 output_dim = num_output_values
 hidden_dim = 256
 amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
+"""STEP 5. Train and validate the neural network."""
 # Convert input parameters and training output to PyTorch tensors
 train_input_tensor = torch.tensor(train_input, dtype=torch.float32)
 train_output_tensor = torch.tensor(train_output, dtype=torch.float32)
@@ -76,6 +93,10 @@ train_output_tensor = torch.tensor(train_output, dtype=torch.float32)
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
 optimizer = optim.Adam(amortized_net.parameters(), lr=0.001)
+
+# Lists to store loss values for plotting
+train_losses = []
+val_losses = []
 
 # Training loop
 num_epochs = 100
@@ -99,8 +120,23 @@ for epoch in range(num_epochs):
     with torch.no_grad():
         val_predictions = amortized_net(torch.tensor(val_input, dtype=torch.float32))
         val_loss = criterion(val_predictions, torch.tensor(val_output, dtype=torch.float32))
+    # Store loss values for plotting
+    train_losses.append(loss.item())
+    val_losses.append(val_loss.item())
 
     print(f"Epoch {epoch + 1}/{num_epochs}: Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+
+# Plot training and validation loss
+plt.figure(figsize=(10, 6))
+plt.plot(range(1, num_epochs+1), train_losses, label='Train Loss')
+plt.plot(range(1, num_epochs+1), val_losses, label='Validation Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.title('Training and Validation Loss')
+plt.legend()
+plt.show()
+
+"""STEP 6. Evaluate the neural network with field-collected data."""
 
 # After training, use the trained network for inference
 # For example, to estimate posterior for new data:
