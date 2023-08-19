@@ -1,7 +1,7 @@
 import torch
 from scipy.stats import uniform, gamma
 
-"""Define different prior distributions for different parameters."""
+"""Define different prior distributions for different parameters.
 
 # Define prior distributions for parameters
 prior_distribution_params = [
@@ -22,7 +22,7 @@ for param_name, distribution in prior_distribution_params:
 # Perform inference using trained network and new observation
 new_observation = ...  # New observation for inference
 inferred_posterior = trained_network(new_observation, param_samples)
-
+"""
 """
 
 import torch
@@ -114,11 +114,11 @@ output_values_tensor = output_values_tensor.view(-1, output_dim)
 # Combine input parameters and output values into a single tensor
 combined_input = torch.cat((input_parameters_tensor, output_values_tensor), dim=1)
 
-""" STEP 2. Define the amortized neural network architecture.
+""" """STEP 2. Define the amortized neural network architecture.
     -The AmortizedPosterior class defines a simple feedforward neural network with three hidden layers.
     -The input parameters and output values are concatenated and passed through the network.
     -You can adjust the number of hidden layers, the number of hidden units in each layer,
-     and other aspects of the network architecture to match the complexity of your problem."""
+     and other aspects of the network architecture to match the complexity of your problem.
 
 
 class AmortizedPosterior(nn.Module):
@@ -183,9 +183,6 @@ for epoch in range(num_epochs):
         val_predictions = amortized_net(val_input)
         val_loss = criterion(val_predictions, val_output)
 
-    print(f"Epoch {epoch + 1}/{num_epochs}: Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
+    print(f"Epoch {epoch + 1}/{num_epochs}: Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")"""
 
 # Now your amortized neural network is trained
-
-
-"""
