@@ -32,11 +32,33 @@ num_parameters = 5
 num_output_values = 150
 
 # Specify the path to the folder that contains the simulated data
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
+PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
 
 # Open the file. Each line is saved as a string in a list.
-#with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
- #   concentrations = [line for line in f.readlines()]
+with open(PATH + 'Mcoral__00_00_026_4636_663_038.txt') as f:
+    simulator_raw_output = [line for line in f.readlines()]
+
+# Empty list to store the simulated reflectance
+storage_list = []
+simulated_reflectance = []
+
+
+# Function to extract the simulated reflectance from the raw output
+def get_simulated_reflectance(raw_output, empty_list, empty_list2):
+    for i in range(630, 780):
+        empty_list.append(raw_output[i])  # Select the right rows
+    for x in range(0, 150):
+        value1 = empty_list[x].split("   ")  # Separate the columns
+        value2 = float(value1[1])  # Select the right column and change the data type from string to float
+        empty_list2.append(value2)  # Save the right column into a list
+
+
+get_simulated_reflectance(simulator_raw_output, storage_list, simulated_reflectance)
+print(simulated_reflectance)
+
+plt.figure(figsize=(10, 6))
+plt.plot(range(0, 150), simulated_reflectance, label='Simulated reflectance')
+plt.show()
 
 presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
 
