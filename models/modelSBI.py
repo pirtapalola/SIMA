@@ -21,16 +21,23 @@ import torch.nn as nn
 import torch.optim as optim
 
 """
-STEP 1. Prepare the presimulated data
-    -The presimulated data is split into input_parameters (5 parameters) and output_values (150 values).
+STEP 1. Prepare the simulated data
+    -The simulated data is split into input_parameters (5 parameters) and output_values (150 values).
     -After converting them to PyTorch tensors, they are concatenated into combined_input.
 
 """
 
-# Create the presimulated data
+# Define the simulated dataset
 num_simulation_runs = 15000
 num_parameters = 5
 num_output_values = 150
+
+# Specify the path to the folder that contains the simulated data
+PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
+
+# Open the file. Each line is saved as a string in a list.
+with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
+    concentrations = [line for line in f.readlines()]
 
 presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
 
