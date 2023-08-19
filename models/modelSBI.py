@@ -1,17 +1,4 @@
-"""Apply the sbi toolbox
-- theta: parameters
-- x: output
-- number of dimensions in the parameter space: 5
-            chl-a
-            CDOM
-            SPM
-            wind speed
-            depth
-- theta and x:
-            torch.Tensor of type float32
-            tensor([[p1, p2, p3, p4, p5],
-                    p1, p2, p3, p4, p5],
-                    ...)"""
+""" Apply simulation-based inference"""
 
 # Import libraries
 
