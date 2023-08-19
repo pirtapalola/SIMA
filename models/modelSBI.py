@@ -14,10 +14,12 @@ STEP 6. Evaluate the neural network with field-collected data.
 # Import libraries
 
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import os
 
 """
 STEP 1. Prepare the simulated data
@@ -32,11 +34,15 @@ num_parameters = 5
 num_output_values = 150
 
 # Specify the path to the folder that contains the simulated data
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
+folder = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
+files = [f for f in os.listdir(folder) if f.endswith('.txt')]
 
 # Open the file. Each line is saved as a string in a list.
-with open(PATH + 'Mcoral__00_00_026_4636_663_038.txt') as f:
-    simulator_raw_output = [line for line in f.readlines()]
+simulator_raw_output = pd.DataFrame()
+
+for i in files:
+    with open(folder + i) as f:
+        simulator_raw_output.loc[i] = [line for line in f.readlines()]
 
 # Empty list to store the simulated reflectance
 storage_list = []
