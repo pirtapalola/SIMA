@@ -46,12 +46,25 @@ num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/HL_output_combined_dataframe.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
-simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "Output_ID"}, inplace=True)  # Rename the column
+simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
+
+
+# Create a dataframe of input values using information contained in the filenames
+hydrolight_input = pd.DataFrame(columns=["file_ID", "phy", "cdom", "spm", "wind", "depth"])  # Create an empty dataframe
+
+# Input string
+input_string = "Mcoral__00_00_026_4636_663_038"
+
+# Split the string using underscores
+split_parts = input_string.split('_')
+
+# Create a DataFrame
+df = pd.DataFrame([split_parts], columns=[f'Column_{i}' for i in range(len(split_parts))])
+
 
 # Define the input and output values for the neural network
-output_values = simulated_reflectance.drop(columns="Output_ID")
-print(output_values)
-input_parameters = presimulated_data[:, :num_parameters]
+output_values = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
+input_parameters = hydrolight_input
 
 
 """STEP 2. Split the data into training and validation datasets."""
