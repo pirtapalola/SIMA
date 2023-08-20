@@ -15,11 +15,13 @@ Written 20 August 2023
 
 # Import libraries
 
+import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import os
 
 
 """
@@ -29,18 +31,28 @@ STEP 1. Prepare the simulated data
 
 """
 
+
+# Create a list of all the filenames
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'  # Define the file location
+files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
+
+
 # Define the simulated dataset
-num_simulation_runs = 15000
-num_parameters = 5
-num_output_values = 150
+num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
+num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
+num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
-files = [f for f in os.listdir(path) if f.endswith('.txt')]
 
-presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
+# Read the csv file containing the simulated Rrs data into a pandas dataframe
+simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/HL_output_combined_dataframe.csv')
+simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
+simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "Output_ID"}, inplace=True)  # Rename the column
 
+# Define the input and output values for the neural network
+output_values = simulated_reflectance.drop(columns="Output_ID")
+print(output_values)
 input_parameters = presimulated_data[:, :num_parameters]
-output_values = presimulated_data[:, num_parameters:]
+
 
 """STEP 2. Split the data into training and validation datasets."""
 
