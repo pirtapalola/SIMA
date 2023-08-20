@@ -9,6 +9,8 @@ STEP 4. Instantiate the amortized neural network.
 STEP 5. Train and validate the neural network.
 STEP 6. Evaluate the neural network with field-collected data.
 
+Written 20 August 2023
+
 """
 
 # Import libraries
