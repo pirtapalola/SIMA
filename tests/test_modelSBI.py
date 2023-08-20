@@ -3,6 +3,11 @@ import numpy as np
 from models.modelSBI import AmortizedPosterior
 
 
+input_dim = 5
+output_dim = 150
+hidden_dim = 256
+
+
 def test_forward():
     # Set up the neural network instance for testing
     input_dim = 5
