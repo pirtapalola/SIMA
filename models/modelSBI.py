@@ -16,7 +16,6 @@ Last updated on 21 August 2023 by Pirta Palola
 # Import libraries
 
 import pandas as pd
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -42,8 +41,8 @@ files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of 
 
 # Define the simulated dataset
 num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
-num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
-num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
+num_parameters = 150  # Chl-a, SPM, CDOM, wind speed, and depth
+num_output_values = 5  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
@@ -111,8 +110,8 @@ def minimum_maximum(dataframe, column_names):
 
 
 # Define the input and output values for the neural network
-output_values = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
-input_parameters = hydrolight_input
+input_parameters = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
+output_values = hydrolight_input
 
 
 """STEP 2. Split the data into training and validation datasets."""
@@ -221,7 +220,8 @@ plt.show()
 
 # After training, use the trained network for inference
 # For example, to estimate posterior for new data:
-new_data = np.random.rand(1, num_parameters)  # Replace with your new data
+print(len(train_output_tensor[1]))
+new_data = train_input_tensor[1]  # Replace with your new data
 new_data_tensor = torch.tensor(new_data, dtype=torch.float32)
 posterior_estimate_new = amortized_net(new_data_tensor)
 
