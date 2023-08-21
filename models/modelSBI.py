@@ -21,7 +21,9 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import os
-
+import numpy as np
+import torch.distributions as dist
+import sbi.inference as inference
 
 """
 STEP 1. Prepare the simulated data
@@ -41,8 +43,8 @@ files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of 
 
 # Define the simulated dataset
 num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
-num_parameters = 150  # Chl-a, SPM, CDOM, wind speed, and depth
-num_output_values = 5  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
+num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
+num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
@@ -128,31 +130,30 @@ val_output = output_values[train_size:]
 
 
 class AmortizedPosterior(nn.Module):
-    def __init__(self, input_dimension, output_dimension, hidden_dimension=256):
+    def __init__(self, input_dim, hidden_dim, output_dim):
         super(AmortizedPosterior, self).__init__()
 
-        self.input_dimension = input_dimension
-        self.output_dimension = output_dimension
-
-        self.hidden_dimension = hidden_dimension
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
 
         self.network_layers = nn.Sequential(
-            nn.Linear(input_dimension, hidden_dimension),
+            nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dimension, hidden_dimension),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dimension, output_dimension)
+            nn.Linear(hidden_dim, output_dim * 2)  # Two parameters per inferred parameter
         )
 
     def forward(self, input_data):
-        posterior_estimate = self.network_layers(input_data)
-        return posterior_estimate
+        posterior_params = self.network_layers(input_data)
+        return posterior_params
 
 
 """STEP 4. Instantiate the amortized neural network."""
 
-input_dim = num_parameters
-output_dim = num_output_values
+input_dim = num_parameters  # Input is the inferred input parameters
+output_dim = num_parameters * 2  # Two parameters per inferred parameter (e.g., shape and rate for gamma distributions)
 hidden_dim = 256
 amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
@@ -173,6 +174,7 @@ train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
 optimizer = optim.Adam(amortized_net.parameters(), lr=0.001)
+
 
 # Lists to store loss values for plotting
 train_losses = []
@@ -216,13 +218,47 @@ plt.title('Training and Validation Loss')
 plt.legend()
 plt.show()
 
-"""STEP 6. Evaluate the neural network with field-collected data."""
 
-# After training, use the trained network for inference
-# For example, to estimate posterior for new data:
-print(len(train_output_tensor[1]))
-new_data = train_input_tensor[1]  # Replace with your new data
-new_data_tensor = torch.tensor(new_data, dtype=torch.float32)
-posterior_estimate_new = amortized_net(new_data_tensor)
+"""
 
-print("Estimated Posterior for New Data:", posterior_estimate_new)
+STEP 6. Define the prior distributions.
+
+Each parameter is associated with its own distribution and name,
+allowing you to create a unified prior distribution for your inference problem.
+This approach ensures that you can model different prior distributions for different parameters 
+while using the sbi toolbox for inference.
+
+"""
+
+# Define the prior distributions
+prior_distribution_params = [
+    ('param1', dist.Uniform(0, 1)),
+    ('param2', dist.Gamma(2, 1)),
+    # ... define more parameters and their prior distributions
+]
+
+# Extract individual prior distributions and parameter names
+prior_distributions = [prior for _, prior in prior_distribution_params]
+parameter_names = [param_name for param_name, _ in prior_distribution_params]
+
+# Create the composite prior distribution
+prior = dist.Independent(dist.Product(prior_distributions), 1)
+
+# Step 5: Inference with sbi
+posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
+inference_method = inference.SNPE(posterior_model, density_estimator='maf')
+
+# Append the simulated data to the inference method
+inference_method.append_simulations(input_parameters_tensor)
+
+# Train the inference method
+inference_method.train()
+
+# Step 6: Perform Inference
+# Generate a new set of observed data from the simulator
+new_observed_data = np.random.rand(num_parameters)  # Replace with actual simulation
+
+# Perform inference using the trained sbi method
+posterior = inference_method(input_parameters_tensor, new_observed_data)
+
+# Posterior distributions for inferred input parameters
