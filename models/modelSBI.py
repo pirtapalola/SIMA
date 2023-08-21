@@ -50,16 +50,64 @@ simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID
 
 
 # Create a dataframe of input values using information contained in the filenames
-hydrolight_input = pd.DataFrame(columns=["file_ID", "phy", "cdom", "spm", "wind", "depth"])  # Create an empty dataframe
+# hydrolight_input = pd.DataFrame(columns=["file_ID", "phy", "cdom", "spm", "wind", "depth"])  # Create a dataframe
 
-# Input string
-input_string = "Mcoral__00_00_026_4636_663_038"
 
-# Split the string using underscores
-split_parts = input_string.split('_')
+def split_strings(list_of_strings):
+    split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    phy_list = []
+    cdom_list = []
+    spm_list = []
+    wind_list = []
+    depth_list = []
+    depth_list0 = []
 
-# Create a DataFrame
-df = pd.DataFrame([split_parts], columns=[f'Column_{i}' for i in range(len(split_parts))])
+    for i in list_of_strings:
+        split_string = i.split("_")  # Split the string at the locations marked by underscores
+        split_df.loc[len(split_df)] = split_string  # Add the split string as a row in the dataframe
+
+    for n in split_df["phy1"]:  # Create a list where the decimal dots are added
+        phy_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["phy"] = phy_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["cdom1"]:  # Create a list where the decimal dots are added
+        cdom_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["cdom"] = cdom_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["spm1"]:  # Create a list where the decimal dots are added
+        spm_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["spm"] = spm_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["wind1"]:  # Create a list where the decimal dots are added
+        wind_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["wind"] = wind_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["depth1"]:
+        sep = '.'
+        depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
+
+    for x in depth_list0:  # Create a list where the decimal dots are added
+        depth_list.append(float(x[:1] + '.' + x[1:]))
+    split_df["depth"] = depth_list  # Create a new column that contains the values with decimal dots
+
+    # Drop the columns that do not contain the values to be inferred
+    split_df = split_df.drop(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    return split_df
+
+
+# Apply the function
+hydrolight_input = split_strings(files)
+print(hydrolight_input)
+
+
+# Print the minimum and maximum values of each column in the dataframe
+def minimum_maximum(dataframe, column_names):
+    for i in column_names:
+        print(i + " min: " + dataframe[i].min())
+        print(i + " max: " + dataframe[i].max())
+
+
+# minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
 
 # Define the input and output values for the neural network
@@ -110,9 +158,18 @@ hidden_dim = 256
 amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
 """STEP 5. Train and validate the neural network."""
+
+# Convert the pandas DataFrame to a numpy array
+train_input_array = train_input.to_numpy()
+train_output_array = train_output.to_numpy()
+val_input_array = val_input.to_numpy()
+val_output_array = val_output.to_numpy()
+
+
 # Convert input parameters and training output to PyTorch tensors
-train_input_tensor = torch.tensor(train_input, dtype=torch.float32)
-train_output_tensor = torch.tensor(train_output, dtype=torch.float32)
+train_input_tensor = torch.tensor(train_input_array, dtype=torch.float32)
+train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
+
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
@@ -142,8 +199,8 @@ for epoch in range(num_epochs):
 
     # Validation
     with torch.no_grad():
-        val_predictions = amortized_net(torch.tensor(val_input, dtype=torch.float32))
-        val_loss = criterion(val_predictions, torch.tensor(val_output, dtype=torch.float32))
+        val_predictions = amortized_net(torch.tensor(val_input_array, dtype=torch.float32))
+        val_loss = criterion(val_predictions, torch.tensor(val_output_array, dtype=torch.float32))
     # Store loss values for plotting
     train_losses.append(loss.item())
     val_losses.append(val_loss.item())
