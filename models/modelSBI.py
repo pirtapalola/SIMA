@@ -9,7 +9,7 @@ STEP 4. Instantiate the amortized neural network.
 STEP 5. Train and validate the neural network.
 STEP 6. Evaluate the neural network with field-collected data.
 
-Written 20 August 2023
+Last updated on 21 August 2023 by Pirta Palola
 
 """
 
@@ -49,11 +49,8 @@ simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
 
-# Create a dataframe of input values using information contained in the filenames
-# hydrolight_input = pd.DataFrame(columns=["file_ID", "phy", "cdom", "spm", "wind", "depth"])  # Create a dataframe
-
-
-def split_strings(list_of_strings):
+# Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run)
+def create_input_dataframe(list_of_strings):
     split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
     phy_list = []
     cdom_list = []
@@ -96,7 +93,7 @@ def split_strings(list_of_strings):
 
 
 # Apply the function
-hydrolight_input = split_strings(files)
+hydrolight_input = create_input_dataframe(files)
 print(hydrolight_input)
 
 
@@ -129,20 +126,20 @@ val_output = output_values[train_size:]
 
 
 class AmortizedPosterior(nn.Module):
-    def __init__(self, input_dim, output_dim, hidden_dim=256):
+    def __init__(self, input_dimension, output_dimension, hidden_dimension=256):
         super(AmortizedPosterior, self).__init__()
 
-        self.input_dim = input_dim
-        self.output_dim = output_dim
+        self.input_dimension = input_dimension
+        self.output_dimension = output_dimension
 
-        self.hidden_dim = hidden_dim
+        self.hidden_dimension = hidden_dimension
 
         self.network_layers = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
+            nn.Linear(input_dimension, hidden_dimension),
             nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
+            nn.Linear(hidden_dimension, hidden_dimension),
             nn.ReLU(),
-            nn.Linear(hidden_dim, output_dim)
+            nn.Linear(hidden_dimension, output_dimension)
         )
 
     def forward(self, input_data):
