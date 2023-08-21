@@ -15,14 +15,14 @@ Written 20 August 2023
 
 # Import libraries
 
-import numpy as np
 import pandas as pd
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import os
-from io import StringIO
+
 
 """
 STEP 1. Prepare the simulated data
@@ -31,74 +31,89 @@ STEP 1. Prepare the simulated data
 
 """
 
+
+# Create a list of all the filenames
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'  # Define the file location
+files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
+
+
 # Define the simulated dataset
-num_simulation_runs = 15000
-num_parameters = 5
-num_output_values = 150
-
-# Specify the path to the folder that contains the simulated data
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'
-
-# Create a list of all the file names in the folder
-files = [f for f in os.listdir(path) if f.endswith('.txt')]
+num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
+num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
+num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
 
-# Open a file. Save each line as a string in a list.
-def open_file(path_string, file_name): # give one file as an input
-    with open(path_string + file_name) as f:
-        simulator_raw_output = [line for line in f.readlines()]  # Save each line of that file as a string in a list
-    return simulator_raw_output
+# Read the csv file containing the simulated Rrs data into a pandas dataframe
+simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/HL_output_combined_dataframe.csv')
+simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
+simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
 
-example_data = open_file(path, files[0])
-print(len(example_data))
-
-# Empty list to store the simulator raw data output
-simulator_raw_list = []
-
-for i in files:
-    new_row = open_file(path, i)  # Apply the function to open files for each file in the folder
-    for x in range(0, len(files)):  # len(files) is the number of files in the folder
-        simulator_raw_list.append(new_row)  # Save each list of each file as a new element in a new list
-        # Each element in the list being appended is a line; there are 5127 lines in each file
+# Create a dataframe of input values using information contained in the filenames
+# hydrolight_input = pd.DataFrame(columns=["file_ID", "phy", "cdom", "spm", "wind", "depth"])  # Create a dataframe
 
 
-# Function to extract the simulated reflectance from the raw output
+def split_strings(list_of_strings):
+    split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    phy_list = []
+    cdom_list = []
+    spm_list = []
+    wind_list = []
+    depth_list = []
+    depth_list0 = []
+
+    for i in list_of_strings:
+        split_string = i.split("_")  # Split the string at the locations marked by underscores
+        split_df.loc[len(split_df)] = split_string  # Add the split string as a row in the dataframe
+
+    for n in split_df["phy1"]:  # Create a list where the decimal dots are added
+        phy_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["phy"] = phy_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["cdom1"]:  # Create a list where the decimal dots are added
+        cdom_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["cdom"] = cdom_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["spm1"]:  # Create a list where the decimal dots are added
+        spm_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["spm"] = spm_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["wind1"]:  # Create a list where the decimal dots are added
+        wind_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["wind"] = wind_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["depth1"]:
+        sep = '.'
+        depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
+
+    for x in depth_list0:  # Create a list where the decimal dots are added
+        depth_list.append(float(x[:1] + '.' + x[1:]))
+    split_df["depth"] = depth_list  # Create a new column that contains the values with decimal dots
+
+    # Drop the columns that do not contain the values to be inferred
+    split_df = split_df.drop(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    return split_df
 
 
-def get_simulated_reflectance(raw_output):
-    empty_list = [] # Empty list to store the simulated reflectance
-    empty_list2 = [] # Empty list to store the simulated reflectance
-    for i in range(630, 780):
-        empty_list.append(raw_output[i])  # Select the right rows
-    for x in range(0, 150):
-        value1 = empty_list[x].split("   ")  # Separate the columns
-        value2 = float(value1[1])  # Select the right column and change the data type from string to float
-        empty_list2.append(value2)  # Save the right column into a list
-        # if len(empty_list2) != 150:
-        # print('Wrong length')
-    return empty_list2
+# Apply the function
+hydrolight_input = split_strings(files)
+print(hydrolight_input)
 
 
-# Create column names
-wavelength_range = [str(x) for x in range(401, 700, 2)]
-# Create an empty dataframe to store the simulated reflectances
-simulated_reflectance_df = pd.DataFrame(columns=wavelength_range)
+# Print the minimum and maximum values of each column in the dataframe
+def minimum_maximum(dataframe, column_names):
+    for i in column_names:
+        print(i + " min: " + dataframe[i].min())
+        print(i + " max: " + dataframe[i].max())
 
-for n in simulator_raw_list:
-    new_datapoint = get_simulated_reflectance(n)
-    for x in range(0, len(files)):
-        simulated_reflectance_df.loc[x] = new_datapoint
 
-print(simulated_reflectance_df)
-plt.figure(figsize=(10, 6))
-plt.plot(range(0, 150), simulated_reflectance_df.loc[1], label='Simulated reflectance')
-plt.show()
+# minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
-presimulated_data = np.random.rand(num_simulation_runs, num_parameters + num_output_values)
 
-input_parameters = presimulated_data[:, :num_parameters]
-output_values = presimulated_data[:, num_parameters:]
+# Define the input and output values for the neural network
+output_values = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
+input_parameters = hydrolight_input
+
 
 """STEP 2. Split the data into training and validation datasets."""
 
@@ -143,9 +158,18 @@ hidden_dim = 256
 amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
 """STEP 5. Train and validate the neural network."""
+
+# Convert the pandas DataFrame to a numpy array
+train_input_array = train_input.to_numpy()
+train_output_array = train_output.to_numpy()
+val_input_array = val_input.to_numpy()
+val_output_array = val_output.to_numpy()
+
+
 # Convert input parameters and training output to PyTorch tensors
-train_input_tensor = torch.tensor(train_input, dtype=torch.float32)
-train_output_tensor = torch.tensor(train_output, dtype=torch.float32)
+train_input_tensor = torch.tensor(train_input_array, dtype=torch.float32)
+train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
+
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
@@ -175,8 +199,8 @@ for epoch in range(num_epochs):
 
     # Validation
     with torch.no_grad():
-        val_predictions = amortized_net(torch.tensor(val_input, dtype=torch.float32))
-        val_loss = criterion(val_predictions, torch.tensor(val_output, dtype=torch.float32))
+        val_predictions = amortized_net(torch.tensor(val_input_array, dtype=torch.float32))
+        val_loss = criterion(val_predictions, torch.tensor(val_output_array, dtype=torch.float32))
     # Store loss values for plotting
     train_losses.append(loss.item())
     val_losses.append(val_loss.item())

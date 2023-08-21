@@ -75,7 +75,7 @@ prior_cdom1 = change_data_format(prior_cdom, prior_cdom_list)
 prior_spm1 = change_data_format(prior_spm, prior_spm_list)
 prior_wind1 = change_data_format1(prior_wind, prior_wind_list)
 prior_depth1 = change_data_format1(prior_depth, prior_depth_list)
-print(prior_chl1)
+
 combinations = []
 for x in range(0, len(prior_chl)):
     new_combination = (0.0, prior_chl1[x], prior_cdom1[x],
@@ -219,7 +219,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
 
 # Create a list containing the combination IDs as strings
 combination_ID_string = [str(i) for i in combination_ID]
-
+"""
 # Apply the function to all the data
 for i in combination_ID:
     new_input_files(combinations_water[i], combinations_wind[i], combinations_depth[i], concentrations, string_id[i])
@@ -244,4 +244,4 @@ for x in range(0, num_lines):
 
 # close the files
 f1.close()
-f2.close()
+f2.close()"""
