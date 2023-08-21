@@ -31,9 +31,12 @@ STEP 1. Prepare the simulated data
 
 """
 
+# Print the current working directory
+current_dir = os.getcwd()
+print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Partial_simulation_v2_coral/'  # Define the file location
+path = 'data/simulated_data/'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 
@@ -44,7 +47,7 @@ num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 
 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/HL_output_combined_dataframe.csv')
+simulated_reflectance = pd.read_csv('data/HL_output_combined_dataframe.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
