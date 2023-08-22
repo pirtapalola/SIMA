@@ -21,10 +21,9 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import os
-import numpy as np
 import torch.distributions as dist
-import sbi.inference as inference
-import torch.distributions.transforms as transforms
+from sbi.inference import SNPE, prepare_for_sbi
+from sbi import analysis as analysis
 
 """
 STEP 1. Prepare the simulated data
@@ -224,47 +223,33 @@ plt.show()
 
 STEP 6. Define the prior distributions.
 
-Each parameter is associated with its own distribution and name,
-allowing you to create a unified prior distribution for your inference problem.
-This approach ensures that you can model different prior distributions for different parameters 
-while using the sbi toolbox for inference.
+Each parameter is associated with its own distribution and name.
 
 """
 
-
-# Custom identity transform
-# The custom CustomIdentityTransform class is used to handle
-# the identity transformation for parameters that have uniform distributions.
-class CustomIdentityTransform(transforms.Transform):
-    def __init__(self, event_dim=0):
-        super().__init__()
-
-    def forward(self, x):
-        return x
-
-    def inverse(self, y):
-        return y
-
-    def log_abs_det_jacobian(self, x, y):
-        return torch.zeros_like(x)
-
-
 # Define the prior distributions
-prior = [
-    ("phy", dist.Gamma(0, 1)),
-    ("cdom", dist.Gamma(2, 1)),
-    ("spm", dist.Gamma(2, 1)),
-    ("wind", dist.Uniform(0, 1)),
-    ("depth", dist.Uniform(0, 1))]
+prior_distributions = [
+    ("phy", dist.Gamma(1.1, 1.1)),
+    ("cdom", dist.Gamma(1.2, 3.0)),
+    ("spm", dist.Gamma(3.0, 0.6)),
+    ("wind", dist.Uniform(0.0, 10.0)),
+    ("depth", dist.Uniform(0.0, 20.0))]
+
+# Convert the list of prior distributions to a dictionary
+prior_dict = dict(prior_distributions)
+
+# Prepare the prior for sbi (simulator is not defined here)
+prior = prepare_for_sbi(None, prior_dict)
 
 
 # Inference with sbi
-posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
-inference_method = inference.SNPE(posterior_model, density_estimator='maf')
+# posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
+# inference_method = inference.SNPE(posterior_model, density_estimator='maf')
 
 # Combine input parameters and corresponding output values
-combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
-print(combined_train_data)
+# combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
+print(train_input_tensor)
+print(train_output_tensor)
 """
 Arguments for append_simulations():
 
@@ -277,18 +262,18 @@ Arguments for append_simulations():
           you can pass them as a tensor of shape (num_simulations,).
         - The log probabilities should correspond to the provided simulations.   
 """
-
+inference = SNPE(prior=prior)
 # Append the combined data to the inference method
-inference_method.append_simulations(combined_train_data)
+inference.append_simulations(train_input_tensor, train_output_tensor)
 
 # Train the inference method
-inference_method.train()
+density_estimator = inference.train()
+posterior = inference.build_posterior(density_estimator)
 
-# Step 6: Perform Inference
-# Generate a new set of observed data from the simulator
-new_observed_data = np.random.rand(num_parameters)  # Replace with actual simulation
+x_o = torch.ones(5,)
+posterior_samples = posterior.sample((10000,), x=x_o)
 
-# Perform inference using the trained sbi method
-posterior = inference_method(combined_train_data, new_observed_data)
-
-# Posterior distributions for inferred input parameters
+# plot posterior samples
+_ = analysis.pairplot(
+    posterior_samples, limits=[[-2, 2], [-2, 2], [-2, 2]], figsize=(5, 5)
+)
