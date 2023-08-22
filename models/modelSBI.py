@@ -250,33 +250,13 @@ class CustomIdentityTransform(transforms.Transform):
 
 
 # Define the prior distributions
-prior_distribution_params = [
+prior = [
     ("phy", dist.Gamma(0, 1)),
     ("cdom", dist.Gamma(2, 1)),
     ("spm", dist.Gamma(2, 1)),
     ("wind", dist.Uniform(0, 1)),
     ("depth", dist.Uniform(0, 1))]
 
-# Create a list of transforms for each prior distribution
-transforms_list = []
-
-for param_name, prior in prior_distribution_params:
-    if isinstance(prior, dist.Uniform):
-        transforms_list.append(CustomIdentityTransform())
-    elif isinstance(prior, dist.Gamma):
-        transforms_list.append(dist.transforms.ExpTransform())
-
-# Combine the transforms using ComposeTransform
-prior_transform = dist.transforms.ComposeTransform(transforms_list)
-
-# Create the composite prior distribution using the actual prior distributions
-# The composite prior distribution is constructed using dist.Independent and dist.Product
-# for combining different prior distributions.
-prior_distributions = [prior for _, prior in prior_distribution_params]
-prior = dist.Independent(dist.Product(prior_distributions), 1)
-
-# Apply the prior_transform to the composite prior distribution
-prior = dist.TransformedDistribution(prior, prior_transform)
 
 # Inference with sbi
 posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
