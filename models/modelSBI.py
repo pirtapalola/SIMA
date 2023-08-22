@@ -9,7 +9,7 @@ STEP 4. Instantiate the amortized neural network.
 STEP 5. Train and validate the neural network.
 STEP 6. Evaluate the neural network with field-collected data.
 
-Last updated on 21 August 2023 by Pirta Palola
+Last updated on 22 August 2023 by Pirta Palola
 
 """
 
@@ -24,6 +24,7 @@ import os
 import numpy as np
 import torch.distributions as dist
 import sbi.inference as inference
+import torch.distributions.transforms as transforms
 
 """
 STEP 1. Prepare the simulated data
@@ -232,24 +233,55 @@ while using the sbi toolbox for inference.
 
 # Define the prior distributions
 prior_distribution_params = [
-    ('param1', dist.Uniform(0, 1)),
-    ('param2', dist.Gamma(2, 1)),
-    # ... define more parameters and their prior distributions
-]
+    ("phy", dist.Uniform(0, 1)),
+    ("cdom", dist.Gamma(2, 1)),
+    ("spm", dist.Gamma(2, 1)),
+    ("wind", dist.Uniform(0, 1)),
+    ("depth", dist.Uniform(0, 1))]
 
-# Extract individual prior distributions and parameter names
+# Create a list of transforms for each prior distribution
+transforms_list = []
+
+for param_name, prior in prior_distribution_params:
+    if isinstance(prior, dist.Uniform):
+        transforms_list.append(dist.transforms.IdentityTransform())
+    elif isinstance(prior, dist.Gamma):
+        # Use the LogTransform for gamma distributions
+        transforms_list.append(dist.transforms.ExpTransform())
+    # Add more conditions for other types of distributions if needed
+
+# Combine the transforms using ComposeTransform
+prior_transform = dist.transforms.ComposeTransform(transforms_list)
+
+# Create the composite prior distribution using the actual prior distributions
 prior_distributions = [prior for _, prior in prior_distribution_params]
-parameter_names = [param_name for param_name, _ in prior_distribution_params]
-
-# Create the composite prior distribution
 prior = dist.Independent(dist.Product(prior_distributions), 1)
+
+# Apply the prior_transform to the composite prior distribution
+prior = dist.TransformedDistribution(prior, prior_transform)
 
 # Step 5: Inference with sbi
 posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
 inference_method = inference.SNPE(posterior_model, density_estimator='maf')
 
-# Append the simulated data to the inference method
-inference_method.append_simulations(input_parameters_tensor)
+# Combine input parameters and corresponding output values
+combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
+print(combined_train_data)
+"""
+Arguments for append_simulations():
+
+1) A tensor containing the simulated data, structured as follows:
+        - Each row represents a single simulation run.
+        - The columns should contain both the input parameters and the corresponding observed (output) data.
+        - The order of the columns matters. The input parameters should come before the observed data.
+2) prior_log_probs: This argument is optional.
+        - If you provide prior log probabilities for your simulated data, 
+          you can pass them as a tensor of shape (num_simulations,).
+        - The log probabilities should correspond to the provided simulations.   
+"""
+
+# Append the combined data to the inference method
+inference_method.append_simulations(combined_train_data)
 
 # Train the inference method
 inference_method.train()
@@ -259,6 +291,6 @@ inference_method.train()
 new_observed_data = np.random.rand(num_parameters)  # Replace with actual simulation
 
 # Perform inference using the trained sbi method
-posterior = inference_method(input_parameters_tensor, new_observed_data)
+posterior = inference_method(combined_train_data, new_observed_data)
 
 # Posterior distributions for inferred input parameters
