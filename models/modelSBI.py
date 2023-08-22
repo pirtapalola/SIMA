@@ -231,9 +231,27 @@ while using the sbi toolbox for inference.
 
 """
 
+
+# Custom identity transform
+# The custom CustomIdentityTransform class is used to handle
+# the identity transformation for parameters that have uniform distributions.
+class CustomIdentityTransform(transforms.Transform):
+    def __init__(self, event_dim=0):
+        super().__init__()
+
+    def forward(self, x):
+        return x
+
+    def inverse(self, y):
+        return y
+
+    def log_abs_det_jacobian(self, x, y):
+        return torch.zeros_like(x)
+
+
 # Define the prior distributions
 prior_distribution_params = [
-    ("phy", dist.Uniform(0, 1)),
+    ("phy", dist.Gamma(0, 1)),
     ("cdom", dist.Gamma(2, 1)),
     ("spm", dist.Gamma(2, 1)),
     ("wind", dist.Uniform(0, 1)),
@@ -244,23 +262,23 @@ transforms_list = []
 
 for param_name, prior in prior_distribution_params:
     if isinstance(prior, dist.Uniform):
-        transforms_list.append(dist.transforms.IdentityTransform())
+        transforms_list.append(CustomIdentityTransform())
     elif isinstance(prior, dist.Gamma):
-        # Use the LogTransform for gamma distributions
         transforms_list.append(dist.transforms.ExpTransform())
-    # Add more conditions for other types of distributions if needed
 
 # Combine the transforms using ComposeTransform
 prior_transform = dist.transforms.ComposeTransform(transforms_list)
 
 # Create the composite prior distribution using the actual prior distributions
+# The composite prior distribution is constructed using dist.Independent and dist.Product
+# for combining different prior distributions.
 prior_distributions = [prior for _, prior in prior_distribution_params]
 prior = dist.Independent(dist.Product(prior_distributions), 1)
 
 # Apply the prior_transform to the composite prior distribution
 prior = dist.TransformedDistribution(prior, prior_transform)
 
-# Step 5: Inference with sbi
+# Inference with sbi
 posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
 inference_method = inference.SNPE(posterior_model, density_estimator='maf')
 
