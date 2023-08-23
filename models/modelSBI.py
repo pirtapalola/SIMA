@@ -15,15 +15,18 @@ Last updated on 22 August 2023 by Pirta Palola
 
 # Import libraries
 
+
 import pandas as pd
 import torch
 import torch.nn as nn
-import torch.optim as optim
-import matplotlib.pyplot as plt
 import os
-import torch.distributions as dist
+from torch.distributions import Uniform, Gamma
 from sbi.inference import SNPE
 from sbi import analysis as analysis
+from torch import tensor
+from models.custom_prior import MultipleIndependent
+import matplotlib.pyplot as plt
+# from sbi.utils import process_prior
 
 """
 STEP 1. Prepare the simulated data
@@ -155,7 +158,7 @@ class AmortizedPosterior(nn.Module):
 input_dim = num_parameters  # Input is the inferred input parameters
 output_dim = num_parameters * 2  # Two parameters per inferred parameter (e.g., shape and rate for gamma distributions)
 hidden_dim = 256
-amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
+# amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
 """STEP 5. Train and validate the neural network."""
 
@@ -227,35 +230,25 @@ Each parameter is associated with its own distribution and name.
 
 """
 
+# Define individual prior distributions
+prior_dist_phy = Gamma(tensor([1.1]), tensor([1.1]))
+prior_dist_cdom = Gamma(tensor([1.2]), tensor([3.0]))
+prior_dist_spm = Gamma(tensor([3.0]), tensor([0.6]))
+prior_dist_wind = Uniform(tensor([0.0]), tensor([10.0]))
+prior_dist_depth = Uniform(tensor([0.0]), tensor([20.0]))
 
-# Define custom distribution class
-class CustomDistribution(dist.Distribution):
-    def __init__(self, distributions):
-        self.distributions = distributions
-        super().__init__(batch_shape=torch.Size(), event_shape=torch.Size([len(distributions)]))
+# Create a list of prior distributions
+prior_distributions = [
+    prior_dist_phy,
+    prior_dist_cdom,
+    prior_dist_spm,
+    prior_dist_wind,
+    prior_dist_depth,
+]
 
-    def sample(self, sample_shape=torch.Size()):
-        samples = torch.stack([dist.sample(sample_shape) for dist in self.distributions], dim=-1)
-        return samples
+# Create the combined distribution using MultipleIndependent
+prior = MultipleIndependent(prior_distributions)
 
-    def log_prob(self, value):
-        log_probs = torch.stack([dist.log_prob(value[..., i]) for i, dist in enumerate(self.distributions)], dim=-1)
-        return log_probs.sum(dim=-1)
-
-
-# Define the prior distributions
-prior_distribution_params = [
-    ("phy", dist.Gamma(1.1, 1.1)),
-    ("cdom", dist.Gamma(1.2, 3.0)),
-    ("spm", dist.Gamma(3.0, 0.6)),
-    ("wind", dist.Uniform(0.0, 10.0)),
-    ("depth", dist.Uniform(0.0, 20.0))]
-
-# Create custom distributions for each parameter
-custom_distributions = [dist for name, dist in prior_distribution_params]
-
-# Create a custom distribution that combines gamma and uniform distributions
-prior = CustomDistribution(custom_distributions)
 
 # Combine input parameters and corresponding output values
 # combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
@@ -286,6 +279,5 @@ x_o = torch.ones(5,)
 posterior_samples = posterior.sample((10000,), x=x_o)
 
 # plot posterior samples
-_ = analysis.pairplot(
-    posterior_samples, limits=[[0, 10], [0, 10], [0, 20], [0, 20], [0, 20]], figsize=(5, 5)
-)"""
+_ = analysis.pairplot(posterior_samples)
+plt.show()
