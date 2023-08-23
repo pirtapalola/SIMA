@@ -22,7 +22,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 import os
 import torch.distributions as dist
-from sbi.inference import SNPE, prepare_for_sbi
+from sbi.inference import SNPE
 from sbi import analysis as analysis
 
 """
@@ -170,7 +170,7 @@ val_output_array = val_output.to_numpy()
 train_input_tensor = torch.tensor(train_input_array, dtype=torch.float32)
 train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
 
-
+"""
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
 optimizer = optim.Adam(amortized_net.parameters(), lr=0.001)
@@ -217,7 +217,7 @@ plt.ylabel('Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
 plt.show()
-
+"""
 
 """
 
@@ -227,29 +227,40 @@ Each parameter is associated with its own distribution and name.
 
 """
 
+
+# Define custom distribution class
+class CustomDistribution(dist.Distribution):
+    def __init__(self, distributions):
+        self.distributions = distributions
+        super().__init__(batch_shape=torch.Size(), event_shape=torch.Size([len(distributions)]))
+
+    def sample(self, sample_shape=torch.Size()):
+        samples = torch.stack([dist.sample(sample_shape) for dist in self.distributions], dim=-1)
+        return samples
+
+    def log_prob(self, value):
+        log_probs = torch.stack([dist.log_prob(value[..., i]) for i, dist in enumerate(self.distributions)], dim=-1)
+        return log_probs.sum(dim=-1)
+
+
 # Define the prior distributions
-prior_distributions = [
+prior_distribution_params = [
     ("phy", dist.Gamma(1.1, 1.1)),
     ("cdom", dist.Gamma(1.2, 3.0)),
     ("spm", dist.Gamma(3.0, 0.6)),
     ("wind", dist.Uniform(0.0, 10.0)),
     ("depth", dist.Uniform(0.0, 20.0))]
 
-# Convert the list of prior distributions to a dictionary
-prior_dict = dict(prior_distributions)
+# Create custom distributions for each parameter
+custom_distributions = [dist for name, dist in prior_distribution_params]
 
-# Prepare the prior for sbi (simulator is not defined here)
-prior = prepare_for_sbi(None, prior_dict)
-
-
-# Inference with sbi
-# posterior_model = inference.NeuralPosterior(amortized_net, prior, input_shape=(input_dim,))
-# inference_method = inference.SNPE(posterior_model, density_estimator='maf')
+# Create a custom distribution that combines gamma and uniform distributions
+prior = CustomDistribution(custom_distributions)
 
 # Combine input parameters and corresponding output values
 # combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
-print(train_input_tensor)
-print(train_output_tensor)
+# print(train_input_tensor)
+# print(train_output_tensor)
 """
 Arguments for append_simulations():
 
@@ -262,6 +273,7 @@ Arguments for append_simulations():
           you can pass them as a tensor of shape (num_simulations,).
         - The log probabilities should correspond to the provided simulations.   
 """
+
 inference = SNPE(prior=prior)
 # Append the combined data to the inference method
 inference.append_simulations(train_input_tensor, train_output_tensor)
@@ -275,5 +287,5 @@ posterior_samples = posterior.sample((10000,), x=x_o)
 
 # plot posterior samples
 _ = analysis.pairplot(
-    posterior_samples, limits=[[-2, 2], [-2, 2], [-2, 2]], figsize=(5, 5)
-)
+    posterior_samples, limits=[[0, 10], [0, 10], [0, 20], [0, 20], [0, 20]], figsize=(5, 5)
+)"""
