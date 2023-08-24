@@ -1,12 +1,89 @@
+"""
+
+Tools for data pre-processing and analysis
+
+TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset
+TOOL NO.2 Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
+TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+
+"""
+
 import warnings
 from typing import Dict, Optional, Sequence
 import torch
 from torch import Tensor
 from torch.distributions import Distribution, constraints
+import pandas as pd
+
+"""
+
+TOOL NO.1
+Calculate the minimum and maximum values in the simulated dataset
+
+"""
 
 
-class MultipleIndependent(Distribution):
-    """Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+def minimum_maximum(dataframe, column_names):
+    print("Minimum and maximum values in the simulated dataset")
+    for i in column_names:
+        print(i + " min: " + dataframe[i].min())
+        print(i + " max: " + dataframe[i].max())
+
+
+"""
+
+TOOL NO.2
+Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
+
+"""
+
+
+def create_input_dataframe(list_of_strings):
+    split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    phy_list = []
+    cdom_list = []
+    spm_list = []
+    wind_list = []
+    depth_list = []
+    depth_list0 = []
+
+    for i in list_of_strings:
+        split_string = i.split("_")  # Split the string at the locations marked by underscores
+        split_df.loc[len(split_df)] = split_string  # Add the split string as a row in the dataframe
+
+    for n in split_df["phy1"]:  # Create a list where the decimal dots are added
+        phy_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["phy"] = phy_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["cdom1"]:  # Create a list where the decimal dots are added
+        cdom_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["cdom"] = cdom_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["spm1"]:  # Create a list where the decimal dots are added
+        spm_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["spm"] = spm_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["wind1"]:  # Create a list where the decimal dots are added
+        wind_list.append(float(n[:1] + '.' + n[1:]))
+    split_df["wind"] = wind_list  # Create a new column that contains the values with decimal dots
+
+    for n in split_df["depth1"]:
+        sep = '.'
+        depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
+
+    for x in depth_list0:  # Create a list where the decimal dots are added
+        depth_list.append(float(x[:1] + '.' + x[1:]))
+    split_df["depth"] = depth_list  # Create a new column that contains the values with decimal dots
+
+    # Drop the columns that do not contain the values to be inferred
+    split_df = split_df.drop(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    return split_df
+
+
+"""
+
+TOOL NO.3
+Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
 
     Every element of the sequence is treated as independent from the other elements.
     Single elements can be multivariate with dependent dimensions, e.g.,:
@@ -18,7 +95,11 @@ class MultipleIndependent(Distribution):
         - [
             Uniform(torch.zeros(1), torch.ones(1)),
             Uniform(torch.ones(1), 2.0 * torch.ones(1))]
-    """
+
+"""
+
+
+class MultipleIndependent(Distribution):
 
     def __init__(
         self,
