@@ -15,18 +15,15 @@ Last updated on 22 August 2023 by Pirta Palola
 
 # Import libraries
 
-
 import pandas as pd
 import torch
-import torch.nn as nn
 import os
 from torch.distributions import Uniform, Gamma
 from sbi.inference import SNPE
 from sbi import analysis as analysis
 from torch import tensor
-from models.custom_prior import MultipleIndependent
+from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
 import matplotlib.pyplot as plt
-# from sbi.utils import process_prior
 
 """
 STEP 1. Prepare the simulated data
@@ -55,63 +52,12 @@ simulated_reflectance = pd.read_csv('data/HL_output_combined_dataframe.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
-
-# Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run)
-def create_input_dataframe(list_of_strings):
-    split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
-    phy_list = []
-    cdom_list = []
-    spm_list = []
-    wind_list = []
-    depth_list = []
-    depth_list0 = []
-
-    for i in list_of_strings:
-        split_string = i.split("_")  # Split the string at the locations marked by underscores
-        split_df.loc[len(split_df)] = split_string  # Add the split string as a row in the dataframe
-
-    for n in split_df["phy1"]:  # Create a list where the decimal dots are added
-        phy_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["phy"] = phy_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["cdom1"]:  # Create a list where the decimal dots are added
-        cdom_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["cdom"] = cdom_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["spm1"]:  # Create a list where the decimal dots are added
-        spm_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["spm"] = spm_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["wind1"]:  # Create a list where the decimal dots are added
-        wind_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["wind"] = wind_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["depth1"]:
-        sep = '.'
-        depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
-
-    for x in depth_list0:  # Create a list where the decimal dots are added
-        depth_list.append(float(x[:1] + '.' + x[1:]))
-    split_df["depth"] = depth_list  # Create a new column that contains the values with decimal dots
-
-    # Drop the columns that do not contain the values to be inferred
-    split_df = split_df.drop(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
-    return split_df
-
-
 # Apply the function
 hydrolight_input = create_input_dataframe(files)
 print(hydrolight_input)
 
 
 # Print the minimum and maximum values of each column in the dataframe
-def minimum_maximum(dataframe, column_names):
-    print("Minimum and maximum values in the simulated dataset")
-    for i in column_names:
-        print(i + " min: " + dataframe[i].min())
-        print(i + " max: " + dataframe[i].max())
-
-
 minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
 # Define the input and output values for the neural network
