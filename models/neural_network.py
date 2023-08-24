@@ -1,6 +1,24 @@
-from models.modelSBI import create_input_dataframe
+"""
+
+Implementation of a neural network
+STEP 1. Read in the datasets.
 
 
+"""
+
+from models.tools import create_input_dataframe
+import pandas as pd
+import torch
+import torch.nn as nn
+import os
+import matplotlib.pyplot as plt
+import torch.optim as optim
+
+"""
+
+STEP 1. Read in the datasets.
+
+"""
 # Create a list of all the filenames
 path = 'data/simulated_data/'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
@@ -9,19 +27,24 @@ files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of 
 # Define the simulated dataset
 num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
 num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
-num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
+num_input_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
 simulated_reflectance = pd.read_csv('data/HL_output_combined_dataframe.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
-hydrolight_input = create_input_dataframe(files)
 
+# Apply the function to create the input dataframe based on the information in the filenames
+hydrolight_input = create_input_dataframe(files)
 print(hydrolight_input)
 
 
-"""STEP 3. Define the amortized neural network architecture."""
+"""
+
+STEP 2. Define the amortized neural network architecture.
+
+"""
 
 
 class AmortizedPosterior(nn.Module):
@@ -45,14 +68,40 @@ class AmortizedPosterior(nn.Module):
         return posterior_params
 
 
-"""STEP 4. Instantiate the amortized neural network."""
+"""
 
-input_dim = num_parameters  # Input is the inferred input parameters
-output_dim = num_parameters * 2  # Two parameters per inferred parameter (e.g., shape and rate for gamma distributions)
+STEP 3. Instantiate the amortized neural network.
+
+"""
+
+# Define key variables
+input_dim = num_input_values
+output_dim = num_parameters
 hidden_dim = 256
 amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
-"""STEP 5. Train and validate the neural network."""
+
+"""
+
+STEP 4. Split the data into training and validation data.
+
+"""
+
+input_parameters = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
+output_values = hydrolight_input
+
+train_size = int(0.8 * num_simulation_runs)  # 80% for training
+train_input = input_parameters[:train_size]
+train_output = output_values[:train_size]
+
+val_input = input_parameters[train_size:]
+val_output = output_values[train_size:]
+
+"""
+
+STEP 5. Train and validate the neural network.
+
+"""
 
 # Convert the pandas DataFrame to a numpy array
 train_input_array = train_input.to_numpy()
@@ -67,7 +116,6 @@ train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
 optimizer = optim.Adam(amortized_net.parameters(), lr=0.001)
-
 
 # Lists to store loss values for plotting
 train_losses = []
