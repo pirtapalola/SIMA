@@ -26,8 +26,10 @@ Calculate the minimum and maximum values in the simulated dataset
 def minimum_maximum(dataframe, column_names):
     print("Minimum and maximum values in the simulated dataset")
     for i in column_names:
-        print(i + " min: " + dataframe[i].min())
-        print(i + " max: " + dataframe[i].max())
+        print(str(i) + " min: ")
+        print(dataframe[i].min())
+        print(str(i) + " max: ")
+        print(dataframe[i].max())
 
 
 """
