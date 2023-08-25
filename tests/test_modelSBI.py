@@ -1,21 +1,49 @@
 import torch
-import numpy as np
-from models.modelSBI import AmortizedPosterior
+import torch.nn as nn
+import pytest
+from models.neural_network import SimpleNeuralNetwork  # Import your neural network module
 
-
-input_dim = 5
-output_dim = 150
-hidden_dim = 256
-
-
-def test_forward():
-    # Set up the neural network instance for testing
-    input_dim = 5
-    output_dim = 150
+@pytest.fixture
+def neural_net():
+    input_dim = 150
     hidden_dim = 256
-    amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
+    output_dim = 5
+    return SimpleNeuralNetwork(input_dim, hidden_dim, output_dim)
 
-    # Test the forward pass of the network
-    input_data = torch.tensor(np.random.rand(10, input_dim), dtype=torch.float32)
-    output = amortized_net(input_data)
-    assert output.shape == (10, output_dim)  # Check if output shape is as expected
+
+def test_forward_pass(neural_net):
+    batch_size = 32
+    input_data = torch.randn(batch_size, neural_net.input_dim)
+    output = neural_net(input_data)
+    expected_output_shape = (batch_size, neural_net.output_dim)
+
+    assert output.shape == expected_output_shape
+
+
+def test_output_range(neural_net):
+    batch_size = 32
+    input_data = torch.randn(batch_size, neural_net.input_dim)
+    output = neural_net(input_data)
+
+    # Check if output values are within a reasonable range (e.g., -10 to 10)
+    assert torch.all(output >= -10)
+    assert torch.all(output <= 10)
+
+
+def test_gradients(neural_net):
+    batch_size = 32
+    input_data = torch.randn(batch_size, neural_net.input_dim)
+    target_data = torch.randn(batch_size, neural_net.output_dim)
+
+    optimizer = torch.optim.SGD(neural_net.parameters(), lr=0.1)
+
+    # Compute loss and backpropagate
+    optimizer.zero_grad()
+    output = neural_net(input_data)
+    loss = nn.MSELoss()(output, target_data)
+    loss.backward()
+
+    # Check if gradients are non-zero after backward pass
+    for param in neural_net.parameters():
+        assert param.grad is not None
+        assert torch.sum(param.grad) != 0
