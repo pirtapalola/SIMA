@@ -2,7 +2,12 @@
 
 Implementation of a neural network
 STEP 1. Read in the datasets.
+STEP 2. Define the amortized neural network architecture.
+STEP 3. Instantiate the amortized neural network.
+STEP 4. Split the data into training and validation datasets.
+STEP 5. Train and validate the neural network.
 
+Last updated on 25 August 2023 by Pirta Palola
 
 """
 
@@ -83,25 +88,22 @@ amortized_net = AmortizedPosterior(input_dim, output_dim, hidden_dim)
 
 """
 
-STEP 4. Split the data into training and validation data.
+STEP 4. Split the data into training and validation datasets.
 
 """
 
+# Define input and output
 input_parameters = simulated_reflectance.drop(columns="File_ID")  # Drop the File_ID column
 output_values = hydrolight_input
 
+# Training datasets
 train_size = int(0.8 * num_simulation_runs)  # 80% for training
 train_input = input_parameters[:train_size]
 train_output = output_values[:train_size]
 
+# Validation datasets
 val_input = input_parameters[train_size:]
 val_output = output_values[train_size:]
-
-"""
-
-STEP 5. Train and validate the neural network.
-
-"""
 
 # Convert the pandas DataFrame to a numpy array
 train_input_array = train_input.to_numpy()
@@ -112,6 +114,12 @@ val_output_array = val_output.to_numpy()
 # Convert input parameters and training output to PyTorch tensors
 train_input_tensor = torch.tensor(train_input_array, dtype=torch.float32)
 train_output_tensor = torch.tensor(train_output_array, dtype=torch.float32)
+
+"""
+
+STEP 5. Train and validate the neural network.
+
+"""
 
 # Define loss function and optimizer
 criterion = nn.MSELoss()  # Mean squared error loss
