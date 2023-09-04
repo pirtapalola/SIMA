@@ -3,10 +3,10 @@
 Simulation-based inference
 
 STEP 1. Prepare the simulated data.
-STEP 2.
+STEP 2. Define the prior.
 
 
-Last updated on 25 August 2023 by Pirta Palola
+Last updated on 04 September 2023 by Pirta Palola
 
 """
 
