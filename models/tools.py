@@ -2,7 +2,7 @@
 
 Tools for data pre-processing and analysis
 
-TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset
+TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset.
 TOOL NO.2 Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
 TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
 
