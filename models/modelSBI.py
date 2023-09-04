@@ -4,7 +4,8 @@ Simulation-based inference
 
 STEP 1. Prepare the simulated data.
 STEP 2. Define the prior.
-
+STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
+STEP 4. Train the neural density estimator and build the posterior.
 
 Last updated on 04 September 2023 by Pirta Palola
 
@@ -70,8 +71,7 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 """
 
 STEP 2. Define the prior.
-
-Each parameter is associated with its own distribution and name.
+    -Each parameter is associated with its own distribution and name.
 
 """
 
@@ -93,6 +93,7 @@ prior_distributions = [
 
 # Create the combined distribution using MultipleIndependent
 prior = MultipleIndependent(prior_distributions)
+print(prior)
 
 
 # Combine input parameters and corresponding output values
