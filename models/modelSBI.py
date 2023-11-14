@@ -133,6 +133,9 @@ posterior_samples = posterior.sample((10000,), x=x_o)
 
 # Evaluate the log-probability of the posterior samples
 log_probability = posterior.log_prob(posterior_samples, x=x_o)
+log_prob_np = log_probability.numpy()  # convert to Numpy array
+log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
+log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/log_probability_test_sample.csv')
 
 # Plot posterior samples
 _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
