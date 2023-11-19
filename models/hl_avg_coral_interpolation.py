@@ -1,7 +1,6 @@
 """
 
-This code applies cubic spline interpolation to the hyperspectral reflectance data
-calculated from TriOS RAMSES radiometric measurements.
+This code applies cubic spline interpolation to the hyperspectral reflectance data from Hochberg et al.
 The reflectance data is interpolated to 1nm intervals.
 
 STEP 1. Access the reflectance data.
@@ -13,7 +12,6 @@ This code was last modified by Pirta Palola on 19 November 2023.
 
 """
 
-
 # Import libraries
 import pandas as pd
 from scipy.interpolate import CubicSpline
@@ -22,16 +20,18 @@ import matplotlib.pylab as plt
 
 """STEP 1. Access the reflectance data."""
 
-# Create a pandas dataframe
-# P_lob22_reflectance: Average reflectance of Porites lobata measured in 2022
-P_lob22_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/avg_coral_tetiaroa.csv')
-trios_wavelength = P_lob22_reflectance['wavelength'].to_numpy()  # Wavelengths measured by the TriOS RAMSES radiometers
+# Create a pandas dataframe with the average reflectance of brown coral
+brown_coral_hochberg_reflectance = pd.read_csv(
+    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/brown_coral_hochberg.csv')
+
+# Create a numpy array containing the wavelengths measured by Hochberg et al.
+hochberg_wavelength = brown_coral_hochberg_reflectance['wavelength'].to_numpy()
 
 """STEP 2. Apply the cubic spline method to the data."""
 
 # Apply the cubic spline method to the data.
-x = trios_wavelength
-y0 = P_lob22_reflectance['P_lob_CalAq22']
+x = hochberg_wavelength
+y0 = brown_coral_hochberg_reflectance['avg_brown_coral']
 cs0 = CubicSpline(x, y0)
 xs = np.arange(319, 951, 1)  # Define the wavelength range and spectral resolution of the end product
 index_list = []  # Create an index list that corresponds to the number of rows in the end product
@@ -74,6 +74,7 @@ def benthic_reflectance_function(reflectance_df, benthic_df):
     reflectance_df = reflectance_df[reflectance_df.wavelength > 319]
     reflectance_df = reflectance_df[reflectance_df.wavelength < 951]
     return reflectance_df
+
 
 # Apply the function and save the output as a csv file
 P_lob22_refl = benthic_reflectance_function(P_lob22_reflectance, P_lob22)
