@@ -2,7 +2,6 @@
 
 This code applies cubic spline interpolation to the hyperspectral reflectance data
 calculated from TriOS RAMSES radiometric measurements.
-The reflectance data is interpolated to 1nm intervals.
 
 STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
@@ -34,9 +33,9 @@ trios_wavelength = P_lob22_reflectance['wavelength'].to_numpy()  # Wavelengths m
 x = trios_wavelength
 y0 = P_lob22_reflectance['reflectance']
 cs0 = CubicSpline(x, y0)
-xs = np.arange(319, 951, 1)  # Define the wavelength range and spectral resolution of the end product
+xs = np.arange(319, 951, 2)  # Define the wavelength range and spectral resolution of the end product
 index_list = []  # Create an index list that corresponds to the number of rows in the end product
-for z in range(0, 632):
+for z in range(len(xs)):
     index_list.append(z)
 P_lob22_list = []
 P_lob22 = []
@@ -63,7 +62,7 @@ P_lob22_reflectance = pd.DataFrame()
 
 # Create a list containing the wavelengths
 wavelength_319_951 = []
-a = range(319, 951)
+a = np.arange(319, 951, 2)
 for q in a:
     wavelength_319_951.append(q)
 
