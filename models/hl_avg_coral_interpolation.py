@@ -1,6 +1,6 @@
 """
 
-This code applies cubic spline interpolation to the hyperspectral reflectance data from Hochberg et al.
+This code applies cubic spline interpolation to the hyperspectral reflectance data from Hydrolight
 The reflectance data is interpolated to 1nm intervals.
 
 STEP 1. Access the reflectance data.
