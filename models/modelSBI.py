@@ -126,7 +126,10 @@ density_estimator = inference.train()
 posterior = inference.build_posterior(density_estimator)
 
 # Define an observation x
-x_o = x_tensor[1]
+observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
+                   'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
+obs_df = pd.read_csv(observation_path)
+x_o = obs_df['reflectance']
 
 # Given this observation, sample from the posterior p(θ|x), or plot it.
 posterior_samples = posterior.sample((10000,), x=x_o)
