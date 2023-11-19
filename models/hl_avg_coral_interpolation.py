@@ -20,30 +20,30 @@ import matplotlib.pylab as plt
 
 """STEP 1. Access the reflectance data."""
 
-# Create a pandas dataframe with the average reflectance of brown coral
-brown_coral_hochberg_reflectance = pd.read_csv(
-    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/brown_coral_hochberg.csv')
+# Create a pandas dataframe with the default average reflectance of coral from Hydrolight
+hl_avg_coral_reflectance = pd.read_csv(
+    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/avg_coral_HL.csv')
 
-# Create a numpy array containing the wavelengths measured by Hochberg et al.
-hochberg_wavelength = brown_coral_hochberg_reflectance['wavelength'].to_numpy()
+# Create a numpy array containing the wavelengths
+hl_wavelength = hl_avg_coral_reflectance['wavelength'].to_numpy()
 
 """STEP 2. Apply the cubic spline method to the data."""
 
 # Apply the cubic spline method to the data.
-x = hochberg_wavelength
-y0 = brown_coral_hochberg_reflectance['avg_brown_coral']
+x = hl_wavelength
+y0 = hl_avg_coral_reflectance['reflectance']
 cs0 = CubicSpline(x, y0)
 xs = np.arange(319, 951, 1)  # Define the wavelength range and spectral resolution of the end product
 index_list = []  # Create an index list that corresponds to the number of rows in the end product
 for z in range(0, 632):
     index_list.append(z)
-P_lob22_list = []
-P_lob22 = []
+refl_list = []
+refl_lis2 = []
 for i in xs:
     n = cs0(i)
-    P_lob22_list.append(n)
+    refl_list.append(n)
 for element in index_list:
-    P_lob22.append(float(P_lob22_list[element]))
+    refl_lis2.append(float(refl_list[element]))
 
 """STEP 3. Create a plot to visualise the interpolation."""
 
@@ -77,5 +77,6 @@ def benthic_reflectance_function(reflectance_df, benthic_df):
 
 
 # Apply the function and save the output as a csv file
-P_lob22_refl = benthic_reflectance_function(P_lob22_reflectance, P_lob22)
-P_lob22_refl.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/P_lob22_CalAq.csv')
+hl_reflectance = benthic_reflectance_function(P_lob22_reflectance, refl_lis2)
+print(hl_reflectance)
+hl_reflectance.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/hl_avg_coral_interpolated.csv')
