@@ -43,6 +43,6 @@ global_dataframe = global_dataframe.set_axis(classes, axis="columns", copy=False
 global_dataframe.insert(0, "wavelength", wavelength_np[0], True)
 print(global_dataframe)
 
-# Save the data in a csv file.
+# Save the data into a csv file.
 
 global_dataframe.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/global_benthic_reflectance_hochberg.csv')
