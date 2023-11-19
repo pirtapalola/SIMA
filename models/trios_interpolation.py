@@ -24,14 +24,15 @@ import matplotlib.pylab as plt
 
 # Create a pandas dataframe
 # P_lob22_reflectance: Average reflectance of Porites lobata measured in 2022
-P_lob22_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/avg_coral_tetiaroa.csv')
+P_lob22_reflectance = pd.read_csv(
+    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/RIM03_2022_surface_reflectance.csv')
 trios_wavelength = P_lob22_reflectance['wavelength'].to_numpy()  # Wavelengths measured by the TriOS RAMSES radiometers
 
 """STEP 2. Apply the cubic spline method to the data."""
 
 # Apply the cubic spline method to the data.
 x = trios_wavelength
-y0 = P_lob22_reflectance['P_lob_CalAq22']
+y0 = P_lob22_reflectance['reflectance']
 cs0 = CubicSpline(x, y0)
 xs = np.arange(319, 951, 1)  # Define the wavelength range and spectral resolution of the end product
 index_list = []  # Create an index list that corresponds to the number of rows in the end product
@@ -75,6 +76,8 @@ def benthic_reflectance_function(reflectance_df, benthic_df):
     reflectance_df = reflectance_df[reflectance_df.wavelength < 951]
     return reflectance_df
 
+
 # Apply the function and save the output as a csv file
 P_lob22_refl = benthic_reflectance_function(P_lob22_reflectance, P_lob22)
-P_lob22_refl.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/P_lob22_CalAq.csv')
+P_lob22_refl.to_csv(
+    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated.csv')
