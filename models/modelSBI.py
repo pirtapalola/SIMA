@@ -22,6 +22,7 @@ from sbi import analysis as analysis
 from torch import tensor
 from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
 import matplotlib.pyplot as plt
+import numpy as np
 
 """
 STEP 1. Prepare the simulated data
@@ -125,6 +126,9 @@ density_estimator = inference.train()
 # Use the trained neural density estimator to build the posterior
 posterior = inference.build_posterior(density_estimator)
 
+# Save the trained density estimator
+torch.save(density_estimator.state_dict(), 'density_estimator.pth')
+
 # Define an observation x
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
                    'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
@@ -146,3 +150,13 @@ plt.show()
 
 # Print the posterior to know how it was trained
 print(posterior)
+
+theta_samples = posterior_samples.numpy()  # Convert to NumPy array
+
+# Mean estimates for each parameter
+theta_means = torch.mean(posterior_samples, dim=0)
+print(theta_means)
+
+# Credible intervals (e.g., 95% interval) for each parameter using NumPy
+theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
+print(theta_intervals)
