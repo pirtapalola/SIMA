@@ -19,9 +19,11 @@ import pandas as pd
 global_data = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                           'global_bottom_irradiance_reflectance.csv')
 wavelength_data = global_data['wavelength']
-coral_brown = global_data['coral_brown']
+# coral_brown = global_data['coral_brown']
+# coral_blue = global_data['coral_blue']
+sand = global_data['sand']
 wavelength = [str(i) for i in wavelength_data]
-cb = [str(i) for i in coral_brown]
+cb = [str(i) for i in sand]
 
 # Create empty lists to store data
 lines = []
@@ -38,7 +40,7 @@ data1 = lines[30:]  # These elements contain the file header and the wavelength 
 data = data1[:-61]  # These elements contain the wavelength range 705-1000 and the last row of the text file
 
 # Iterate through each element in the data list and replace the second part with the values from another list
-coral_brown_list0 = [str(i)+'\n' for i in coral_brown]
+coral_brown_list0 = [str(i)+'\n' for i in sand]
 coral_brown_list = coral_brown_list0[0::5]
 modified_data = [f'{element.split()[0]}   {coral_brown_list[i]}' for i, element in enumerate(data)]
 benthic_reflectance = [' ' + string for string in modified_data]
@@ -49,7 +51,7 @@ modified_input_data = lines[:30] + benthic_reflectance + lines[-61:]
 """STEP 3. Save the new bottom reflectance input data file as a txt file."""
 
 # Specify the file path
-file_path = r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/coral_brown.txt'
+file_path = r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/sand.txt'
 
 # Write the list to the text file
 with open(file_path, 'w') as fp2:
