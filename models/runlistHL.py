@@ -1,8 +1,20 @@
-"""This code creates the runlist.txt file for the Hydrolight simulations."""
+"""
+
+Create the runlist.txt file for the Hydrolight simulations.
+
+STEP 1. Save the input file names into a list.
+STEP 2. Write the runlist file containing all the file names.
+
+Last updated on 05 December 2023 by Pirta Palola
+
+"""
+
+# Import libraries
 
 import os
 
-# Access the input files
+""""STEP 1. Save the input file names into a list."""
+
 os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup_v2')
 the_list = []
 
@@ -10,6 +22,9 @@ for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2
     for file in files:
         if file.endswith('.txt'):
             the_list.append(file)
+
+
+"""STEP 2. Write the runlist file containing all the file names."""
 
 
 def new_runlist_file(path_list):
