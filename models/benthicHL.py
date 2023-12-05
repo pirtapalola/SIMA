@@ -1,4 +1,20 @@
+"""
+
+Input bottom reflectance data into Hydrolight by replacing the default data file.
+
+STEP 1. Upload the data.
+STEP 2. Insert the bottom reflectance data into the default data file.
+STEP 3. Save the new bottom reflectance input data file as a txt file.
+
+Last updated on 05 December 2023 by Pirta Palola
+
+"""
+
+# Import libraries
+
 import pandas as pd
+
+"""STEP 1. Upload the data."""
 
 global_data = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                           'global_bottom_irradiance_reflectance.csv')
@@ -6,20 +22,6 @@ wavelength_data = global_data['wavelength']
 coral_brown = global_data['coral_brown']
 wavelength = [str(i) for i in wavelength_data]
 cb = [str(i) for i in coral_brown]
-
-# Define the path of the default bottom reflectance file
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/avg_coral.txt'
-
-
-# hydrolight_file[65] = r'D:\HE53\data\User\microplastics\MPzdata.txt' + '\n'
-
-def write_wavelength_file(wavelength_list):
-    with open(path, 'w') as fp:
-        for item in wavelength_list:
-            fp.write(' ' + item + '   ' + '\n')
-
-
-# write_wavelength_file(wavelength)
 
 # Create empty lists to store data
 lines = []
@@ -29,9 +31,11 @@ data_list = []
 with open(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/avg_coral.txt', 'r') as fp1:
     lines = fp1.readlines()  # Add each line of the txt file as an element in the list
 
-# Delete the first elements and the last elements of the list
-data1 = lines[30:]
-data = data1[:-61]
+"""Step 2. Insert the bottom reflectance data into the default data file."""
+
+# Delete the first and the last elements of the list (these will not be modified)
+data1 = lines[30:]  # These elements contain the file header and the wavelength range 300-395
+data = data1[:-61]  # These elements contain the wavelength range 705-1000 and the last row of the text file
 
 # Iterate through each element in the data list and replace the second part with the values from another list
 coral_brown_list0 = [str(i)+'\n' for i in coral_brown]
@@ -42,6 +46,8 @@ benthic_reflectance = [' ' + string for string in modified_data]
 # Add new elements using the addition operator
 modified_input_data = lines[:30] + benthic_reflectance + lines[-61:]
 
+"""STEP 3. Save the new bottom reflectance input data file as a txt file."""
+
 # Specify the file path
 file_path = r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/coral_brown.txt'
 
@@ -51,6 +57,9 @@ with open(file_path, 'w') as fp2:
         fp2.write(line)
 
 """
+
+Below is code for reading the reflectance data from the txt file and saving it in a csv file.
+
 # Split each string in the list into two separate strings and store as sublists in a list
 for i in range(len(data2)):
     data_list.append(data2[i].split("   "))
