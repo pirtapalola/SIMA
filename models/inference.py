@@ -46,16 +46,25 @@ def prior_gamma_distribution(parameter_name, alpha, beta):
 # Define a function that generates and samples the prior assuming a uniform distribution
 def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     prior_uniform = torch.distributions.uniform.Uniform(low=prior_min, high=prior_max)
-    input_data = prior_uniform.sample((15000,))
+    input_data = prior_uniform.sample((10000,))
+    input_df = pd.DataFrame(input_data)
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    return input_data
+
+
+# Define a function that generates and samples the prior assuming a Gamma distribution
+def prior_lognormal_distribution(parameter_name, loc, scale):
+    prior_lognormal = torch.distributions.log_normal.LogNormal(torch.tensor([loc]), torch.tensor([scale]))
+    input_data = prior_lognormal.sample((5000,))
     input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_gamma_distribution('chl', 1.1, 1.1)
-prior_cdom = prior_gamma_distribution('cdom', 1.2, 3.0)
-prior_spm = prior_gamma_distribution('spm', 3.0, 0.6)
+prior_chl = prior_lognormal_distribution('chl', 0.4, 1.6)
+prior_cdom = prior_lognormal_distribution('cdom', 1.3, 3.0)
+prior_spm = prior_lognormal_distribution('spm', 1.3, 1.1)
 prior_wind = prior_uniform_distribution('wind', 0.0, 10.0)
 prior_depth = prior_uniform_distribution('depth', 0.0, 20.0)
 
