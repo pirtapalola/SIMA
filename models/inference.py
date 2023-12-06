@@ -1,22 +1,37 @@
-"""Generate the prior distributions of the theta parameters.
-    Sample the prior distributions to create parameterisations for the simulator."""
+"""
 
+Generate the prior distributions of the theta parameters.
+Sample the prior distributions to create parameterisations for the simulator.
+
+STEP 1. Access the Ecolight setup file.
+STEP 2. Create the priors.
+
+
+Last updated on 05 December 2023 by Pirta Palola
+
+"""
+
+# Import libraries
 
 import torch
 import pandas as pd
 
+"""STEP 1. Access the Ecolight setup file."""
+
+# Define the path
 PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
+
 # Open the file. Each line is saved as a string in a list.
 
 with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
-'''Create the priors
+"""STEP 2. Create the priors.
     Chl-a range: 0-10 (mg/m-3)
     CDOM range: 0-5 (m-1 at 440 nm)
     SPM range: 0-30 (g m-3)
     wind speed range: 0-10 m/s
-    depth range: 0-20 m'''
+    depth range: 0-20 m"""
 
 
 # Define a function that generates and samples the prior assuming a Gamma distribution

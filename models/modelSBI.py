@@ -3,10 +3,11 @@
 Simulation-based inference
 
 STEP 1. Prepare the simulated data.
-STEP 2.
+STEP 2. Define the prior.
+STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
+STEP 4. Train the neural density estimator and build the posterior.
 
-
-Last updated on 25 August 2023 by Pirta Palola
+Last updated on 05 December 2023 by Pirta Palola
 
 """
 
@@ -21,6 +22,7 @@ from sbi import analysis as analysis
 from torch import tensor
 from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
 import matplotlib.pyplot as plt
+import numpy as np
 
 """
 STEP 1. Prepare the simulated data
@@ -70,8 +72,7 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 """
 
 STEP 2. Define the prior.
-
-Each parameter is associated with its own distribution and name.
+    -Each parameter is associated with its own distribution and name.
 
 """
 
@@ -93,6 +94,7 @@ prior_distributions = [
 
 # Create the combined distribution using MultipleIndependent
 prior = MultipleIndependent(prior_distributions)
+print(prior)
 
 
 # Combine input parameters and corresponding output values
@@ -124,14 +126,23 @@ density_estimator = inference.train()
 # Use the trained neural density estimator to build the posterior
 posterior = inference.build_posterior(density_estimator)
 
+# Save the trained density estimator
+torch.save(density_estimator.state_dict(), 'density_estimator.pth')
+
 # Define an observation x
-x_o = x_tensor[1]
+observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
+                   'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
+obs_df = pd.read_csv(observation_path)
+x_o = obs_df['reflectance']
 
 # Given this observation, sample from the posterior p(θ|x), or plot it.
 posterior_samples = posterior.sample((10000,), x=x_o)
 
 # Evaluate the log-probability of the posterior samples
 log_probability = posterior.log_prob(posterior_samples, x=x_o)
+log_prob_np = log_probability.numpy()  # convert to Numpy array
+log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
+log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/log_probability_test_sample.csv')
 
 # Plot posterior samples
 _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
@@ -139,3 +150,13 @@ plt.show()
 
 # Print the posterior to know how it was trained
 print(posterior)
+
+theta_samples = posterior_samples.numpy()  # Convert to NumPy array
+
+# Mean estimates for each parameter
+theta_means = torch.mean(posterior_samples, dim=0)
+print(theta_means)
+
+# Credible intervals (e.g., 95% interval) for each parameter using NumPy
+theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
+print(theta_intervals)
