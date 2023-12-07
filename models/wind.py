@@ -2,8 +2,9 @@ import copernicus_marine_client as copernicus_marine
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.stats import norm, gamma, lognorm
 import seaborn as sns
-from fitter import Fitter, get_common_distributions, get_distributions
+import scipy
 
 # Set parameters
 data_request = {
@@ -59,24 +60,101 @@ def average_wind(list_dates, dataframe_to_split):
     return new_df
 
 
+# Apply the function.
 average_wind_speed = average_wind(dates, wind_df)
-print(average_wind_speed)
 
-# plt.hist(average_wind_speed['wind_speed'], bins=100)
-# plt.show()
+# Convert the data into a numpy array.
+wind = average_wind_speed["wind_speed"].values
 
+size = len(wind)
+x = np.linspace(0, 20, size)  # Use linspace to create x-values
+
+# Creating the histogram
+h = plt.hist(wind, bins=100, density=True)  # Use density=True to get normalized probabilities
+
+# Test fitting different distributions to the data
+dist_names = ['norm', 'lognorm', 'gamma']
+
+for dist_name in dist_names:
+    dist = getattr(scipy.stats, dist_name)
+    params = dist.fit(wind)
+    arg = params[:-2]
+    loc = params[-2]
+    scale = params[-1]
+    print(arg, loc, scale)
+    if arg:
+        pdf_fitted = dist.pdf(x, *arg, loc=loc, scale=scale)
+    else:
+        pdf_fitted = dist.pdf(x, loc=loc, scale=scale)
+    plt.plot(x, pdf_fitted, label=dist_name)
+    # Set x-axis limits
+    plt.xlim(0, 20)
+    # Add labels and legend
+    plt.xlabel('Wind Speed')
+    plt.ylabel('Frequency')
+    plt.legend(loc='upper right')
+
+# Assuming you already have the fitted parameters for each distribution
+params_norm = norm.fit(wind)
+params_lognorm = lognorm.fit(wind)
+params_gamma = gamma.fit(wind)
+
+# Perform KS tests
+ks_statistic_norm, ks_pvalue_norm = scipy.stats.kstest(wind, 'norm', params_norm)
+ks_statistic_lognorm, ks_pvalue_lognorm = scipy.stats.kstest(wind, 'lognorm', params_lognorm)
+ks_statistic_gamma, ks_pvalue_gamma = scipy.stats.kstest(wind, 'gamma', params_gamma)
+
+print('KS Test Results:')
+print('Normal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_norm, ks_pvalue_norm))
+print('Lognormal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_lognorm, ks_pvalue_lognorm))
+print('Gamma Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_gamma, ks_pvalue_gamma))
+print('Parameters of the Lognormal distribution: ', params_norm)
+
+scale = params_lognorm[2]
+shape = params_lognorm[0]
+mu = np.log(scale)
+sigma = shape
+print(mu, sigma)
+
+# Show the plot
+plt.show()
+
+"""
+
+# Plot the data in a histogram.
 sns.set_style('white')
 sns.set_context("paper", font_scale=2)
-sns.displot(data=average_wind_speed['wind_speed'], x="Wind speed", kind="hist", bins=100, aspect=1.5)
+sns.displot(data=average_wind_speed, x="wind_speed", kind="hist", bins=100, aspect=1.5)
 
-# Convert the data into a numpy array
-wind_speed = average_wind_speed['wind_speed'].values
 
-f = Fitter(height,
-           distributions=['gamma',
-                          'lognorm',
-                          "beta",
-                          "burr",
-                          "norm"])
-f.fit()
-f.summary()
+# Fit gamma, lognormal, and normal distributions to the data.
+fitted = Fitter(wind, distributions=['gamma', 'lognorm', "norm"])
+fitted.fit()
+fitted.summary()
+
+best_lognorm_params = fitted.get_best()['lognorm']
+
+# Get the best fit.
+best_fit = fitted.get_best(method='sumsquare_error')
+
+# Calculate the min, max, mean and standard deviation of the data.
+mean_wind_speed = wind.mean()
+std_wind_speed = wind.std()
+min_wind = wind_df['wind_speed'].min()
+max_wind = wind_df['wind_speed'].max()
+print('Minimum wind speed', min_wind, 'Maximum wind speed', max_wind, 'Mean wind speed: ', mean_wind_speed, 'Standard deviation', std_wind_speed, 'Best fit: ', best_fit)
+scale = 15.666340917893361
+shape = 0.13295081858033553
+mu = np.log(scale)
+sigma = shape
+print(mu, sigma)
+
+# Extract mu and sigma from the lognormal parameters.
+mu_fit = np.log(best_lognorm_params['scale'])
+sigma_fit = best_lognorm_params['s']
+
+print('Best fit lognormal parameters: mu = {:.4f}, sigma = {:.4f}'.format(mu_fit, sigma_fit))
+
+
+# Show the plot.
+plt.show()"""
