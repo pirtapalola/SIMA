@@ -5,6 +5,8 @@ Sample the prior distributions to create parameterisations for the simulator.
 
 STEP 1. Access the Ecolight setup file.
 STEP 2. Create the priors.
+STEP 3. Store the simulation parameterizations in a dictionary.
+STEP 4. Write the new Ecolight set-up files.
 
 
 Last updated on 05 December 2023 by Pirta Palola
@@ -15,23 +17,19 @@ Last updated on 05 December 2023 by Pirta Palola
 
 import torch
 import pandas as pd
+from scipy.stats import lognorm
 
 """STEP 1. Access the Ecolight setup file."""
 
 # Define the path
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL/'
+PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/priors/'
 
 # Open the file. Each line is saved as a string in a list.
 
-with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt') as f:
+with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
-"""STEP 2. Create the priors.
-    Chl-a range: 0-10 (mg/m-3)
-    CDOM range: 0-5 (m-1 at 440 nm)
-    SPM range: 0-30 (g m-3)
-    wind speed range: 0-10 m/s
-    depth range: 0-20 m"""
+"""STEP 2. Create the priors."""
 
 
 # Define a function that generates and samples the prior assuming a Gamma distribution
@@ -46,18 +44,37 @@ def prior_gamma_distribution(parameter_name, alpha, beta):
 # Define a function that generates and samples the prior assuming a uniform distribution
 def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     prior_uniform = torch.distributions.uniform.Uniform(low=prior_min, high=prior_max)
-    input_data = prior_uniform.sample((15000,))
+    input_data = prior_uniform.sample((10000,))
     input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
+# Define a function that generates and samples the prior assuming a lognormal distribution
+
+
+def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
+    prior_lognormal = lognorm.rvs(s=shape, loc=location, scale=scale, size=size)
+    input_data = torch.from_numpy(prior_lognormal).float()
+    input_df = pd.DataFrame(input_data.numpy())
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    return input_data
+
+
+def prior_lognormal_torch(parameter_name, loc, scale):
+    prior_lognormal_dist = torch.distributions.log_normal.LogNormal(torch.tensor([loc]), torch.tensor([scale]))
+    input_data = prior_lognormal_dist.sample((5000,))
+    input_df = pd.DataFrame(input_data.numpy())
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    return input_data
+
+
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_gamma_distribution('chl', 1.1, 1.1)
-prior_cdom = prior_gamma_distribution('cdom', 1.2, 3.0)
-prior_spm = prior_gamma_distribution('spm', 3.0, 0.6)
-prior_wind = prior_uniform_distribution('wind', 0.0, 10.0)
-prior_depth = prior_uniform_distribution('depth', 0.0, 20.0)
+prior_chl = prior_lognormal_torch('chl', 0.4, 1.6)
+prior_cdom = prior_lognormal_torch('cdom', 0.2, 1.6)
+prior_spm = prior_lognormal_torch('spm', 1.3, 1.1)
+prior_wind = prior_lognormal_scipy('wind', 0.13, 15.67, -9.08, 5000)
+prior_depth = prior_uniform_distribution('depth', 0.3, 20.0)
 
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
@@ -101,7 +118,8 @@ for x in range(0, len(prior_chl)):
 df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
 # print(df)
 df_combinations.to_csv('C:/Users/pirtapalola/'
-                       'Documents/DPhil/Chapter2/Methods/SBI_water_constituent_combinations.csv')
+                       'Documents/DPhil/Chapter2/Methods'
+                       '/Methods_Ecolight/Ecolight_parameter_combinations.csv')
 
 '''
 # Check that the sampled prior distributions look realistic
@@ -123,6 +141,8 @@ for n in parameters:
     plt.hist(n, bins=100)
     plt.show()
 '''
+
+"""STEP 3. Store the simulation parameterizations in a dictionary."""
 
 
 # Create a new class
@@ -207,6 +227,8 @@ for x in combinations:
     combinations_wind.append(x[-2])
     combinations_depth.append(x[-1])
 
+"""STEP 4. Write the new Ecolight set-up files."""
+
 
 def new_input_files(combination_iop, combination_w, combination_d, hydrolight_file, id_string):
     str0 = ', '.join(str(n) for n in combination_iop)
@@ -214,18 +236,18 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     str1 = str(combination_w)
     # strcomb2 = ', '.join(str(n) for n in combination_d)
     str2 = str(combination_d)
-    hydrolight_file[2] = 'coral_' + id_string + '\n'  # rename the output file
+    hydrolight_file[2] = 'coralbrown' + id_string + '\n'  # rename the output file
     hydrolight_file[6] = str0 + ', \n'  # change the water constituent concentrations
     hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
     hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
-    hydrolight_file[61] = 'avg_coral.txt' + '\n'  # specify the benthic reflectance
+    hydrolight_file[61] = 'coral_brown.txt' + '\n'  # specify the benthic reflectance
     hydrolight_file[12] = r'..\data\defaults\apstarchl.txt' + '\n'
     hydrolight_file[14] = r'..\data\defaults\astarmin_average.txt' + '\n'
     hydrolight_file[22] = r'..\data\defaults\bstarmin_average.txt' + '\n'
     hydrolight_file[65] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals' + id_string + '_coral' + '.txt'
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals' + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
@@ -234,7 +256,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
 
 # Create a list containing the combination IDs as strings
 combination_ID_string = [str(i) for i in combination_ID]
-"""
+
 # Apply the function to all the data
 for i in combination_ID:
     new_input_files(combinations_water[i], combinations_wind[i], combinations_depth[i], concentrations, string_id[i])
@@ -242,9 +264,9 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/HL_sbi_setup/Icorals'
-          + string_id[100] + '_coral' + '.txt', 'r')
-f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Hydrolight_setup/final_setup/Icorals_final.txt', 'r')
+f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals'
+          + string_id[100] + '_coralbrown' + '.txt', 'r')
+f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
@@ -259,4 +281,4 @@ for x in range(0, num_lines):
 
 # close the files
 f1.close()
-f2.close()"""
+f2.close()
