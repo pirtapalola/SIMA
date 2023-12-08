@@ -20,30 +20,33 @@ for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2
 """STEP 2. Write the new Ecolight set-up files."""
 
 
-def change_and_save_bottom_file(original_file_path, bottom_name, bottom_file):
+def change_and_save_bottom_file(list_files, original_file_path, bottom_name, bottom_file):
     # Read the original file into a list of lines
-    with open(original_file_path, 'r') as original_fp:
-        original_file_content = original_fp.readlines()
+    for i in list_files:
+        with open(original_file_path + i, 'r') as original_fp:
+            original_file_content = original_fp.readlines()
+            id_string = original_file_content[2].strip()
+            new_id = id_string.replace('coralbrown', bottom_name)
+            new_file_name = new_id.replace(bottom_name, '')
+            original_file_content[2] = new_id + '\n'  # Rename the output file
+            original_file_content[61] = bottom_file + '\n'  # Specify the name of the benthic reflectance file
 
-    # Modify the desired lines
-    id_string = original_file_content[2].strip()
-    new_id = id_string.replace('coralbrown', bottom_name)
-    original_file_content[2] = new_id + '\n'  # Rename the output file
-    original_file_content[61] = bottom_file + '\n'  # Specify the name of the benthic reflectance file
+            directory_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/setup_sand/Icorals'
 
-    # Create a new file path based on the modifications
-    new_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/setup_sand/' \
-                    + new_id + '.txt'
+            # Create the directory if it doesn't exist
+            os.makedirs(directory_path, exist_ok=True)
 
-    # Write the modified content to the new file
-    with open(new_file_path, 'w') as new_fp:
-        new_fp.writelines(original_file_content)
+            # Construct the file path
+            path = os.path.join(directory_path, f'Icorals{new_file_name}_{bottom_name}.txt')
 
-    return new_file_path
+            with open(path, 'w') as fp:
+                for item in original_file_content:
+                    fp.write(item)
+    return original_file_content
 
 
 original_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/'
-change_and_save_bottom_file(original_path, 'sand', 'sand.txt')
+# change_and_save_bottom_file(the_list, original_path, 'turf', 'turf.txt')
 
 """STEP 3. Check that the correct changes were made."""
 
@@ -51,9 +54,9 @@ change_and_save_bottom_file(original_path, 'sand', 'sand.txt')
 
 # reading files
 f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'setup/sand/Icorals_00_0001_1361_049_509_1927_sand.txt', 'r')
+          'setup/setup_sand/Icorals/Icorals_00_0001_1361_049_509_1927_turf.txt', 'r')
 f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'final_setup/Icorals_final.txt', 'r')
+          'setup/Icorals_00_0001_1361_049_509_1927_coralbrown.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
