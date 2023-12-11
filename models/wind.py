@@ -39,6 +39,9 @@ wind_df = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/"
 
 # Drop rows with NaN values.
 wind_df = wind_df.dropna(subset=['wind_speed'])
+maximum = wind_df['wind_speed'].max()
+minimum = wind_df['wind_speed'].min()
+print(minimum, maximum)
 
 # Create a list of dates for which there is data.
 dates = wind_df['time'].unique()
