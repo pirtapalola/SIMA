@@ -44,7 +44,7 @@ def prior_gamma_distribution(parameter_name, alpha, beta):
 # Define a function that generates and samples the prior assuming a uniform distribution
 def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     prior_uniform = torch.distributions.uniform.Uniform(low=prior_min, high=prior_max)
-    input_data = prior_uniform.sample((10000,))
+    input_data = prior_uniform.sample((3000,))
     input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
@@ -61,19 +61,29 @@ def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
     return input_data
 
 
-def prior_lognormal_torch(parameter_name, loc, scale):
+def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=3000):
     prior_lognormal_dist = torch.distributions.log_normal.LogNormal(torch.tensor([loc]), torch.tensor([scale]))
-    input_data = prior_lognormal_dist.sample((5000,))
+    # Generate more samples than required
+    input_data = prior_lognormal_dist.sample((num_samples * 2,))
+    # Identify values exceeding the threshold
+    exceed_threshold = input_data >= threshold
+    # Resample values exceeding the threshold
+    while exceed_threshold.any():
+        extra_samples = prior_lognormal_dist.sample((exceed_threshold.sum().item(),))
+        input_data[exceed_threshold] = extra_samples.flatten()  # Use flatten to match shapes
+        exceed_threshold = input_data >= threshold
+    # Truncate to the final desired number of samples
+    input_data = input_data[:num_samples]
     input_df = pd.DataFrame(input_data.numpy())
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_torch('chl', 0.4, 1.6)
-prior_cdom = prior_lognormal_torch('cdom', 0.2, 1.6)
-prior_spm = prior_lognormal_torch('spm', 1.3, 1.1)
-prior_wind = prior_lognormal_scipy('wind', 0.13, 15.67, -9.08, 5000)
+prior_chl = prior_lognormal_torch('chl', 0.4, 1.6, 10)
+prior_cdom = prior_lognormal_torch('cdom', 0.2, 1.6, 5)
+prior_spm = prior_lognormal_torch('spm', 1.3, 1.1, 50)
+prior_wind = prior_lognormal_scipy('wind', 0.13, 15.67, -9.08, 3000)
 prior_depth = prior_uniform_distribution('depth', 0.3, 20.0)
 
 prior_chl = prior_chl.tolist()
