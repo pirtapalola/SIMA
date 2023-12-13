@@ -309,3 +309,49 @@ def build_support(
             support = constraints.interval(lower_bound, upper_bound)
 
     return support
+
+
+"""TOOL N0.4 Create a truncated log-normal Pytorch distribution object"""
+
+
+class TruncatedLogNormal(torch.distributions.Distribution):
+    def __init__(self, loc, scale, lower_bound, upper_bound):
+        self.loc = loc
+        self.scale = scale
+        self.lower_bound = lower_bound
+        self.upper_bound = upper_bound
+        self.base_lognormal = torch.distributions.LogNormal(loc, scale)
+
+    def sample(self, sample_shape=torch.Size()):
+        generated_samples = []
+        total_samples = 0
+
+        while total_samples < sample_shape.numel():
+            remaining_samples = sample_shape.numel() - total_samples
+            extra_samples = self.base_lognormal.sample(torch.Size([remaining_samples]))
+
+            # Apply truncation using vectorized operations
+            mask = (extra_samples >= self.lower_bound) & (extra_samples <= self.upper_bound)
+            valid_samples = extra_samples[mask]
+
+            generated_samples.append(valid_samples)
+            total_samples += valid_samples.numel()
+
+        # Concatenate the generated samples
+        samples = torch.cat(generated_samples)[:sample_shape.numel()]
+
+        # Debugging information
+        print(f"sample_shape: {sample_shape}, samples.size(): {samples.size()}, total_samples: {total_samples}")
+
+        return samples
+
+    def log_prob(self, value):
+        # Calculate log probability for a given value using vectorized operations
+        log_prob_base = self.base_lognormal.log_prob(value)
+        log_prob_truncated = log_prob_base - torch.log(self.cdf(self.upper_bound) - self.cdf(self.lower_bound))
+
+        return log_prob_truncated
+
+    def cdf(self, value):
+        # Cumulative distribution function
+        return self.base_lognormal.cdf(value)
