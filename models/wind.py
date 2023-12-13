@@ -5,6 +5,7 @@ import numpy as np
 from scipy.stats import norm, gamma, lognorm
 import seaborn as sns
 import scipy
+import torch
 
 # Set parameters
 data_request = {
@@ -107,6 +108,8 @@ ks_statistic_norm, ks_pvalue_norm = scipy.stats.kstest(wind, 'norm', params_norm
 ks_statistic_lognorm, ks_pvalue_lognorm = scipy.stats.kstest(wind, 'lognorm', params_lognorm)
 ks_statistic_gamma, ks_pvalue_gamma = scipy.stats.kstest(wind, 'gamma', params_gamma)
 
+
+print("Values for the PyTorch lognormal distribution: ", pytorch_mean, pytorch_std)
 print('KS Test Results:')
 print('Normal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_norm, ks_pvalue_norm))
 print('Lognormal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_lognorm, ks_pvalue_lognorm))
