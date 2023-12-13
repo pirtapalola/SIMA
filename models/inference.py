@@ -18,6 +18,7 @@ Last updated on 05 December 2023 by Pirta Palola
 import torch
 import pandas as pd
 from scipy.stats import lognorm
+from tools import TruncatedLogNormal
 
 """STEP 1. Access the Ecolight setup file."""
 
@@ -35,7 +36,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Define a function that generates and samples the prior assuming a Gamma distribution
 def prior_gamma_distribution(parameter_name, alpha, beta):
     prior_gamma = torch.distributions.gamma.Gamma(torch.tensor([alpha]), torch.tensor([beta]))
-    input_data = prior_gamma.sample((15000,))
+    input_data = prior_gamma.sample(torch.Size([3000]))
     input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
@@ -44,15 +45,13 @@ def prior_gamma_distribution(parameter_name, alpha, beta):
 # Define a function that generates and samples the prior assuming a uniform distribution
 def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     prior_uniform = torch.distributions.uniform.Uniform(low=prior_min, high=prior_max)
-    input_data = prior_uniform.sample((3000,))
+    input_data = prior_uniform.sample(torch.Size([3000]))
     input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
 # Define a function that generates and samples the prior assuming a lognormal distribution
-
-
 def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
     prior_lognormal = lognorm.rvs(s=shape, loc=location, scale=scale, size=size)
     input_data = torch.from_numpy(prior_lognormal).float()
@@ -61,6 +60,25 @@ def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
     return input_data
 
 
+# Create a PyTorch log-normal distribution that is not truncated.
+def prior_lognormal_distribution(parameter_name, mean, std):
+    torch_lognormal = torch.distributions.LogNormal(loc=mean, scale=std)
+    input_data = torch_lognormal.sample(torch.Size([3000]))
+    input_df = pd.DataFrame(input_data)
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    return input_data
+
+
+# Create a PyTorch distribution object for a truncated log-normal distribution.
+def prior_lognormal_truncated(parameter_name, loc, scale, lower_bound, upper_bound):
+    truncated_lognormal = TruncatedLogNormal(loc, scale, lower_bound, upper_bound)
+    input_data = truncated_lognormal.sample(torch.Size([3000]))
+    input_df = pd.DataFrame(input_data)
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    return input_data
+
+
+"""
 def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=3000):
     prior_lognormal_dist = torch.distributions.log_normal.LogNormal(torch.tensor([loc]), torch.tensor([scale]))
     # Generate more samples than required
@@ -77,14 +95,21 @@ def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=300
     input_df = pd.DataFrame(input_data.numpy())
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
+"""
 
+# SciPy lognormal distribution parameters
+shape, scale, location = 0.13, 15.67, -9.08
+
+# Convert SciPy parameters to PyTorch parameters
+pytorch_mean = torch.exp(torch.tensor(location) + 0.5 * torch.tensor(scale)**2)
+pytorch_std = torch.sqrt((torch.exp(torch.tensor(scale)**2) - 1) * torch.exp(2 * torch.tensor(location) + torch.tensor(scale)**2))
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_torch('chl', 0.4, 1.6, 10)
-prior_cdom = prior_lognormal_torch('cdom', 0.2, 1.6, 5)
-prior_spm = prior_lognormal_torch('spm', 1.3, 1.1, 50)
-prior_wind = prior_lognormal_scipy('wind', 0.13, 15.67, -9.08, 3000)
-prior_depth = prior_uniform_distribution('depth', 0.3, 20.0)
+prior_chl = prior_lognormal_truncated('chl', 0.4, 1.6, 0.001, 10)
+prior_cdom = prior_lognormal_truncated('cdom', 0.2, 1.6, 0.001, 5)
+prior_spm = prior_lognormal_truncated('spm', 1.3, 1.1, 0.001, 50)
+prior_wind = prior_lognormal_distribution('wind', pytorch_mean.log(), pytorch_std.log())
+prior_depth = prior_uniform_distribution('depth', 0.2, 20.0)
 
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
@@ -112,9 +137,9 @@ def change_data_format1(data_list1, empty_list1):
     return empty_list1
 
 
-prior_chl1 = change_data_format(prior_chl, prior_chl_list)
-prior_cdom1 = change_data_format(prior_cdom, prior_cdom_list)
-prior_spm1 = change_data_format(prior_spm, prior_spm_list)
+prior_chl1 = change_data_format1(prior_chl, prior_chl_list)
+prior_cdom1 = change_data_format1(prior_cdom, prior_cdom_list)
+prior_spm1 = change_data_format1(prior_spm, prior_spm_list)
 prior_wind1 = change_data_format1(prior_wind, prior_wind_list)
 prior_depth1 = change_data_format1(prior_depth, prior_depth_list)
 
@@ -257,7 +282,8 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[65] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals' + id_string + '_coralbrown' + '.txt'
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals' \
+           + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
