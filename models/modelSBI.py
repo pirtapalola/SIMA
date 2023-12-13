@@ -23,6 +23,7 @@ from torch import tensor
 from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
 import matplotlib.pyplot as plt
 import numpy as np
+from inference import truncated_lognormal_distribution
 
 """
 STEP 1. Prepare the simulated data
@@ -74,14 +75,16 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 STEP 2. Define the prior.
     -Each parameter is associated with its own distribution and name.
 
-"""
+
 
 # Define individual prior distributions
 prior_dist_phy = Gamma(tensor([1.1]), tensor([1.1]))
 prior_dist_cdom = Gamma(tensor([1.2]), tensor([3.0]))
 prior_dist_spm = Gamma(tensor([3.0]), tensor([0.6]))
 prior_dist_wind = Uniform(tensor([0.0]), tensor([10.0]))
-prior_dist_depth = Uniform(tensor([0.0]), tensor([20.0]))
+prior_dist_depth = Uniform(tensor([0.0]), tensor([20.0]))"""
+
+prior_dist_phy = truncated_lognormal_distribution(0.4, 1.6, 0.001, 10)
 
 # Create a list of prior distributions
 prior_distributions = [
