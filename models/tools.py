@@ -5,9 +5,16 @@ Tools for data pre-processing and analysis
 TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset.
 TOOL NO.2 Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
 TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+TOOL N0.4 Create a truncated log-normal PyTorch distribution object.
+TOOL NO.5 A function to fit a log-normal distribution to data.
+
+Last modified on 18 December 2023 by Pirta Palola.
 
 """
 
+import numpy as np
+import torch.nn as nn
+import torch.optim as optim
 import warnings
 from typing import Dict, Optional, Sequence
 import torch
@@ -311,7 +318,7 @@ def build_support(
     return support
 
 
-"""TOOL N0.4 Create a truncated log-normal Pytorch distribution object"""
+"""TOOL N0.4 Create a truncated log-normal PyTorch distribution object."""
 
 
 class TruncatedLogNormal(torch.distributions.Distribution):
@@ -355,3 +362,38 @@ class TruncatedLogNormal(torch.distributions.Distribution):
     def cdf(self, value):
         # Cumulative distribution function
         return self.base_lognormal.cdf(value)
+
+
+"""TOOL NO.5 A function to fit a log-normal distribution to data using PyTorch."""
+
+
+class LogNormalFitter(nn.Module):
+    def __init__(self):
+        super(LogNormalFitter, self).__init__()
+        self.mu = nn.Parameter(torch.tensor(0.0))
+        self.sigma = nn.Parameter(torch.tensor(1.0))
+
+    def forward(self, data):
+        log_likelihood = torch.sum(
+            -0.5 * ((torch.log(data) - self.mu) / self.sigma) ** 2 - torch.log(data * self.sigma) - 0.5 * np.log(
+                2 * np.pi))
+        return -log_likelihood
+
+
+def fit_lognormal_torch(data):
+    data = torch.tensor(data, dtype=torch.float32)
+
+    model = LogNormalFitter()
+    optimizer = optim.LBFGS(model.parameters(), lr=0.01, max_iter=100)
+
+    def closure():
+        optimizer.zero_grad()
+        loss = model(data)
+        loss.backward()
+        return loss
+
+    optimizer.step(closure)
+
+    mu, sigma = model.mu, torch.exp(model.sigma)
+    return mu.item(), sigma.item()
+
