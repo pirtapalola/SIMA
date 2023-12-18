@@ -97,18 +97,12 @@ def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=300
     return input_data
 """
 
-# SciPy lognormal distribution parameters
-shape, scale, location = 0.13, 15.67, -9.08
-
-# Convert SciPy parameters to PyTorch parameters
-pytorch_mean = torch.exp(torch.tensor(location) + 0.5 * torch.tensor(scale)**2)
-pytorch_std = torch.sqrt((torch.exp(torch.tensor(scale)**2) - 1) * torch.exp(2 * torch.tensor(location) + torch.tensor(scale)**2))
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
 prior_chl = prior_lognormal_truncated('chl', 0.4, 1.6, 0.001, 10)
 prior_cdom = prior_lognormal_truncated('cdom', 0.2, 1.6, 0.001, 5)
 prior_spm = prior_lognormal_truncated('spm', 1.3, 1.1, 0.001, 50)
-prior_wind = prior_lognormal_distribution('wind', pytorch_mean.log(), pytorch_std.log())
+prior_wind = prior_lognormal_distribution('wind', 1.82, 1.80)
 prior_depth = prior_uniform_distribution('depth', 0.2, 20.0)
 
 prior_chl = prior_chl.tolist()
