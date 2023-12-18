@@ -6,6 +6,8 @@ from scipy.stats import norm, gamma, lognorm
 import seaborn as sns
 import scipy
 import torch
+from tools import fit_lognormal_torch
+from statsmodels.distributions.empirical_distribution import ECDF
 
 # Set parameters
 data_request = {
@@ -70,12 +72,49 @@ average_wind_speed = average_wind(dates, wind_df)
 # Convert the data into a numpy array.
 wind = average_wind_speed["wind_speed"].values
 
-size = len(wind)
-x = np.linspace(0, 20, size)  # Use linspace to create x-values
+#size = len(wind)
+#x = np.linspace(0, 20, size)  # Use linspace to create x-values
 
 # Creating the histogram
-h = plt.hist(wind, bins=100, density=True)  # Use density=True to get normalized probabilities
+#h = plt.hist(wind, bins=100, density=True)  # Use density=True to get normalized probabilities
 
+
+def fit_lognormal_moments(data):
+    mu = torch.mean(torch.log(data))
+    sigma = torch.std(torch.log(data))
+
+    return mu.item(), sigma.item()
+
+
+# Fit log-normal distribution to the data
+wind_tensor = torch.from_numpy(wind)
+mu, sigma = fit_lognormal_moments(wind_tensor)
+
+# Plot histogram
+plt.hist(wind, bins=1000, density=True, alpha=0.7, color='blue', label='Histogram')
+
+# Plot fitted log-normal curve
+xmin, xmax = plt.xlim()
+size = len(wind)
+x = np.linspace(0, 20, size)  # Use linspace to create x-values
+p = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
+plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
+
+# Plot empirical cumulative distribution function (ECDF)
+ecdf = ECDF(wind)
+plt.step(ecdf.x, ecdf.y, 'r', label='Empirical CDF')
+
+plt.title("Fitted Log-normal Distribution to Histogram (Method of Moments)")
+plt.xlabel("Value")
+plt.ylabel("Frequency / Probability")
+plt.legend()
+plt.show()
+
+print("Fitted Lognormal Distribution Parameters:")
+print("Mean (mu):", mu)
+print("Standard Deviation (sigma):", sigma)
+
+"""
 # Test fitting different distributions to the data
 dist_names = ['norm', 'lognorm', 'gamma']
 
@@ -126,7 +165,7 @@ print(mu, sigma)
 plt.show()
 
 """
-
+"""
 # Plot the data in a histogram.
 sns.set_style('white')
 sns.set_context("paper", font_scale=2)
