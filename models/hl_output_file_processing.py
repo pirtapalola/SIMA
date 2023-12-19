@@ -27,8 +27,8 @@ def process_file(file_path):
 
 
 def main():
-    folder_path = 'C:/Users/pirtapalola/seascapeRS/data/simulated_data/'  # Folder path
-    output_path = 'C:/Users/pirtapalola/seascapeRS/data/HL_output_combined_dataframe.csv'
+    folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2'  # Folder path
+    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2.csv'
 
     # List all text files in the folder
     text_files = [os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.endswith('.txt')]
