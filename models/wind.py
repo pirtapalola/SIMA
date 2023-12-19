@@ -72,49 +72,12 @@ average_wind_speed = average_wind(dates, wind_df)
 # Convert the data into a numpy array.
 wind = average_wind_speed["wind_speed"].values
 
-#size = len(wind)
-#x = np.linspace(0, 20, size)  # Use linspace to create x-values
-
-# Creating the histogram
-#h = plt.hist(wind, bins=100, density=True)  # Use density=True to get normalized probabilities
-
-
-def fit_lognormal_moments(data):
-    mu = torch.mean(torch.log(data))
-    sigma = torch.std(torch.log(data))
-
-    return mu.item(), sigma.item()
-
-
-# Fit log-normal distribution to the data
-wind_tensor = torch.from_numpy(wind)
-mu, sigma = fit_lognormal_moments(wind_tensor)
-
-# Plot histogram
-plt.hist(wind, bins=1000, density=True, alpha=0.7, color='blue', label='Histogram')
-
-# Plot fitted log-normal curve
-xmin, xmax = plt.xlim()
 size = len(wind)
 x = np.linspace(0, 20, size)  # Use linspace to create x-values
-p = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
-plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
 
-# Plot empirical cumulative distribution function (ECDF)
-ecdf = ECDF(wind)
-plt.step(ecdf.x, ecdf.y, 'r', label='Empirical CDF')
+# Create the histogram
+h = plt.hist(wind, bins=100, density=True)  # Use density=True to get normalized probabilities
 
-plt.title("Fitted Log-normal Distribution to Histogram (Method of Moments)")
-plt.xlabel("Value")
-plt.ylabel("Frequency / Probability")
-plt.legend()
-plt.show()
-
-print("Fitted Lognormal Distribution Parameters:")
-print("Mean (mu):", mu)
-print("Standard Deviation (sigma):", sigma)
-
-"""
 # Test fitting different distributions to the data
 dist_names = ['norm', 'lognorm', 'gamma']
 
@@ -137,6 +100,31 @@ for dist_name in dist_names:
     plt.ylabel('Frequency')
     plt.legend(loc='upper right')
 
+
+#
+def fit_lognormal_moments(data):
+    mu = torch.mean(torch.log(data))
+    sigma = torch.std(torch.log(data))
+
+    return mu.item(), sigma.item()
+
+
+# Fit log-normal distribution to the data using method of moments
+wind_tensor = torch.from_numpy(wind)
+mu, sigma = fit_lognormal_moments(wind_tensor)
+
+# Create PyTorch log-normal distribution with the fitted parameters
+torch_lognormal_dist = torch.distributions.LogNormal(mu, sigma)
+
+# Plot the probability density function (PDF) of the fitted log-normal distribution
+# Convert the values to tensors before passing them to icdf
+x = torch.linspace(torch_lognormal_dist.icdf(torch.tensor(0.001)).item(),
+                   torch_lognormal_dist.icdf(torch.tensor(0.999)).item(), 100)
+p = torch_lognormal_dist.log_prob(x).exp().numpy()
+# p = torch_lognormal_dist.log_prob(torch.tensor(x)).exp().numpy()
+# p = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
+plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
+
 # Assuming you already have the fitted parameters for each distribution
 params_norm = norm.fit(wind)
 params_lognorm = lognorm.fit(wind)
@@ -147,24 +135,17 @@ ks_statistic_norm, ks_pvalue_norm = scipy.stats.kstest(wind, 'norm', params_norm
 ks_statistic_lognorm, ks_pvalue_lognorm = scipy.stats.kstest(wind, 'lognorm', params_lognorm)
 ks_statistic_gamma, ks_pvalue_gamma = scipy.stats.kstest(wind, 'gamma', params_gamma)
 
-
-print("Values for the PyTorch lognormal distribution: ", pytorch_mean, pytorch_std)
 print('KS Test Results:')
 print('Normal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_norm, ks_pvalue_norm))
 print('Lognormal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_lognorm, ks_pvalue_lognorm))
 print('Gamma Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_gamma, ks_pvalue_gamma))
-print('Parameters of the Lognormal distribution: ', params_norm)
+print('Parameters of the lognormal distribution: ', 'mu = ', mu, ', sigma = ', sigma)
 
-scale = params_lognorm[2]
-shape = params_lognorm[0]
-mu = np.log(scale)
-sigma = shape
-print(mu, sigma)
+
 
 # Show the plot
 plt.show()
 
-"""
 """
 # Plot the data in a histogram.
 sns.set_style('white')
