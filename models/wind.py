@@ -1,3 +1,11 @@
+"""
+
+Estimate the wind speed prior distribution using Copernicus data.
+
+Last updated on 19 December 2023 by Pirta Palola
+
+"""
+
 import copernicus_marine_client as copernicus_marine
 import pandas as pd
 import matplotlib.pyplot as plt
