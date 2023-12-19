@@ -96,8 +96,8 @@ for dist_name in dist_names:
     # Set x-axis limits
     plt.xlim(0, 20)
     # Add labels and legend
-    plt.xlabel('Wind Speed')
-    plt.ylabel('Frequency')
+    plt.xlabel('Wind Speed (m/s)')
+    plt.ylabel('Probability Density')
     plt.legend(loc='upper right')
 
 
@@ -118,12 +118,12 @@ torch_lognormal_dist = torch.distributions.LogNormal(mu, sigma)
 
 # Plot the probability density function (PDF) of the fitted log-normal distribution
 # Convert the values to tensors before passing them to icdf
-x = torch.linspace(torch_lognormal_dist.icdf(torch.tensor(0.001)).item(),
-                   torch_lognormal_dist.icdf(torch.tensor(0.999)).item(), 100)
-p = torch_lognormal_dist.log_prob(x).exp().numpy()
+#x = torch.linspace(torch_lognormal_dist.icdf(torch.tensor(0.001)).item(),
+           #        torch_lognormal_dist.icdf(torch.tensor(0.999)).item(), 100)
+#p = torch_lognormal_dist.log_prob(x).exp().numpy()
 # p = torch_lognormal_dist.log_prob(torch.tensor(x)).exp().numpy()
 # p = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
-plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
+#plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
 
 # Assuming you already have the fitted parameters for each distribution
 params_norm = norm.fit(wind)
@@ -140,6 +140,7 @@ print('Normal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_s
 print('Lognormal Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_lognorm, ks_pvalue_lognorm))
 print('Gamma Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_statistic_gamma, ks_pvalue_gamma))
 print('Parameters of the lognormal distribution: ', 'mu = ', mu, ', sigma = ', sigma)
+print('Number of data points: ', len(wind))
 
 
 
