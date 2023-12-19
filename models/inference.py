@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 05 December 2023 by Pirta Palola
+Last updated on 19 December 2023 by Pirta Palola
 
 """
 
