@@ -16,11 +16,11 @@ Last updated on 19 December 2023 by Pirta Palola
 import pandas as pd
 import torch
 import os
-from torch.distributions import Uniform, Gamma
+from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from sbi import analysis as analysis
 from torch import tensor
-from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
+from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum, TruncatedLogNormal
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -37,7 +37,7 @@ current_dir = os.getcwd()
 print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
-path = 'data/simulated_data/'  # Define the file location
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
@@ -46,7 +46,8 @@ num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
 num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
-simulated_reflectance = pd.read_csv('data/HL_output_combined_dataframe.csv')
+simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
+                                    'Methods/Methods_Ecolight/test_setup2.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
@@ -78,14 +79,11 @@ STEP 2. Define the prior.
 """
 
 # Define individual prior distributions
-prior_dist_phy = Gamma(tensor([1.1]), tensor([1.1]))
-prior_dist_cdom = Gamma(tensor([1.2]), tensor([3.0]))
-prior_dist_spm = Gamma(tensor([3.0]), tensor([0.6]))
-prior_dist_wind = Uniform(tensor([0.0]), tensor([10.0]))
-prior_dist_depth = Uniform(tensor([0.0]), tensor([20.0]))
-
-
-# prior_dist_phy = prior_lognormal_truncated(0.4, 1.6, 0.001, 10)
+prior_dist_phy = LogNormal(tensor([0.1]), tensor([1.7]), tensor([0.001]), tensor([10]))
+prior_dist_cdom = LogNormal(tensor([0.05]), tensor([1.7]), tensor([0.001]), tensor([5]))
+prior_dist_spm = LogNormal(tensor([0.4]), tensor([1.1]), tensor([0.001]), tensor([50]))
+prior_dist_wind = LogNormal(tensor([1.85]), tensor([0.33]))
+prior_dist_depth = Uniform(tensor([0.10]), tensor([20.0]))
 
 # Create a list of prior distributions
 prior_distributions = [
@@ -140,7 +138,7 @@ obs_df = pd.read_csv(observation_path)
 x_o = obs_df['reflectance']
 
 # Given this observation, sample from the posterior p(θ|x), or plot it.
-posterior_samples = posterior.sample((10000,), x=x_o)
+posterior_samples = posterior.sample((1000,), x=x_o)
 
 # Evaluate the log-probability of the posterior samples
 log_probability = posterior.log_prob(posterior_samples, x=x_o)
