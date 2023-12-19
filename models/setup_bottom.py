@@ -46,17 +46,14 @@ def change_and_save_bottom_file(list_files, original_file_path, bottom_name, bot
 
 
 original_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/'
-# change_and_save_bottom_file(the_list, original_path, 'turf', 'turf.txt')
+# change_and_save_bottom_file(the_list, original_path, 'sand', 'sand.txt')
 
 """STEP 3. Check that the correct changes were made."""
 
-# Check that only line 61 was changed
-
+# Check that only lines 2 and 61 were changed
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'setup/setup_sand/Icorals/Icorals_00_0001_1361_049_509_1927_turf.txt', 'r')
-f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'setup/Icorals_00_0001_1361_049_509_1927_coralbrown.txt', 'r')
+f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals_00_00_021_461_672_1006_coralbrown.txt', 'r')
+f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals_00_00_021_461_672_1006_sand.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
