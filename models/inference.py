@@ -38,7 +38,7 @@ def prior_gamma_distribution(parameter_name, alpha, beta):
     prior_gamma = torch.distributions.gamma.Gamma(torch.tensor([alpha]), torch.tensor([beta]))
     input_data = prior_gamma.sample(torch.Size([3000]))
     input_df = pd.DataFrame(input_data)
-    #input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
@@ -47,7 +47,7 @@ def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     prior_uniform = torch.distributions.uniform.Uniform(low=prior_min, high=prior_max)
     input_data = prior_uniform.sample(torch.Size([3000]))
     input_df = pd.DataFrame(input_data)
-    #input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
@@ -56,7 +56,7 @@ def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
     prior_lognormal = lognorm.rvs(s=shape, loc=location, scale=scale, size=size)
     input_data = torch.from_numpy(prior_lognormal).float()
     input_df = pd.DataFrame(input_data.numpy())
-    #input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
@@ -65,7 +65,7 @@ def prior_lognormal_distribution(parameter_name, mean, std):
     torch_lognormal = torch.distributions.LogNormal(loc=mean, scale=std)
     input_data = torch_lognormal.sample(torch.Size([3000]))
     input_df = pd.DataFrame(input_data)
-    #input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
@@ -73,8 +73,8 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 def prior_lognormal_truncated(parameter_name, loc, scale, lower_bound, upper_bound):
     truncated_lognormal = TruncatedLogNormal(loc, scale, lower_bound, upper_bound)
     input_data = truncated_lognormal.sample(torch.Size([3000]))
-    #input_df = pd.DataFrame(input_data)
-    #input_df.to_csv(PATH + parameter_name + '_prior.csv')
+    input_df = pd.DataFrame(input_data)
+    input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
 
 
