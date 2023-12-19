@@ -1,6 +1,16 @@
+"""
+
+Visualise the prior distributions:
+ -Plot the 3000 samples drawn from each prior distribution to a histogram.
+ -Add the corresponding prior distribution as a curve.
+
+Last updated on 19 December 2023 by Pirta Palola
+
+"""
+
+# Import libraries
 import torch
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 # Define the priors
