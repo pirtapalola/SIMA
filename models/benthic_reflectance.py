@@ -1,3 +1,13 @@
+"""
+
+Read the mat file provided by Eric Hochberg and save the data into a csv file.
+The file contains the global benthic reflectance dataset.
+
+Last updated on 3 January 2024 by Pirta Palola
+
+"""
+
+# Import libraries.
 from scipy.io import loadmat
 import pandas as pd
 import numpy as np
