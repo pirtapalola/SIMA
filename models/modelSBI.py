@@ -37,7 +37,7 @@ current_dir = os.getcwd()
 print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2'  # Define the file location
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Test_runs/test_setup2'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
@@ -47,7 +47,7 @@ num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/test_setup2.csv')
+                                    'Methods/Methods_Ecolight/Test_runs/test_setup2.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
@@ -79,9 +79,9 @@ STEP 2. Define the prior.
 """
 
 # Define individual prior distributions
-prior_dist_phy = LogNormal(tensor([0.1]), tensor([1.7]), tensor([0.001]), tensor([10]))
-prior_dist_cdom = LogNormal(tensor([0.05]), tensor([1.7]), tensor([0.001]), tensor([5]))
-prior_dist_spm = LogNormal(tensor([0.4]), tensor([1.1]), tensor([0.001]), tensor([50]))
+prior_dist_phy = TruncatedLogNormal(tensor([0.1]), tensor([1.7]), tensor([0.001]), tensor([10]))
+prior_dist_cdom = TruncatedLogNormal(tensor([0.05]), tensor([1.7]), tensor([0.001]), tensor([5]))
+prior_dist_spm = TruncatedLogNormal(tensor([0.4]), tensor([1.1]), tensor([0.001]), tensor([50]))
 prior_dist_wind = LogNormal(tensor([1.85]), tensor([0.33]))
 prior_dist_depth = Uniform(tensor([0.10]), tensor([20.0]))
 
