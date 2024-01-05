@@ -98,9 +98,13 @@ def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=300
 """
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_truncated('chl', 0.1, 1.7, 0.001, 10)
-prior_cdom = prior_lognormal_truncated('cdom', 0.05, 1.7, 0.001, 5)
-prior_spm = prior_lognormal_truncated('spm', 0.4, 1.1, 0.001, 50)
+# prior_chl = prior_lognormal_truncated('chl', 0.1, 1.7, 0.001, 10)
+# prior_cdom = prior_lognormal_truncated('cdom', 0.05, 1.7, 0.001, 5)
+# prior_spm = prior_lognormal_truncated('spm', 0.4, 1.1, 0.001, 50)
+
+prior_chl = prior_gamma_distribution('chl', 1.1, 1.1)
+prior_cdom = prior_gamma_distribution('cdom', 1.2, 3.0)
+prior_spm = prior_gamma_distribution('spm', 3.0, 0.6)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
 prior_depth = prior_uniform_distribution('depth', 0.1, 20.0)
 
@@ -130,9 +134,9 @@ def change_data_format1(data_list1, empty_list1):
     return empty_list1
 
 
-prior_chl1 = change_data_format1(prior_chl, prior_chl_list)
-prior_cdom1 = change_data_format1(prior_cdom, prior_cdom_list)
-prior_spm1 = change_data_format1(prior_spm, prior_spm_list)
+prior_chl1 = change_data_format(prior_chl, prior_chl_list)
+prior_cdom1 = change_data_format(prior_cdom, prior_cdom_list)
+prior_spm1 = change_data_format(prior_spm, prior_spm_list)
 prior_wind1 = change_data_format1(prior_wind, prior_wind_list)
 prior_depth1 = change_data_format1(prior_depth, prior_depth_list)
 
