@@ -10,8 +10,8 @@ Last updated on 19 December 2023 by Pirta Palola
 
 # Import libraries
 import torch
-import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Define the priors
 prior1 = torch.distributions.LogNormal(0.1, 1.7)
@@ -21,11 +21,12 @@ prior4 = torch.distributions.LogNormal(1.85, 0.33)
 
 # Import the samples drawn from each prior (3000 randomly drawn samples)
 prior_samples = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                            "Methods_Ecolight/priors/priors_summary.csv")
+                            "Methods_Ecolight/Dec2023_lognormal_priors/priors/priors_summary.csv")
 samples_phy = prior_samples["Phytoplankton"].to_numpy()
 samples_cdom = prior_samples["CDOM"].to_numpy()
 samples_nap = prior_samples["NAP"].to_numpy()
 samples_wind = prior_samples["Wind"].to_numpy()
+
 
 # Create a figure with four subplots
 fig, axes = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
