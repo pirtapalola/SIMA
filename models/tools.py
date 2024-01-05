@@ -341,8 +341,8 @@ class TruncatedLogNormal(torch.distributions.Distribution):
         generated_samples = []
         total_samples = 0
 
-        while total_samples < sample_shape.numel():
-            remaining_samples = sample_shape.numel() - total_samples
+        while total_samples < torch.Size(sample_shape).numel():
+            remaining_samples = torch.Size(sample_shape).numel() - total_samples
             extra_samples = self.base_lognormal.sample(torch.Size([remaining_samples]))
 
             # Apply truncation using vectorized operations
@@ -353,7 +353,7 @@ class TruncatedLogNormal(torch.distributions.Distribution):
             total_samples += valid_samples.numel()
 
         # Concatenate the generated samples
-        samples = torch.cat(generated_samples)[:sample_shape.numel()]
+        samples = torch.cat(generated_samples)[:torch.Size(sample_shape).numel()]
 
         # Debugging information
         print(f"sample_shape: {sample_shape}, samples.size(): {samples.size()}, total_samples: {total_samples}")
@@ -369,7 +369,17 @@ class TruncatedLogNormal(torch.distributions.Distribution):
 
     def cdf(self, value):
         # Cumulative distribution function
-        return self.base_lognormal.cdf(value)
+        transformed_value = (value - self.loc) / self.scale
+        transformed_value_tensor = torch.tensor(transformed_value, dtype=torch.float32)
+        cdf_transformed = self.base_lognormal.cdf(transformed_value_tensor)
+
+        return cdf_transformed
+
+    def pdf(self, x):
+        # Probability density function
+        pdf_base = torch.exp(self.base_lognormal.log_prob(x))
+        pdf_truncated = pdf_base / (self.cdf(self.upper_bound) - self.cdf(self.lower_bound))
+        return pdf_truncated.numpy()
 
 
 """
