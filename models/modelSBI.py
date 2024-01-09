@@ -20,7 +20,8 @@ from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from sbi import analysis as analysis
 from torch import tensor
-from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
+from models.tools import MultipleIndependent, \
+    create_input_dataframe, minimum_maximum, find_strings_with_different_splits
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -38,7 +39,8 @@ print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/files'  # Define the file location
+       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
+       'EL_test_2_dec2023/EL_test_2_dec2023'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
@@ -51,6 +53,11 @@ simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapte
                                     'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
+
+
+# Check that the strings have the same number of splits
+string_check = find_strings_with_different_splits(files, "Msand_00_937_067_061_308_263")
+print("Strings with different splits:", string_check)
 
 # Apply the function to create a dataframe containing the inputs of each of the HydroLight simulation runs
 hydrolight_input = create_input_dataframe(files)
