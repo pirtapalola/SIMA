@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 19 December 2023 by Pirta Palola
+Last updated on 9 January 2024 by Pirta Palola
 
 """
 
@@ -20,7 +20,7 @@ from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from sbi import analysis as analysis
 from torch import tensor
-from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum, TruncatedLogNormal
+from models.tools import MultipleIndependent, create_input_dataframe, minimum_maximum
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -37,7 +37,8 @@ current_dir = os.getcwd()
 print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Test_runs/test_setup2'  # Define the file location
+path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
+       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/files'  # Define the file location
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
@@ -47,7 +48,7 @@ num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Test_runs/test_setup2.csv')
+                                    'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
 simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
 
@@ -79,9 +80,9 @@ STEP 2. Define the prior.
 """
 
 # Define individual prior distributions
-prior_dist_phy = TruncatedLogNormal(tensor([0.1]), tensor([1.7]), tensor([0.001]), tensor([10]))
-prior_dist_cdom = TruncatedLogNormal(tensor([0.05]), tensor([1.7]), tensor([0.001]), tensor([5]))
-prior_dist_spm = TruncatedLogNormal(tensor([0.4]), tensor([1.1]), tensor([0.001]), tensor([50]))
+prior_dist_phy = LogNormal(tensor([0.1]), tensor([1.7]))
+prior_dist_cdom = LogNormal(tensor([0.05]), tensor([1.7]))
+prior_dist_spm = LogNormal(tensor([0.4]), tensor([1.1]))
 prior_dist_wind = LogNormal(tensor([1.85]), tensor([0.33]))
 prior_dist_depth = Uniform(tensor([0.10]), tensor([20.0]))
 
@@ -129,7 +130,7 @@ density_estimator = inference.train()
 posterior = inference.build_posterior(density_estimator)
 
 # Save the trained density estimator
-torch.save(density_estimator.state_dict(), 'density_estimator.pth')
+# torch.save(density_estimator.state_dict(), 'density_estimator.pth')
 
 # Define an observation x
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
@@ -144,7 +145,8 @@ posterior_samples = posterior.sample((1000,), x=x_o)
 log_probability = posterior.log_prob(posterior_samples, x=x_o)
 log_prob_np = log_probability.numpy()  # convert to Numpy array
 log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
-log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/log_probability_test_sample.csv')
+log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
+                   'Methods_Ecolight/Dec2023_lognormal_priors/log_probability_dec23_lognormal.csv')
 
 # Plot posterior samples
 _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
