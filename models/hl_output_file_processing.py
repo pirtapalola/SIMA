@@ -27,8 +27,10 @@ def process_file(file_path):
 
 
 def main():
-    folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2'  # Folder path
-    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/test_setup2.csv'
+    folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
+                  'EL_test_2_dec2023/EL_test_2_dec2023'  # Folder path
+    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
+                  'simulated_rrs_dec23_lognorm.csv'
 
     # List all text files in the folder
     text_files = [os.path.join(folder_path, file) for file in os.listdir(folder_path) if file.endswith('.txt')]
