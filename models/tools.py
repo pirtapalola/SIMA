@@ -7,6 +7,7 @@ TOOL NO.2 Create a pandas dataframe containing the input parameters (each row co
 TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
 TOOL N0.4 Create a truncated log-normal PyTorch distribution object.
 TOOL NO.5 A function to fit a log-normal distribution to data.
+TOOL NO.6 Check that the strings in a list have the same number of splits.
 
 Last modified on 18 December 2023 by Pirta Palola.
 
@@ -48,7 +49,7 @@ Create a pandas dataframe containing the input parameters (each row corresponds 
 
 
 def create_input_dataframe(list_of_strings):
-    split_df = pd.DataFrame(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    split_df = pd.DataFrame(columns=["data", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
     phy_list = []
     cdom_list = []
     spm_list = []
@@ -80,12 +81,12 @@ def create_input_dataframe(list_of_strings):
         sep = '.'
         depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
 
-    for x in depth_list0:  # Create a list where the decimal dots are added
-        depth_list.append(float(x[:1] + '.' + x[1:]))
-    split_df["depth"] = depth_list  # Create a new column that contains the values with decimal dots
+    #for x in depth_list0:  # Create a list where the decimal dots are added
+     #   depth_list.append(float(x[:1] + '.' + x[1:]))
+    split_df["depth"] = depth_list0  # Create a new column that contains the values with decimal dots
 
     # Drop the columns that do not contain the values to be inferred
-    split_df = split_df.drop(columns=["data", "empty", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
+    split_df = split_df.drop(columns=["data", "water", "phy1", "cdom1", "spm1", "wind1", "depth1", "depth"])
     return split_df
 
 
@@ -458,4 +459,19 @@ def fit_lognormal_torch(data):
 
     mu, sigma = model.mu, torch.exp(model.sigma)
     return mu.item(), sigma.item()
+
+
+"""TOOL NO.6 Check that the strings in a list have the same number of splits."""
+
+
+def find_strings_with_different_splits(list_of_strings, reference_string):
+    reference_splits = len(reference_string.split("_"))  # Split at the locations marked by an underscore.
+    different_splits_strings = []
+
+    for s in list_of_strings:
+        current_splits = len(s.split("_"))
+        if current_splits != reference_splits:
+            different_splits_strings.append(s)
+
+    return different_splits_strings
 
