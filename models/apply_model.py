@@ -1,20 +1,22 @@
-import pandas as pd
+
+# Import libraries
 import pandas as pd
 import torch
-import os
-from torch.distributions import Uniform, LogNormal
-from sbi.inference import SNPE
 from sbi import analysis as analysis
-from torch import tensor
 import matplotlib.pyplot as plt
 import numpy as np
+import pickle
 
+# Load the posterior
+with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+          "Dec2023_lognormal_priors/loaded_posterior.pkl", "rb") as handle:
+    loaded_posterior = pickle.load(handle)
 
-# Use the trained neural density estimator to build the posterior
-posterior = inference.build_posterior(density_estimator)
+# Read the csv file containing the simulated reflectance data into a pandas dataframe
+simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
+                                    'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
+x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[-1]})
 
-# Save the trained density estimator
-torch.save(density_estimator.state_dict(), 'density_estimator.pth')
 # Define an observation x
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
                    'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
@@ -22,14 +24,14 @@ obs_df = pd.read_csv(observation_path)
 # x_o = obs_df['reflectance']
 
 # Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
-x_o = x_tensor[1]
+x_o = x_dataframe.iloc[1]
 print(x_o)
 
 # Given this observation, sample from the posterior p(θ|x), or plot it.
-posterior_samples = posterior.sample((1000,), x=x_o)
+posterior_samples = loaded_posterior.sample((1000,), x=x_o)
 
 # Evaluate the log-probability of the posterior samples
-log_probability = posterior.log_prob(posterior_samples, x=x_o)
+log_probability = loaded_posterior.log_prob(posterior_samples, x=x_o)
 log_prob_np = log_probability.numpy()  # convert to Numpy array
 log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
 log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
@@ -40,7 +42,7 @@ _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 1
 plt.show()
 
 # Print the posterior to know how it was trained
-print(posterior)
+print(loaded_posterior)
 
 theta_samples = posterior_samples.numpy()  # Convert to NumPy array
 
