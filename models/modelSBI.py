@@ -17,11 +17,9 @@ import torch
 import os
 from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
-from sbi import analysis as analysis
 from torch import tensor
 from models.tools import MultipleIndependent, minimum_maximum
-import matplotlib.pyplot as plt
-import numpy as np
+import pickle
 
 """
 STEP 1. Prepare the simulated data
@@ -131,3 +129,12 @@ STEP 4. Train the neural density estimator and build the posterior.
 
 # Train the neural density estimator
 density_estimator = inference.train()
+
+# Use the trained neural density estimator to build the posterior
+posterior = inference.build_posterior(density_estimator)
+
+# Save the posterior in binary write mode ("wb")
+# The "with" statement ensures that the file is closed
+with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+          "Dec2023_lognormal_priors/loaded_posterior.pkl", "wb") as handle:
+    pickle.dump(posterior, handle)
