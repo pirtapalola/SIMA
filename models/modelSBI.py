@@ -12,7 +12,6 @@ Last updated on 9 January 2024 by Pirta Palola
 """
 
 # Import libraries
-
 import pandas as pd
 import torch
 import os
@@ -20,8 +19,7 @@ from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from sbi import analysis as analysis
 from torch import tensor
-from models.tools import MultipleIndependent, \
-    create_input_dataframe, minimum_maximum, find_strings_with_different_splits, extract_values_from_filename
+from models.tools import MultipleIndependent, minimum_maximum
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -50,29 +48,31 @@ num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                                     'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
-simulated_reflectance.iloc[:, 0] = files  # Replace the first column repeating "Rrs" with the corresponding file names
-simulated_reflectance.rename(columns={simulated_reflectance.columns[0]: "File_ID"}, inplace=True)  # Rename the column
+simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
+simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
+print(simulated_reflectance)
 
+# Read the csv file containing the inputs of each of the HydroLight simulation runs
+hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
+                               'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv')
+hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
+print(hydrolight_input)  # Check that the dataframe contains the correct information.
 
-# Check that the strings have the same number of splits
-string_check = find_strings_with_different_splits(files, "Msand_00_937_067_061_308_263")
-print("Strings with different splits:", string_check)
-
-# Apply the function to create a dataframe containing the inputs of each of the HydroLight simulation runs
-hydrolight_input = create_input_dataframe(files)
-print(hydrolight_input)
-
-# Print the minimum and maximum values of each column in the dataframe
+# Print the minimum and maximum values of each column in the dataframe.
 # These should correspond to the empirically realistic range of values.
 minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
-# Define theta and x
+# Define theta and x.
 theta_dataframe = hydrolight_input  # Theta contains the five input variables.
 x_dataframe = simulated_reflectance.drop(columns="File_ID")  # The output values are stored in x. Drop the File_ID.
 
 # Convert the pandas DataFrames to numpy arrays
 theta_array = theta_dataframe.to_numpy()
 x_array = x_dataframe.to_numpy()
+
+print("Length of theta: ", len(theta_array[0]))
+print("Length of x: ", len(x_array[0]))
+print(x_array[0])
 
 # Convert the numpy arrays to PyTorch tensors
 theta_tensor = torch.tensor(theta_array, dtype=torch.float32)
@@ -131,42 +131,3 @@ STEP 4. Train the neural density estimator and build the posterior.
 
 # Train the neural density estimator
 density_estimator = inference.train()
-
-# Use the trained neural density estimator to build the posterior
-posterior = inference.build_posterior(density_estimator)
-
-# Save the trained density estimator
-# torch.save(density_estimator.state_dict(), 'density_estimator.pth')
-
-# Define an observation x
-observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
-                   'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
-obs_df = pd.read_csv(observation_path)
-x_o = obs_df['reflectance']
-
-# Given this observation, sample from the posterior p(θ|x), or plot it.
-posterior_samples = posterior.sample((1000,), x=x_o)
-
-# Evaluate the log-probability of the posterior samples
-log_probability = posterior.log_prob(posterior_samples, x=x_o)
-log_prob_np = log_probability.numpy()  # convert to Numpy array
-log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
-log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
-                   'Methods_Ecolight/Dec2023_lognormal_priors/log_probability_dec23_lognormal.csv')
-
-# Plot posterior samples
-_ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
-plt.show()
-
-# Print the posterior to know how it was trained
-print(posterior)
-
-theta_samples = posterior_samples.numpy()  # Convert to NumPy array
-
-# Mean estimates for each parameter
-theta_means = torch.mean(posterior_samples, dim=0)
-print(theta_means)
-
-# Credible intervals (e.g., 95% interval) for each parameter using NumPy
-theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
-print(theta_intervals)
