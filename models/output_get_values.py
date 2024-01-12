@@ -1,12 +1,13 @@
 """
 
-Get the values of the parameters of each simulation run from the filenames.
+Create a csv file storing the EL output in a correct format.
 STEP 1. Read the parameter combinations from a csv file.
 STEP 2. Store each row in the csv file as a tuple in a list.
 STEP 3. Create the file ID associated with each tuple.
 STEP 4. Add the file IDs as a column in the dataframe.
 STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
+STEP 6. Extract reflectance from the EL output files.
 
 """
 
@@ -14,6 +15,9 @@ STEP 5. Use the list of file IDs to create a list of filepaths
 import pandas as pd
 import csv
 import glob
+from io import StringIO
+import os
+from multiprocessing import Pool
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
@@ -64,8 +68,6 @@ for i in float_data_list:
 
 combinations_df = combinations
 combinations_df["filename"] = string_id
-print(combinations_df)
-
 
 """STEP 5. Use the list of file IDs to create a list of filepaths 
 so that each file can be accessed in the order defined by the list of file IDs."""
@@ -89,147 +91,46 @@ for file_id in file_ids:
 
 # Now, file_paths contains the paths to the files in the order specified by file_ids.
 
-print(len(file_ids))
-print(len(file_paths))
-
-"""
-# STEP 1: Create a list of all the files in the folder
-# Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/setup'
-files = [f for f in os.listdir(path) if f.endswith('.txt')]
+"""STEP 6. Extract reflectance from the EL output files."""
 
 
-# STEP 2: Extract the input parameter values from the filenames
+# A function to process a single file
+def process_file(file_path):
+    with open(file_path, 'r') as file:
+        text = file.read()
+        lines = text.strip().split('\n')[629:780]  # Extract lines 630-780
+        data = "\n".join(lines)  # Join the lines and create a StringIO object
+        data_io = StringIO(data)
+        df = pd.read_csv(data_io, sep=r'\s+', header=None)  # Read the data into a pandas DataFrame
+        df = df.T  # Transpose the DataFrame to get the desired format
+        df.columns = df.iloc[0]  # Set the first row as the header
+        df = df.iloc[:3]
+        df = df.drop([0, 2])
+    return df
 
 
-def extract_parameters(filename):
-    # Remove the prefix "Icorals_" and split the remaining string by underscores
-    filename = filename.replace("_coralbrown.txt", "")
-    parameters_str = filename[len("Icorals_"):].split('_')
+# Apply the function to all the files
+def main():
+    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
+                  'simulated_rrs_dec23_lognorm.csv'
 
-    # Insert decimal points for each parameter
-    parameters = [float(f"{param[:-2]}.{param[-2:]}") for param in parameters_str]
+    # Number of processes to use (adjust as needed)
+    num_processes = 4
 
-    # Assign parameter names
-    water, chl, cdom, spm, wind, depth = parameters
+    # Create a Pool of processes
+    with Pool(num_processes) as pool:
+        data_frames = pool.map(process_file, file_paths)
 
-    return {
-        'water': water,
-        'chl': chl,
-        'cdom': cdom,
-        'spm': spm,
-        'wind': wind,
-        'depth': depth
-    }
+    # Concatenate DataFrames
+    combined_df = pd.concat(data_frames, ignore_index=True)
+
+    # Save the combined DataFrame to a CSV file
+    combined_df.to_csv(output_path, index=False)
 
 
-# Example usage:
-filename = "Icorals_00_00_021_461_672_1006_coralbrown.txt"
-parameters = extract_parameters(filename)
-print(parameters)
+# This condition checks if the script is being run directly as the main program
+# (not imported as a module into another script).
+# This ensures that the code within the main() function only runs when the script is executed directly.
 
-# STEP 3. Extract the parameter values from all the filenames.
-
-# Create a DataFrame to store the parameter values
-result_df = pd.DataFrame(columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
-
-# Extract values from filenames and populate the result DataFrame
-for filename in files:
-    # Extract values directly from filename
-    values = extract_parameters(filename)
-    if values:
-        result_df.loc[len(result_df)] = values
-
-result_df = result_df.drop(columns="phy")
-print(result_df)
-
-# STEP: Compare the resulting dataframe to the original CSV file
-
-combinations = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                           'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv')
-print(combinations)
-
-# Merge dataframes based on common columns 'phy', 'cdom', and 'spm'
-merged_df = pd.merge(result_df, combinations, on=['water', 'cdom', 'spm', 'wind', 'depth'])
-
-# Display the merged dataframe
-print(merged_df)"""
-
-"""
-def extract_values_from_filename(filename):
-    # Remove ".txt" from the filename
-    filename = filename.replace(".txt", "")
-
-    # Assuming the format "Mcoralbrown_00_00_021_461_672_100"
-    parts = filename.split('_')
-
-    # Extract parameter values from the filename
-    try:
-        water = int(parts[1]) / 100.0
-        phy = int(parts[2]) / 100.0
-        cdom = int(parts[3]) / 100.0
-        spm = int(parts[4]) / 100.0
-        wind = int(parts[5]) / 10.0
-        depth = int(parts[6]) / 10.0
-    except ValueError:
-        return filename  # Return filename if there's an error
-
-    return water, phy, cdom, spm, wind, depth
-
-
-testing = extract_values_from_filename("Mcoralbrown_00_001_042_1166_779_1.txt")
-print(testing)
-
-# Load CSV file into a DataFrame
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
-       'Ecolight_parameter_combinations.csv'
-df_csv = pd.read_csv(csv_file_path)
-
-# Create a dictionary to store parameter combinations
-param_dict = {}
-
-# Populate the dictionary with parameter combinations from the CSV file
-for index, row in df_csv.iterrows():
-    filename = "_".join(str(round(value, 3) if col not in ['wind', 'depth'] else round(value, 2)).replace('.', '') for col, value in zip(df_csv.columns, row))
-    param_dict[filename] = row.tolist()
-
-# Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
-       'EL_test_2_dec2023/EL_test_2_dec2023'
-files = [f for f in os.listdir(path) if f.endswith('.txt')]
-
-# Create a DataFrame to store the results
-result_df = pd.DataFrame(columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
-
-# List to store problematic filenames
-error_files = []
-
-# Extract values from filenames and accumulate problematic filenames
-for filename in files:
-    values = extract_values_from_filename(filename)
-    if isinstance(values, str):  # Check if values is a string (filename)
-        error_files.append(values)
-
-# Print all the filenames that caused errors
-if error_files:
-    print("Files with errors:")
-    for filename in error_files:
-        print(filename)
-
-# Extract values from filenames and populate the result DataFrame
-for filename in files:
-    # Extract values directly from filename
-    values = extract_values_from_filename(filename)
-    if values:
-        result_df.loc[len(result_df)] = values
-        param_dict[filename.replace(".txt", "")]['filename'] = filename
-
-# Display the resulting DataFrame
-print(result_df)
-
-# Add the filename as a column to the CSV file
-df_csv['filename'] = df_csv.apply(lambda row: param_dict.get("_".join(str(round(value, 3) if col not in ['wind', 'depth'] else round(value, 2)).replace('.', '') for col, value in zip(df_csv.columns, row)), {}).get('filename', ''), axis=1)
-df_csv.to_csv(csv_file_path, index=False)"""
+if __name__ == '__main__':  # Check if the script is being run directly
+    main()  # If so, call the main() function to start executing the script
