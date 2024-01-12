@@ -1,23 +1,28 @@
 """
 
 Get the values of the parameters of each simulation run from the filenames.
+STEP 1. Read the parameter combinations from a csv file.
+STEP 2. Store each row in the csv file as a tuple in a list.
+STEP 3. Create the file ID associated with each tuple.
+STEP 4. Add the file IDs as a column in the dataframe.
+STEP 5. Use the list of file IDs to create a list of filepaths
+        so that each file can be accessed in the order defined by the list of file IDs.
 
 """
 
 # Import libraries
 import pandas as pd
 import csv
+import glob
+
+"""STEP 1. Read the parameter combinations from a csv file."""
 
 csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                 'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv'
 combinations = pd.read_csv(csv_file_path)
 
-# Sort the DataFrame based on all the columns
-#sorted_df = combinations.sort_values(by=['phy', 'cdom', 'spm', 'wind', 'depth'])
 
-
-
-"""Read a csv file and store each row as a tuple in a list."""
+"""STEP 2. Store each row in the csv file as a tuple in a list."""
 
 data_list = []
 
@@ -38,8 +43,10 @@ modified_data_list = [tuple(row[:-1]) for row in data_list]
 # Convert each item in each tuple into a float
 float_data_list = [tuple(map(float, row)) for row in modified_data_list]
 
+"""STEP 3. Create the file ID associated with each tuple."""
 
-# Create the file ID associated with each tuple
+
+# Use the same function that was used for naming the EL output files in the "inference" script.
 def convert_tuple(tup):
     empty_string = ''
     for item in tup:
@@ -53,32 +60,22 @@ string_id = []
 for i in float_data_list:
     string_id.append(convert_tuple(i))
 
-print("The first row of the dataframe: ", combinations.loc[0])
-print("The first tuple: ", float_data_list[0])
-print("The first file ID: ", string_id[0])
-
-# Print the original and sorted DataFrames
-print("Original DataFrame:")
-print(combinations)
+"""STEP 4. Add the file IDs as a column in the dataframe."""
 
 combinations_df = combinations
 combinations_df["filename"] = string_id
-# Sort the DataFrame based on the 'filename' column
-sorted_df = combinations_df.sort_values(by='filename')
+print(combinations_df)
 
-print("\nSorted DataFrame:")
-print(sorted_df)
 
-"""I have a list that contains file IDs for each file in a folder ("_00_001_016_052_524"). 
-I want to read the files in that folder in the same order as the file ID are listed. 
-The names of the files contain other things at the start and/or the end of the string, 
-but each does contain the file ID somewhere within the string."""
+"""STEP 5. Use the list of file IDs to create a list of filepaths 
+so that each file can be accessed in the order defined by the list of file IDs."""
 
-import glob
+# Specify path to the folder containing the output files
+folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
+              'EL_test_2_dec2023/EL_test_2_dec2023'
+file_ids = combinations_df["filename"]
 
-folder_path = '/path/to/your/folder'  # Replace with the path to your folder
-file_ids = ['_00_001_016_052_524', '_01_002_017_053_525', ...]  # Replace with your file IDs
-
+# Create an empty list to store the filepaths
 file_paths = []
 
 # Iterate through file IDs and match corresponding files in the folder
@@ -90,14 +87,10 @@ for file_id in file_ids:
         # Assuming there is only one matching file for each file ID
         file_paths.append(matching_files[0])
 
-# Now, file_paths contains the paths to the files in the order specified by file_ids
+# Now, file_paths contains the paths to the files in the order specified by file_ids.
 
-# Now you can read the files in the specified order
-for file_path in file_paths:
-    with open(file_path, 'r') as file:
-        # Perform operations on the file content as needed
-        content = file.read()
-        print(f"File content for {file_path}:\n{content}")
+print(len(file_ids))
+print(len(file_paths))
 
 """
 # STEP 1: Create a list of all the files in the folder
