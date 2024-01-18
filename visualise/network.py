@@ -1,3 +1,9 @@
+"""
+
+Network analysis in Python: code from the Economic Networks Summer School in 2023.
+
+"""
+
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt

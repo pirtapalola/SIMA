@@ -1,3 +1,12 @@
+"""
+
+Calculate the mean value of each benthic cover type from the global reflectance dataset.
+
+Last updated on 18 January 2024 by Pirta Palola
+
+"""
+
+# Import libraries
 import pandas as pd
 
 # Read the csv file containing the simulated Rrs data into a pandas dataframe

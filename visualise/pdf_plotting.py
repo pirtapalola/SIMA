@@ -1,3 +1,9 @@
+"""
+
+Plot pdf for a Truncated LogNormal distribution.
+
+"""
+
 # Import libraries
 import numpy as np
 import matplotlib as plt
