@@ -59,5 +59,5 @@ summary_stats["Maximum"] = max_list
 summary_stats["10th percentile"] = percentile10
 summary_stats["33rd percentile"] = percentile33
 summary_stats["90th percentile"] = percentile90
-summary_stats.to_csv(path + "prior_summary_stats.csv")
-print(summary_stats)
+#summary_stats.to_csv(path + "prior_summary_stats.csv")
+#print(summary_stats)
