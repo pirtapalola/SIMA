@@ -21,29 +21,31 @@ import matplotlib.pylab as plt
 
 """STEP 1. Access the reflectance data."""
 
+# Specify file location
+path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
+       "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_calibrated.csv"
+
 # Create a pandas dataframe
-# P_lob22_reflectance: Average reflectance of Porites lobata measured in 2022
-P_lob22_reflectance = pd.read_csv(
-    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/RIM03_2022_surface_reflectance.csv')
-trios_wavelength = P_lob22_reflectance['wavelength'].to_numpy()  # Wavelengths measured by the TriOS RAMSES radiometers
+reflectance_data = pd.read_csv(path)
+trios_wavelength = reflectance_data['wavelength'].to_numpy()  # Wavelengths measured by the TriOS RAMSES radiometers
 
 """STEP 2. Apply the cubic spline method to the data."""
 
 # Apply the cubic spline method to the data.
 x = trios_wavelength
-y0 = P_lob22_reflectance['reflectance']
+y0 = reflectance_data['reflectance']
 cs0 = CubicSpline(x, y0)
 xs = np.arange(319, 951, 2)  # Define the wavelength range and spectral resolution of the end product
 index_list = []  # Create an index list that corresponds to the number of rows in the end product
 for z in range(len(xs)):
     index_list.append(z)
-P_lob22_list = []
-P_lob22 = []
+empty_list = []
+data_list = []
 for i in xs:
     n = cs0(i)
-    P_lob22_list.append(n)
+    empty_list.append(n)
 for element in index_list:
-    P_lob22.append(float(P_lob22_list[element]))
+    data_list.append(float(empty_list[element]))
 
 """STEP 3. Create a plot to visualise the interpolation."""
 
@@ -58,7 +60,7 @@ plt.show()
 """STEP 4. Save the interpolated data in a csv file."""
 
 # Add the data in a pandas data frame
-P_lob22_reflectance = pd.DataFrame()
+interpolated_reflectance = pd.DataFrame()
 
 # Create a list containing the wavelengths
 wavelength_319_951 = []
@@ -77,6 +79,6 @@ def benthic_reflectance_function(reflectance_df, benthic_df):
 
 
 # Apply the function and save the output as a csv file
-P_lob22_refl = benthic_reflectance_function(P_lob22_reflectance, P_lob22)
-P_lob22_refl.to_csv(
-    'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated.csv')
+interpolated_reflectance_df = benthic_reflectance_function(interpolated_reflectance, data_list)
+interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
+                                   "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_interpolated.csv")
