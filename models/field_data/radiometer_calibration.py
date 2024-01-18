@@ -1,59 +1,49 @@
 """
 
-RADIOMETERS: TriOS RAMSES radiance and irradiance
-TASK: Apply the in-water calibration factors to the raw radiance/irradiance data exported from the MSDA_EX software.
+Apply the in-water calibration factor to the hyperspectral data measured with the TriOS RAMSES radiometers.
 
-STEP 1. Access the datafiles.
-STEP 2. Visualise the data.
-STEP 3. Save the data into a csv file.
+STEP 1. Read the data.
+STEP 2. Multiply the in-air calibrated data with the in-air calibration factor to get back to the raw values.
+STEP 3. Divide the raw values with the in-water calibration factor.
 
-Last updated by Pirta Palola 15 November 2023.
+Last updated on 18 January 2024 by Pirta Palola
 
 """
 
-# Import libraries.
+# Import libraries
 import pandas as pd
-import os
-import matplotlib.pyplot as plt
 
-""" STEP 1. Access the raw data files. """
+# Access the calibration factors from a csv file
+calibration_factors = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
+                                  "Methods_Ecolight/In_water_calibration_2022/correction_factors_2022.csv")
 
-# Create a list of all the filenames
-path = 'C:/Users/kell5379/Documents/Code/example_data/RIM2022/'  # Define the file location
-all_files = [f for f in os.listdir(path) if f.endswith('.dat')]  # Create a list of all the files in the folder
+air_878A_2022 = calibration_factors["Air_878A_2022"]
+aq_878A_2022 = calibration_factors["Aq_878A_2022"]
+air_8789_2022 = calibration_factors["Air_8789_2022"]
+aq_8789_2022 = calibration_factors["Aq_8789_2022"]
 
-# Create a list with the raw data files (exclude the calibrated data files)
-raw_data_files = all_files[::2]
-print("The number of raw data files is " + str(len(all_files)) + "/2 = " + str((len(raw_data_files))))
+# Access the TriOS RAMSES data
+measurement = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
+                          "Methods_Ecolight/In_water_calibration_2022/RIM01_2022.csv")
+rim01_e1_uncal = measurement["Mean_e1"]
+rim01_l1_uncal = measurement["Mean_l1"]
 
-# Save the wavelength range of the TriOS radiometers into a list
-trios_wavelength_df = pd.read_csv("C:/Users/kell5379/ocean-optics/data/trios_wavelength_range.csv")  # Read csv
-trios_wavelength = list(trios_wavelength_df[trios_wavelength_df.columns[0]])  # Transform into a list
-print(trios_wavelength)
+"STEP 2. Multiply the in-air calibrated data with the in-air calibration factor to get back to the raw values."
 
+rim01_e1_raw = [rim01_e1_uncal[i] * air_878A_2022[i] for i in range(len(rim01_e1_uncal))]
+rim01_l1_raw = [rim01_l1_uncal[i] * air_8789_2022[i] for i in range(len(rim01_l1_uncal))]
 
-# Save the data into a list
-def read_trios_files(file_name, path_name, calibration_factors):
-    new_data = pd.read_csv(path_name + file_name, sep=' ', usecols=[2])  # Select the column containing the data
-    new_data = new_data.iloc[44:235]  # Select the rows containing the data
-    new_data = new_data.astype('float64', copy=True, errors='raise')  # Transform the data into float
-    new_data = new_data.divide(10)  # Divide each value by ten
-    data_list = list(new_data[new_data.columns[0]])
-    [a * b for a, b in zip(data_list, cal_aq)]
-    return data_list
+"STEP 3. Divide the raw values with the in-water calibration factor."
 
+rim01_e1_cal = [rim01_e1_raw[i] / aq_878A_2022[i] for i in range(len(rim01_e1_raw))]
+rim01_l1_cal = [rim01_l1_raw[i] / aq_8789_2022[i] for i in range(len(rim01_l1_raw))]
 
-# Save the wavelength range of the TriOS radiometers into a list
-trios_wavelength_df = pd.read_csv("C:/Users/kell5379/ocean-optics/data/trios_wavelength_range.csv")  # Read csv
-trios_wavelength = list(trios_wavelength_df[trios_wavelength_df.columns[0]])  # Transform into a list
-print(trios_wavelength)
+"STEP 4. Save the calibrated values into a csv file."
 
-# Create an empty pandas dataframe
-trios_data = pd.DataFrame(columns=data_files)  # Name the columns with the filenames
-trios_data["wavelength"] = trios_wavelength  # Add the wavelengths as a column
+cal_values = pd.DataFrame()
+cal_values["rim01_e1_cal"] = rim01_e1_cal
+cal_values["rim01_l1_cal"] = rim01_l1_cal
+cal_values["rim01_rrs"] = [rim01_l1_cal[i] / rim01_e1_cal[i] for i in range(len(rim01_e1_cal))]
 
-# Loop through all the data files and save the lists as columns in the pandas dataframe
-for item in data_files:
-    trios_data[item] = read_trios_files(item, path)
-
-print(trios_data)
+cal_values.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
+                  "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_calibrated.csv")
