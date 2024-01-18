@@ -1,3 +1,11 @@
+"""
+
+Show the sampling sites in a map.
+
+Last updated on 18 January 2024 by Pirta Palola
+
+"""
+
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
