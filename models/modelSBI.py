@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 9 January 2024 by Pirta Palola
+Last updated on 18 January 2024 by Pirta Palola
 
 """
 
@@ -25,7 +25,6 @@ import pickle
 STEP 1. Prepare the simulated data
     -The simulated data is split into input_parameters (5 parameters) and output_values (150 values).
     -After converting them to PyTorch tensors, they are concatenated into combined_input.
-
 """
 
 # Print the current working directory
