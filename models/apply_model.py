@@ -1,3 +1,13 @@
+"""
+
+Apply the posterior estimated in "modelSBI"
+STEP 1. Load the posterior and the reflectance data.
+STEP 2. Define an observation.
+STEP 3. Infer the parameters corresponding to the observation.
+
+Last updated on 18 January 2024 by Pirta Palola
+
+"""
 
 # Import libraries
 import pandas as pd
@@ -6,6 +16,8 @@ from sbi import analysis as analysis
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
+
+"""STEP 1. Load the posterior and the reflectance data."""
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
@@ -17,6 +29,8 @@ simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapte
                                     'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
 x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[-1]})
 
+"""STEP 2. Define an observation."""
+
 # Define an observation x
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
                    'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
@@ -26,6 +40,8 @@ obs_df = pd.read_csv(observation_path)
 # Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
 x_o = x_dataframe.iloc[1]
 print(x_o)
+
+"""STEP 3. Infer the parameters corresponding to the observation."""
 
 # Given this observation, sample from the posterior p(θ|x), or plot it.
 posterior_samples = loaded_posterior.sample((1000,), x=x_o)
