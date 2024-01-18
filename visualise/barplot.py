@@ -1,6 +1,12 @@
+"""
+
+Plot a horizontal barplot.
+
+Last updated on 18 January 2024 by Pirta Palola
+
+"""
+
 # Import libraries
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 
 # Create bars
