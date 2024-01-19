@@ -6,7 +6,7 @@ STEP 1. Read the data.
 STEP 2. Multiply the in-air calibrated data with the in-air calibration factor to get back to the raw values.
 STEP 3. Divide the raw values with the in-water calibration factor.
 
-Last updated on 18 January 2024 by Pirta Palola
+Last updated on 19 January 2024 by Pirta Palola
 
 """
 
@@ -24,7 +24,7 @@ aq_8789_2022 = calibration_factors["Aq_8789_2022"]
 
 # Access the TriOS RAMSES data
 measurement = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                          "Methods_Ecolight/In_water_calibration_2022/RIM01_2022.csv")
+                          "Methods_Ecolight/In_water_calibration_2022/ONE02_2022.csv")
 rim01_e1_uncal = measurement["Mean_e1"]
 rim01_l1_uncal = measurement["Mean_l1"]
 
@@ -41,9 +41,9 @@ rim01_l1_cal = [rim01_l1_raw[i] / aq_8789_2022[i] for i in range(len(rim01_l1_ra
 "STEP 4. Save the calibrated values into a csv file."
 
 cal_values = pd.DataFrame()
-cal_values["rim01_e1_cal"] = rim01_e1_cal
-cal_values["rim01_l1_cal"] = rim01_l1_cal
-cal_values["rim01_rrs"] = [rim01_l1_cal[i] / rim01_e1_cal[i] for i in range(len(rim01_e1_cal))]
+cal_values["one02_e1_cal"] = rim01_e1_cal
+cal_values["one02_l1_cal"] = rim01_l1_cal
+cal_values["one02_rrs"] = [rim01_l1_cal[i] / rim01_e1_cal[i] for i in range(len(rim01_e1_cal))]
 
 cal_values.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                  "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_calibrated.csv")
+                  "Methods_Ecolight/In_water_calibration_2022/ONE02_2022_calibrated.csv")
