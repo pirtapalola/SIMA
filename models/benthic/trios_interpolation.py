@@ -8,7 +8,7 @@ STEP 2. Apply the cubic spline method to the data.
 STEP 3. Create a plot to visualise the interpolation.
 STEP 4. Save the interpolated data in a csv file.
 
-This code was last modified by Pirta Palola on 19 November 2023.
+This code was last modified by Pirta Palola on 19 January 2024
 
 """
 
@@ -23,7 +23,7 @@ import matplotlib.pylab as plt
 
 # Specify file location
 path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_calibrated.csv"
+       "Methods_Ecolight/In_water_calibration_2022/ONE02_2022_calibrated.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
@@ -81,4 +81,4 @@ def benthic_reflectance_function(reflectance_df, benthic_df):
 # Apply the function and save the output as a csv file
 interpolated_reflectance_df = benthic_reflectance_function(interpolated_reflectance, data_list)
 interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                                   "Methods_Ecolight/In_water_calibration_2022/RIM01_2022_interpolated.csv")
+                                   "Methods_Ecolight/In_water_calibration_2022/ONE02_2022_interpolated.csv")
