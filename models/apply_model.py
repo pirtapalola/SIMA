@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the reflectance data.
 STEP 2. Define an observation.
 STEP 3. Infer the parameters corresponding to the observation.
 
-Last updated on 18 January 2024 by Pirta Palola
+Last updated on 19 January 2024 by Pirta Palola
 
 """
 
@@ -33,12 +33,13 @@ x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[
 
 # Define an observation x
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
-                   'Chapter2/Methods/RIM03_2022_surface_reflectance_interpolated_400_700nm.csv'
+                   'Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/checks/Check0/check0.csv'
 obs_df = pd.read_csv(observation_path)
-# x_o = obs_df['reflectance']
+x_o = obs_df['reflectance1']
 
 # Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
-x_o = x_dataframe.iloc[1]
+# x_o = x_dataframe.iloc[1]
+
 print(x_o)
 
 """STEP 3. Infer the parameters corresponding to the observation."""
@@ -51,7 +52,7 @@ log_probability = loaded_posterior.log_prob(posterior_samples, x=x_o)
 log_prob_np = log_probability.numpy()  # convert to Numpy array
 log_prob_df = pd.DataFrame(log_prob_np)  # convert to a dataframe
 log_prob_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
-                   'Methods_Ecolight/Dec2023_lognormal_priors/log_probability_dec23_lognormal.csv')
+                   'Methods_Ecolight/Dec2023_lognormal_priors/checks/Check0/log_probability_reflectance1.csv')
 
 # Plot posterior samples
 _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
