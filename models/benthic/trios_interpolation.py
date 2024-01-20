@@ -5,62 +5,78 @@ calculated from TriOS RAMSES radiometric measurements.
 
 STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
-STEP 3. Create a plot to visualise the interpolation.
-STEP 4. Save the interpolated data in a csv file.
+STEP 3. Save the interpolated data in csv files.
 
-This code was last modified by Pirta Palola on 19 January 2024
+Last updated on 20 January 2024 by Pirta Palola
 
 """
-
 
 # Import libraries
 import pandas as pd
 from scipy.interpolate import CubicSpline
 import numpy as np
-import matplotlib.pylab as plt
 
 """STEP 1. Access the reflectance data."""
 
 # Specify file location
 path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2022/ONE02_2022_calibrated.csv"
+       "Methods_Ecolight/In_water_calibration_2022/calibrated_surface_measurements_tetiaroa_2022.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
-trios_wavelength = reflectance_data['wavelength'].to_numpy()  # Wavelengths measured by the TriOS RAMSES radiometers
+
+# Wavelengths measured by the TriOS RAMSES radiometers
+trios_wavelength = reflectance_data['wavelength'].to_numpy()
+
+# Sample IDs
+sample_IDs = list(reflectance_data.columns)
+sample_IDs = sample_IDs[1::]  # Delete the first element of the list
+print(sample_IDs)
 
 """STEP 2. Apply the cubic spline method to the data."""
 
-# Apply the cubic spline method to the data.
-x = trios_wavelength
-y0 = reflectance_data['reflectance']
-cs0 = CubicSpline(x, y0)
-xs = np.arange(319, 951, 2)  # Define the wavelength range and spectral resolution of the end product
-index_list = []  # Create an index list that corresponds to the number of rows in the end product
-for z in range(len(xs)):
-    index_list.append(z)
-empty_list = []
-data_list = []
-for i in xs:
-    n = cs0(i)
-    empty_list.append(n)
-for element in index_list:
-    data_list.append(float(empty_list[element]))
 
-"""STEP 3. Create a plot to visualise the interpolation."""
+def cubic_spline_interpolation(y0_list, x_list):
+    # Define the wavelength range and spectral resolution of the end product
+    xs = np.arange(319, 951, 2)
+    # Create an index list that corresponds to the number of rows in the end product
+    index_list = []
+    for z in range(len(xs)):
+        index_list.append(z)
+    # Define the cubic spline method
+    cs0 = CubicSpline(x_list, y0_list)
+    # Create empty lists to store the results
+    empty_list = []
+    data_list = []
+    # Save the results in a list
+    for i in xs:
+        n = cs0(i)
+        empty_list.append(n)
+    for element in index_list:
+        data_list.append(float(empty_list[element]))
+    return data_list
 
-fig, ax = plt.subplots(figsize=(6.5, 4))
-ax.plot(x, y0, label='Data', color='black', linestyle=':', linewidth=5)
-ax.plot(xs, cs0(xs), label='Cubic spline interpolation', color='orange', linewidth=2)
-ax.legend(loc='lower left', ncol=2)
-ax.set_xlim(319, 800)
-ax.set_ylim(0, 0.08)
-plt.show()
 
-"""STEP 4. Save the interpolated data in a csv file."""
+# Apply the cubic spline function to the data and save the results in a list.
+interpolation_results_list = []
+for x in sample_IDs:
+    interpolation_result = cubic_spline_interpolation(reflectance_data[x], trios_wavelength)
+    interpolation_results_list.append(interpolation_result)
 
-# Add the data in a pandas data frame
-interpolated_reflectance = pd.DataFrame()
+print("Number of sample IDs: ", len(sample_IDs))
+print("Number of measurements: ", len(interpolation_results_list))
+
+# Create a plot to visualise the interpolation.
+
+# fig, ax = plt.subplots(figsize=(6.5, 4))
+# ax.plot(x, y0, label='Data', color='black', linestyle=':', linewidth=5)
+# ax.plot(xs, cs0(xs), label='Cubic spline interpolation', color='orange', linewidth=2)
+# ax.legend(loc='lower left', ncol=2)
+# ax.set_xlim(319, 800)
+# ax.set_ylim(0, 0.08)
+# plt.show()
+
+"""STEP 3. Save the interpolated data in csv files."""
 
 # Create a list containing the wavelengths
 wavelength_319_951 = []
@@ -70,15 +86,18 @@ for q in a:
 
 
 # Create a function that filters the desired wavelengths from the data
-def benthic_reflectance_function(reflectance_df, benthic_df):
+def reflectance_function(data):
+    reflectance_df = pd.DataFrame()
     reflectance_df['wavelength'] = wavelength_319_951
-    reflectance_df['benthic'] = benthic_df
-    reflectance_df = reflectance_df[reflectance_df.wavelength > 319]
-    reflectance_df = reflectance_df[reflectance_df.wavelength < 951]
+    reflectance_df['reflectance'] = data
+    reflectance_df = reflectance_df[reflectance_df.wavelength > 400]
+    reflectance_df = reflectance_df[reflectance_df.wavelength < 700]
     return reflectance_df
 
 
 # Apply the function and save the output as a csv file
-interpolated_reflectance_df = benthic_reflectance_function(interpolated_reflectance, data_list)
-interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                                   "Methods_Ecolight/In_water_calibration_2022/ONE02_2022_interpolated.csv")
+for x in interpolation_results_list:
+    interpolated_reflectance_df = reflectance_function(x)
+    for sample_id in sample_IDs:
+        interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+                                           "In_water_calibration_2022/interpolated_files_2022/" + sample_id + ".csv")
