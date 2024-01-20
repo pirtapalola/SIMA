@@ -16,6 +16,7 @@ from sbi import analysis as analysis
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
+from models.tools import min_max_normalisation
 
 """STEP 1. Load the posterior and the reflectance data."""
 
@@ -35,7 +36,8 @@ x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
                    'Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/checks/Check0/check0.csv'
 obs_df = pd.read_csv(observation_path)
-x_o = obs_df['reflectance1']
+x_obs = obs_df['reflectance1']
+x_o = min_max_normalisation(x_obs)
 
 # Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
 # x_o = x_dataframe.iloc[1]
