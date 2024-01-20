@@ -18,7 +18,7 @@ import os
 from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from torch import tensor
-from models.tools import MultipleIndependent, minimum_maximum
+from models.tools import MultipleIndependent, minimum_maximum, min_max_normalisation
 import pickle
 
 """
@@ -47,29 +47,48 @@ simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapte
                                     'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
 simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
-print(simulated_reflectance)
+simulated_reflectance_drop = simulated_reflectance.drop(columns="File_ID")
+# print(simulated_reflectance_drop)
+# print(simulated_reflectance_drop.iloc[0])
+
+# Conduct min-max normalisation
+normalised_simulated_reflectance = []
+for x in range(num_simulation_runs):
+    normalised_list = min_max_normalisation(simulated_reflectance_drop.iloc[x])
+    normalised_simulated_reflectance.append(normalised_list)
+
+# Save the results in a dataframe
+list_len = [*range(len(normalised_simulated_reflectance[0]))]
+normalised_simulated_reflectance_df = pd.DataFrame(columns=list_len)
+for i in normalised_simulated_reflectance:
+    normalised_simulated_reflectance_df.loc[len(normalised_simulated_reflectance_df)] = i
+
+# print(normalised_simulated_reflectance_df)
 
 # Read the csv file containing the inputs of each of the HydroLight simulation runs
 hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                                'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv')
 hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
-print(hydrolight_input)  # Check that the dataframe contains the correct information.
+# print(hydrolight_input)  # Check that the dataframe contains the correct information.
 
 # Print the minimum and maximum values of each column in the dataframe.
 # These should correspond to the empirically realistic range of values.
-minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
+# minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
 # Define theta and x.
 theta_dataframe = hydrolight_input  # Theta contains the five input variables.
-x_dataframe = simulated_reflectance.drop(columns="File_ID")  # The output values are stored in x. Drop the File_ID.
+x_dataframe = normalised_simulated_reflectance_df
+print(x_dataframe)
 
 # Convert the pandas DataFrames to numpy arrays
 theta_array = theta_dataframe.to_numpy()
 x_array = x_dataframe.to_numpy()
 
+print("No. of parameter sets", len(theta_array))
+print("No. of simulation outputs", len(x_array))
 print("Length of theta: ", len(theta_array[0]))
 print("Length of x: ", len(x_array[0]))
-print(x_array[0])
+# print(x_array[0])
 
 # Convert the numpy arrays to PyTorch tensors
 theta_tensor = torch.tensor(theta_array, dtype=torch.float32)
