@@ -9,6 +9,7 @@ TOOL N0.4 Create a truncated log-normal PyTorch distribution object.
 TOOL NO.5 A function to fit a log-normal distribution to data.
 TOOL NO.6 Check that the strings in a list have the same number of splits.
 TOOL NO.7 Get the values of the parameters of each simulation run from the filenames.
+TOOL NO. 8 Conduct min-max normalisation.
 
 Last modified on 18 December 2023 by Pirta Palola.
 
@@ -499,3 +500,15 @@ def extract_values_from_filename(filename):
         return filename  # Return filename if there's an error
 
     return water, phy, cdom, spm, wind, depth
+
+
+"""TOOL NO. 8 Conduct min-max normalisation."""
+
+
+def min_max_normalisation(data_list):
+    normalised = []
+    list_min = data_list.min()
+    list_max = data_list.max()
+    for i in range(len(data_list)):
+        normalised.append((data_list[i]-list_min)/(list_max-list_min))
+    return normalised
