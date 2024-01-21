@@ -20,7 +20,7 @@ import numpy as np
 
 # Specify file location
 path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2022/calibrated_surface_measurements_tetiaroa_2022.csv"
+       "Methods_Ecolight/In_water_calibration_2022/calibrated_surface_reflectance_2022.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
@@ -76,28 +76,12 @@ print("Number of measurements: ", len(interpolation_results_list))
 # ax.set_ylim(0, 0.08)
 # plt.show()
 
-"""STEP 3. Save the interpolated data in csv files."""
+"""STEP 3. Save the interpolated data in a csv file."""
 
-# Create a list containing the wavelengths
-wavelength_319_951 = []
-a = np.arange(319, 951, 2)
-for q in a:
-    wavelength_319_951.append(q)
+# Create a DataFrame
+interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
+interpolated_reflectance_df = interpolated_reflectance_df.transpose()
+print(interpolated_reflectance_df)
+interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+                                   "In_water_calibration_2022/interpolated_surface_reflectance_2022.csv")
 
-
-# Create a function that filters the desired wavelengths from the data
-def reflectance_function(data):
-    reflectance_df = pd.DataFrame()
-    reflectance_df['wavelength'] = wavelength_319_951
-    reflectance_df['reflectance'] = data
-    reflectance_df = reflectance_df[reflectance_df.wavelength > 400]
-    reflectance_df = reflectance_df[reflectance_df.wavelength < 700]
-    return reflectance_df
-
-
-# Apply the function and save the output as a csv file
-for x in interpolation_results_list:
-    interpolated_reflectance_df = reflectance_function(x)
-    for sample_id in sample_IDs:
-        interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                           "In_water_calibration_2022/interpolated_files_2022/" + sample_id + ".csv")
