@@ -65,11 +65,10 @@ for x in range(len(e_sample_IDs)):
                                  measurement[e_sample_IDs[x]], measurement[l_sample_IDs[x]])
     refl_list.append(refl)  # Append the results into a list
 
-"STEP 3. Save the calibrated values into a csv file."
+"STEP 3. Save the calibrated values into csv files."
 
-cal_values = pd.DataFrame(columns=e_sample_IDs)
-for i in refl_list:
-    for x in e_sample_IDs:
-        cal_values[x] = i
-cal_values.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                  "Methods_Ecolight/In_water_calibration_2022/calibrated_surface_measurements_tetiaroa_2022.csv")
+# Create a DataFrame
+calibrated_reflectance_df = pd.DataFrame(refl_list)
+print(calibrated_reflectance_df)
+calibrated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+                                 "In_water_calibration_2022/calibrated_surface_reflectance_2022.csv")
