@@ -69,6 +69,7 @@ for x in range(len(e_sample_IDs)):
 
 # Create a DataFrame
 calibrated_reflectance_df = pd.DataFrame(refl_list)
+calibrated_reflectance_df = calibrated_reflectance_df.transpose()
 print(calibrated_reflectance_df)
 calibrated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
                                  "In_water_calibration_2022/calibrated_surface_reflectance_2022.csv")
