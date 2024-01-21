@@ -40,4 +40,4 @@ the_dataframe = readdataframe(the_list)
 
 # Save the dataframe as a csv file
 the_dataframe.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                     'In_water_calibration_2022/surface_reflectance_2022.csv')
+                     'In_water_calibration_2022/interpolated_surface_reflectance_2022.csv')
