@@ -16,7 +16,7 @@ simulated_spectra = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/M
 
 # Dataset of 17 spectra
 measured_spectra = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                               "In_water_calibration_2022/smooth_surface_reflectance_2022.csv")
+                               "In_water_calibration_2022/above_water_reflectance_2022.csv")
 
 # Combine the datasets
 # all_data = pd.concat([simulated_spectra, measured_spectra], axis=1)
