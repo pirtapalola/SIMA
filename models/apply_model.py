@@ -71,7 +71,7 @@ def infer_from_observation(sample_id):
     theta_intervals_df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
                               'Methods_Ecolight/Dec2023_lognormal_priors/results/theta_intervals/'
                               + sample_id + '_theta_intervals.csv')
-    # create the figure
+    # Create the figure
     _ = analysis.pairplot(posterior_samples, limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]], figsize=(6, 6))
     plt.savefig('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/'
                 'Methods_Ecolight/Dec2023_lognormal_priors/results/figures/'
