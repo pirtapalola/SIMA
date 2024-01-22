@@ -77,7 +77,7 @@ hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" 
 
 # Define theta and x.
 theta_dataframe = hydrolight_input  # Theta contains the five input variables.
-x_dataframe = normalised_simulated_reflectance_df
+x_dataframe = simulated_reflectance_drop
 print(x_dataframe)
 
 # Convert the pandas DataFrames to numpy arrays
