@@ -15,6 +15,7 @@ import torch
 from sbi import analysis as analysis
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
 from models.tools import min_max_normalisation
 
 """STEP 1. Load the posterior and the simulated reflectance data."""
@@ -33,7 +34,7 @@ x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
-                   'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2022/smooth_surface_reflectance_2022.csv'
+                   'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2022/above_water_reflectance_2022.csv'
 obs_df = pd.read_csv(observation_path)
 
 # Create a list of sample IDs
