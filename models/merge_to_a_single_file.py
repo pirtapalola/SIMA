@@ -12,14 +12,14 @@ import pandas as pd
 
 # Define the folder
 os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-         r'In_water_calibration_2022/interpolated_files_2022')
+         r'Dec2023_lognormal_priors/results/theta_intervals')
 
 # Create an empty list
 the_list = []
 
 # Create a list that contains the paths of all the csv files in a folder
 for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                                 r'In_water_calibration_2022/interpolated_files_2022'):
+                                 r'Dec2023_lognormal_priors/results/theta_intervals'):
     for file in files:
         if file.endswith('.csv'):
             the_list.append(file)
@@ -32,7 +32,7 @@ def readdataframe(list_paths):
     df = pd.DataFrame()  # define df as an empty pandas DataFrame
     for element in list_paths:
         # print(element)
-        df[element] = pd.read_csv(element, sep=',', header=0, usecols=[2])
+        df[element] = pd.read_csv(element, sep=',', header=0, usecols=[1])
     return df
 
 
@@ -40,4 +40,4 @@ the_dataframe = readdataframe(the_list)
 
 # Save the dataframe as a csv file
 the_dataframe.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                     'In_water_calibration_2022/interpolated_surface_reflectance_2022.csv')
+                     'Dec2023_lognormal_priors/results/theta_intervals_summary.csv')
