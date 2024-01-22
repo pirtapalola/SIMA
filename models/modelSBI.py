@@ -18,8 +18,10 @@ import os
 from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from torch import tensor
-from models.tools import MultipleIndependent, minimum_maximum, min_max_normalisation
+from models.tools import MultipleIndependent, min_max_normalisation
 import pickle
+from sbi.neural_nets.embedding_nets import CNNEmbedding
+from sbi import utils
 
 """
 STEP 1. Prepare the simulated data
@@ -133,8 +135,15 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 """
 
+# Define the embedding net
+embedding_net = CNNEmbedding(input_shape=(150,))
+
+# instantiate the neural density estimator
+neural_posterior = utils.posterior_nn(
+    model="maf", embedding_net=embedding_net, hidden_features=10, num_transforms=2)
+
 # Instantiate the SNPE inference method
-inference = SNPE(prior=prior)
+inference = SNPE(prior=prior, density_estimator=neural_posterior)
 
 # Append the combined data to the inference object
 inference.append_simulations(theta_tensor, x_tensor)
