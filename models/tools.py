@@ -3,12 +3,11 @@
 Tools for data pre-processing and analysis
 
 TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset.
-TOOL NO.2 Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
-TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
-TOOL N0.4 Create a truncated log-normal PyTorch distribution object.
-TOOL NO.5 A function to fit a log-normal distribution to data.
-TOOL NO.6 Check that the strings in a list have the same number of splits.
-TOOL NO. 7 Conduct min-max normalisation.
+TOOL NO.2 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
+TOOL N0.3 Create a truncated log-normal PyTorch distribution object.
+TOOL NO.4 A function to fit a log-normal distribution to data.
+TOOL NO.5 Check that the strings in a list have the same number of splits.
+TOOL NO.6 Conduct min-max normalisation.
 
 Last modified on 23 January 2024 by Pirta Palola
 
@@ -44,56 +43,6 @@ def minimum_maximum(dataframe, column_names):
 """
 
 TOOL NO.2
-Create a pandas dataframe containing the input parameters (each row corresponds to a single simulation run).
-
-"""
-
-
-def create_input_dataframe(list_of_strings):
-    split_df = pd.DataFrame(columns=["data", "water", "phy1", "cdom1", "spm1", "wind1", "depth1"])
-    phy_list = []
-    cdom_list = []
-    spm_list = []
-    wind_list = []
-    depth_list = []
-    depth_list0 = []
-
-    for i in list_of_strings:
-        split_string = i.split("_")  # Split the string at the locations marked by underscores
-        split_df.loc[len(split_df)] = split_string  # Add the split string as a row in the dataframe
-
-    for n in split_df["phy1"]:  # Create a list where the decimal dots are added
-        phy_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["phy"] = phy_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["cdom1"]:  # Create a list where the decimal dots are added
-        cdom_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["cdom"] = cdom_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["spm1"]:  # Create a list where the decimal dots are added
-        spm_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["spm"] = spm_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["wind1"]:  # Create a list where the decimal dots are added
-        wind_list.append(float(n[:1] + '.' + n[1:]))
-    split_df["wind"] = wind_list  # Create a new column that contains the values with decimal dots
-
-    for n in split_df["depth1"]:
-        sep = '.'
-        depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
-
-    # for x in depth_list0:  # Create a list where the decimal dots are added
-    #   depth_list.append(float(x[:1] + '.' + x[1:]))
-    split_df["depth"] = depth_list0  # Create a new column that contains the values with decimal dots
-
-    # Drop the columns that do not contain the values to be inferred
-    split_df = split_df.drop(columns=["data", "water", "phy1", "cdom1", "spm1", "wind1", "depth1", "depth"])
-    return split_df
-
-
-"""
-
-TOOL NO.3
 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
 
     Every element of the sequence is treated as independent from the other elements.
@@ -320,7 +269,7 @@ def build_support(
     return support
 
 
-"""TOOL N0.4 Create a truncated log-normal PyTorch distribution object."""
+"""TOOL N0.3 Create a truncated log-normal PyTorch distribution object."""
 
 
 class TruncatedLogNormal(torch.distributions.Distribution):
@@ -412,7 +361,7 @@ class TruncatedLogNormal(torch.distributions.Distribution):
         return self.base_lognormal.cdf(value)"""
 
 
-"""TOOL NO.5 A function to fit a log-normal distribution to data using PyTorch."""
+"""TOOL NO.4 A function to fit a log-normal distribution to data using PyTorch."""
 
 
 class LogNormalFitter(nn.Module):
@@ -446,7 +395,7 @@ def fit_lognormal_torch(data):
     return mu.item(), sigma.item()
 
 
-"""TOOL NO.6 Check that the strings in a list have the same number of splits."""
+"""TOOL NO.5 Check that the strings in a list have the same number of splits."""
 
 
 def find_strings_with_different_splits(list_of_strings, reference_string):
@@ -461,7 +410,7 @@ def find_strings_with_different_splits(list_of_strings, reference_string):
     return different_splits_strings
 
 
-"""TOOL NO. 7 Conduct min-max normalisation."""
+"""TOOL NO. 6 Conduct min-max normalisation."""
 
 
 def min_max_normalisation(data_list):
