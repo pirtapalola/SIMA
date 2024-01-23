@@ -10,7 +10,7 @@ import statistics
 import numpy as np
 
 # Specify the path
-path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_gamma_priors/priors/"
+path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/priors/"
 
 # Read the csv files
 chl_samples = pd.read_csv(path + "chl_prior.csv")

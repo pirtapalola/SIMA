@@ -289,8 +289,21 @@ class TruncatedLogNormal(torch.distributions.Distribution):
         return self.base_lognormal.event_shape
 
     def sample(self, sample_shape=torch.Size()):
-        extra_samples = self.base_lognormal.sample(sample_shape)
-        return torch.clamp(extra_samples, min=self.lower_bound, max=self.upper_bound)
+        generated_samples = []
+        total_samples = 0
+        while total_samples < sample_shape.numel():
+            remaining_samples = sample_shape.numel() - total_samples
+            extra_samples = self.base_lognormal.sample(torch.Size([remaining_samples]))
+            # Apply truncation using vectorized operations
+            mask = (extra_samples >= self.lower_bound) & (extra_samples <= self.upper_bound)
+            valid_samples = extra_samples[mask]
+            generated_samples.append(valid_samples)
+            total_samples += valid_samples.numel()
+        # Concatenate the generated samples
+        samples = torch.cat(generated_samples)[:sample_shape.numel()]
+        # Debugging information
+        print(f"sample_shape: {sample_shape}, samples.size(): {samples.size()}, total_samples: {total_samples}")
+        return samples
 
     def log_prob(self, value):
         # Calculate log probability for a given value using vectorized operations

@@ -12,8 +12,8 @@ from models.tools import TruncatedLogNormal
 from scipy.integrate import quad, simps
 
 # Create an instance of TruncatedLogNormal
-upper_bound = 5
-prior1 = TruncatedLogNormal(loc=0.01, scale=2.5, upper_bound=upper_bound)
+upper_bound = 50
+prior1 = TruncatedLogNormal(loc=0, scale=4, upper_bound=upper_bound)
 
 # Plot the PDF for visualization
 x_values = np.linspace(0.01, upper_bound, 1000)
