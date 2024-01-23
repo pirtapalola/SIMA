@@ -8,10 +8,9 @@ TOOL NO.3 Wrap a sequence of PyTorch distributions into a joint PyTorch distribu
 TOOL N0.4 Create a truncated log-normal PyTorch distribution object.
 TOOL NO.5 A function to fit a log-normal distribution to data.
 TOOL NO.6 Check that the strings in a list have the same number of splits.
-TOOL NO.7 Get the values of the parameters of each simulation run from the filenames.
-TOOL NO. 8 Conduct min-max normalisation.
+TOOL NO. 7 Conduct min-max normalisation.
 
-Last modified on 18 December 2023 by Pirta Palola.
+Last modified on 23 January 2024 by Pirta Palola
 
 """
 
@@ -478,31 +477,7 @@ def find_strings_with_different_splits(list_of_strings, reference_string):
     return different_splits_strings
 
 
-"""TOOL NO.7 Get the values of the parameters of each simulation run from the filenames."""
-
-
-def extract_values_from_filename(filename):
-    # Remove ".txt" from the filename
-    filename = filename.replace(".txt", "")
-
-    # Assuming the format "Mcoralbrown_00_00_021_461_672_100"
-    parts = filename.split('_')
-
-    # Extract parameter values from the filename
-    try:
-        water = int(parts[1]) / 100.0
-        phy = int(parts[2]) / 100.0
-        cdom = int(parts[3]) / 100.0
-        spm = int(parts[4]) / 100.0
-        wind = int(parts[5]) / 100.0
-        depth = int(parts[6]) / 10.0
-    except ValueError:
-        return filename  # Return filename if there's an error
-
-    return water, phy, cdom, spm, wind, depth
-
-
-"""TOOL NO. 8 Conduct min-max normalisation."""
+"""TOOL NO. 7 Conduct min-max normalisation."""
 
 
 def min_max_normalisation(data_list):
