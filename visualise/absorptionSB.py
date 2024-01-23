@@ -62,13 +62,13 @@ plymouth_ph['wavelength'] = wavelength_list
 # plot examples: NAP and phytoplankton absorption coefficients
 
 fig2, ax2 = plt.subplots()
-ax2.plot(plymouth_nap['wavelength'], plymouth_nap['LAG104A_0m_4L_10112022.csv'], label='LAG104C_nap')
-ax2.plot(plymouth_ph['wavelength'], plymouth_ph['LAG104A_0m_4L_10112022.csv'], label='LAG104C_ph')
+ax2.plot(plymouth_nap['wavelength'], plymouth_nap['LAG104A_0m_4L_10112022.csv'], label='Non-algal particulate matter')
+ax2.plot(plymouth_ph['wavelength'], plymouth_ph['LAG104A_0m_4L_10112022.csv'], label='Phytoplankton')
 ax2.set_xlabel('Wavelength (nm)')  # Add an x-label to the axes.
-ax2.set_ylabel('$a_{NAP}$')  # Add a y-label to the axes.
-ax2.set_title("NAP absorption coefficent")  # Add a title to the axes.
-ax2.set_xlim([350, 850])  # Set the scale of the x-axis
-ax2.set_xticks(np.arange(350, 900, 50, dtype=int))  # Modify the tick marks of the x-axis
+ax2.set_ylabel('$a$')  # Add a y-label to the axes.
+ax2.set_title("Absorption coefficents")  # Add a title to the axes.
+ax2.set_xlim([400, 700])  # Set the scale of the x-axis
+ax2.set_xticks(np.arange(400, 720, 20, dtype=int))  # Modify the tick marks of the x-axis
 ax2.legend()  # Add a legend.
 plt.show()
 
