@@ -362,10 +362,10 @@ class TruncatedLogNormal(torch.distributions.Distribution):
 
     def pdf(self, x):
         # Probability density function
-        pdf_base = torch.exp(self.base_lognormal.log_prob(x))
-        pdf_truncated = pdf_base / (self.cdf(self.upper_bound))
+        log_pdf_base = self.base_lognormal.log_prob(x)
+        pdf_truncated = torch.exp(log_pdf_base - torch.log(self.cdf(self.upper_bound)))
 
-        return pdf_truncated.numpy()
+        return pdf_truncated
 
 
 """
