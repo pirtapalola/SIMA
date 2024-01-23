@@ -12,10 +12,10 @@ from models.tools import TruncatedLogNormal
 from scipy.integrate import quad, simps
 
 # Create an instance of TruncatedLogNormal
-prior1 = TruncatedLogNormal(loc=0.1, scale=1.7, upper_bound=10)
+upper_bound = 5
+prior1 = TruncatedLogNormal(loc=0.01, scale=2.5, upper_bound=upper_bound)
 
 # Plot the PDF for visualization
-upper_bound = 10
 x_values = np.linspace(0.01, upper_bound, 1000)
 pdf_values = prior1.pdf(torch.tensor(x_values))
 
