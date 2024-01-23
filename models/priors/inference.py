@@ -17,8 +17,7 @@ Last updated on 19 December 2023 by Pirta Palola
 
 import torch
 import pandas as pd
-from scipy.stats import lognorm
-from tools import TruncatedLogNormal
+from models.tools import TruncatedLogNormal
 
 """STEP 1. Access the Ecolight setup file."""
 
@@ -33,7 +32,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 """STEP 2. Create the priors."""
 
 
-# Define a function that generates and samples the prior assuming a Gamma distribution
+# Define a function that generates and samples the prior assuming a gamma distribution
 def prior_gamma_distribution(parameter_name, alpha, beta):
     prior_gamma = torch.distributions.gamma.Gamma(torch.tensor([alpha]), torch.tensor([beta]))
     input_data = prior_gamma.sample(torch.Size([3000]))
@@ -51,25 +50,7 @@ def prior_uniform_distribution(parameter_name, prior_min, prior_max):
     return input_data
 
 
-# Define a function that generates and samples the prior assuming a lognormal distribution
-def prior_lognormal_scipy(parameter_name, shape, scale, location, size):
-    prior_lognormal = lognorm.rvs(s=shape, loc=location, scale=scale, size=size)
-    input_data = torch.from_numpy(prior_lognormal).float()
-    input_df = pd.DataFrame(input_data.numpy())
-    input_df.to_csv(PATH + parameter_name + '_prior.csv')
-    return input_data
-
-
-# Create a PyTorch log-normal distribution that is not truncated.
-def prior_lognormal_distribution(parameter_name, mean, std):
-    torch_lognormal = torch.distributions.LogNormal(loc=mean, scale=std)
-    input_data = torch_lognormal.sample(torch.Size([3000]))
-    input_df = pd.DataFrame(input_data)
-    input_df.to_csv(PATH + parameter_name + '_prior.csv')
-    return input_data
-
-
-# Create a PyTorch distribution object for a truncated log-normal distribution.
+# Create a PyTorch distribution object for a truncated log-normal distribution
 def prior_lognormal_truncated(parameter_name, loc, scale, lower_bound, upper_bound):
     truncated_lognormal = TruncatedLogNormal(loc, scale, lower_bound, upper_bound)
     input_data = truncated_lognormal.sample(torch.Size([3000]))
@@ -78,35 +59,21 @@ def prior_lognormal_truncated(parameter_name, loc, scale, lower_bound, upper_bou
     return input_data
 
 
-"""
-def prior_lognormal_torch(parameter_name, loc, scale, threshold, num_samples=3000):
-    prior_lognormal_dist = torch.distributions.log_normal.LogNormal(torch.tensor([loc]), torch.tensor([scale]))
-    # Generate more samples than required
-    input_data = prior_lognormal_dist.sample((num_samples * 2,))
-    # Identify values exceeding the threshold
-    exceed_threshold = input_data >= threshold
-    # Resample values exceeding the threshold
-    while exceed_threshold.any():
-        extra_samples = prior_lognormal_dist.sample((exceed_threshold.sum().item(),))
-        input_data[exceed_threshold] = extra_samples.flatten()  # Use flatten to match shapes
-        exceed_threshold = input_data >= threshold
-    # Truncate to the final desired number of samples
-    input_data = input_data[:num_samples]
-    input_df = pd.DataFrame(input_data.numpy())
+# Create a PyTorch log-normal distribution that is not truncated
+def prior_lognormal_distribution(parameter_name, mean, std):
+    torch_lognormal = torch.distributions.LogNormal(loc=mean, scale=std)
+    input_data = torch_lognormal.sample(torch.Size([3000]))
+    input_df = pd.DataFrame(input_data)
     input_df.to_csv(PATH + parameter_name + '_prior.csv')
     return input_data
-"""
+
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-# prior_chl = prior_lognormal_truncated('chl', 0.1, 1.7, 0.001, 10)
-# prior_cdom = prior_lognormal_truncated('cdom', 0.05, 1.7, 0.001, 5)
-# prior_spm = prior_lognormal_truncated('spm', 0.4, 1.1, 0.001, 50)
-
-prior_chl = prior_gamma_distribution('chl', 1.1, 1.1)
-prior_cdom = prior_gamma_distribution('cdom', 1.2, 3.0)
-prior_spm = prior_gamma_distribution('spm', 3.0, 0.6)
+prior_chl = prior_lognormal_truncated('chl', 0.1, 1.7, 0.001, 10)
+prior_cdom = prior_lognormal_truncated('cdom', 0.05, 1.7, 0.001, 5)
+prior_spm = prior_lognormal_truncated('spm', 0.4, 1.1, 0.001, 50)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
-prior_depth = prior_uniform_distribution('depth', 0.1, 20.0)
+prior_depth = prior_uniform_distribution('depth', 0.1, 10.0)
 
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
