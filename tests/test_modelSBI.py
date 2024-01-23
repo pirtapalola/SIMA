@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import pytest
-from models.neural_network import SimpleNeuralNetwork  # Import your neural network module
+from visualise.neural_network import SimpleNeuralNetwork  # Import your neural network module
 
 @pytest.fixture
 def neural_net():
