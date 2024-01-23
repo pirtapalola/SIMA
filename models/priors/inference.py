@@ -69,8 +69,8 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_truncated('chl', 0.1, 1.7, 0.001, 10)
-prior_cdom = prior_lognormal_truncated('cdom', 0.05, 1.7, 0.001, 5)
+prior_chl = prior_lognormal_truncated('chl', 0.05, 2, 0.001, 10)
+prior_cdom = prior_lognormal_truncated('cdom', 0.05, 2, 0.001, 5)
 prior_spm = prior_lognormal_truncated('spm', 0.4, 1.1, 0.001, 50)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
 prior_depth = prior_uniform_distribution('depth', 0.1, 10.0)
