@@ -82,8 +82,8 @@ def create_input_dataframe(list_of_strings):
         sep = '.'
         depth_list0.append(n.split(sep, 1)[0])  # Remove ".txt" from the string based on the separator "."
 
-    #for x in depth_list0:  # Create a list where the decimal dots are added
-     #   depth_list.append(float(x[:1] + '.' + x[1:]))
+    # for x in depth_list0:  # Create a list where the decimal dots are added
+    #   depth_list.append(float(x[:1] + '.' + x[1:]))
     split_df["depth"] = depth_list0  # Create a new column that contains the values with decimal dots
 
     # Drop the columns that do not contain the values to be inferred
@@ -201,7 +201,7 @@ class MultipleIndependent(Distribution):
         dims_covered = 0
         for idx, d in enumerate(self.dists):
             ndims = int(self.dims_per_dist[idx])
-            v = value[:, dims_covered : dims_covered + ndims]
+            v = value[:, dims_covered: dims_covered + ndims]
             # Reshape here to ensure all returned log_probs are 2D for concatenation.
             log_probs.append(d.log_prob(v).reshape(num_samples, 1))
             dims_covered += ndims
@@ -324,10 +324,9 @@ def build_support(
 
 
 class TruncatedLogNormal(torch.distributions.Distribution):
-    def __init__(self, loc, scale, lower_bound, upper_bound):
+    def __init__(self, loc, scale, upper_bound):
         self.loc = loc
         self.scale = scale
-        self.lower_bound = lower_bound
         self.upper_bound = upper_bound
         self.base_lognormal = torch.distributions.LogNormal(loc, scale)
 
@@ -340,32 +339,16 @@ class TruncatedLogNormal(torch.distributions.Distribution):
         return self.base_lognormal.event_shape
 
     def sample(self, sample_shape=torch.Size()):
-        generated_samples = []
-        total_samples = 0
-
-        while total_samples < torch.Size(sample_shape).numel():
-            remaining_samples = torch.Size(sample_shape).numel() - total_samples
-            extra_samples = self.base_lognormal.sample(torch.Size([remaining_samples]))
-
-            # Apply truncation using vectorized operations
-            mask = (extra_samples >= self.lower_bound) & (extra_samples <= self.upper_bound)
-            valid_samples = extra_samples[mask]
-
-            generated_samples.append(valid_samples)
-            total_samples += valid_samples.numel()
-
-        # Concatenate the generated samples
-        samples = torch.cat(generated_samples)[:torch.Size(sample_shape).numel()]
-
-        # Debugging information
-        print(f"sample_shape: {sample_shape}, samples.size(): {samples.size()}, total_samples: {total_samples}")
-
-        return samples
+        extra_samples = self.base_lognormal.sample(sample_shape)
+        return torch.clamp(extra_samples, max=self.upper_bound)
 
     def log_prob(self, value):
         # Calculate log probability for a given value using vectorized operations
         log_prob_base = self.base_lognormal.log_prob(value)
-        log_prob_truncated = log_prob_base - torch.log(self.cdf(self.upper_bound) - self.cdf(self.lower_bound))
+
+        # Only consider values within the truncated range
+        mask = (value <= self.upper_bound)
+        log_prob_truncated = torch.where(mask, log_prob_base, torch.tensor(float('-inf')))
 
         return log_prob_truncated
 
@@ -380,7 +363,8 @@ class TruncatedLogNormal(torch.distributions.Distribution):
     def pdf(self, x):
         # Probability density function
         pdf_base = torch.exp(self.base_lognormal.log_prob(x))
-        pdf_truncated = pdf_base / (self.cdf(self.upper_bound) - self.cdf(self.lower_bound))
+        pdf_truncated = pdf_base / (self.cdf(self.upper_bound))
+
         return pdf_truncated.numpy()
 
 
