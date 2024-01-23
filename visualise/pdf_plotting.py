@@ -26,7 +26,8 @@ plt.ylabel('Probability Density')
 plt.legend()
 plt.show()
 
-# Numerically integrate the PDF with simps (Simpson's rule)
-area_simps = simps(pdf_values, x_values)
-
+# Numerically integrate the PDF
+area, _ = quad(lambda x: prior1.pdf(torch.tensor(x)), 0, upper_bound)
+area_simps = simps(pdf_values, x_values)  # Simpson's rule
+print("Area under the PDF:", area)
 print("Area under the PDF (Simpson's rule):", area_simps)
