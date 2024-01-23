@@ -21,7 +21,6 @@ from typing import Dict, Optional, Sequence
 import torch
 from torch import Tensor
 from torch.distributions import Distribution, constraints
-import pandas as pd
 
 """
 
@@ -274,9 +273,11 @@ def build_support(
 
 class TruncatedLogNormal(torch.distributions.Distribution):
     def __init__(self, loc, scale, upper_bound):
+        super(TruncatedLogNormal, self).__init__()
         self.loc = loc
         self.scale = scale
         self.upper_bound = upper_bound
+        self.lower_bound = 0.01  # Add a lower bound
         self.base_lognormal = torch.distributions.LogNormal(loc, scale)
 
     @property
@@ -289,21 +290,23 @@ class TruncatedLogNormal(torch.distributions.Distribution):
 
     def sample(self, sample_shape=torch.Size()):
         extra_samples = self.base_lognormal.sample(sample_shape)
-        return torch.clamp(extra_samples, max=self.upper_bound)
+        return torch.clamp(extra_samples, min=self.lower_bound, max=self.upper_bound)
 
     def log_prob(self, value):
         # Calculate log probability for a given value using vectorized operations
         log_prob_base = self.base_lognormal.log_prob(value)
 
         # Only consider values within the truncated range
-        mask = (value <= self.upper_bound)
+        mask = (value >= self.lower_bound) & (value <= self.upper_bound)
         log_prob_truncated = torch.where(mask, log_prob_base, torch.tensor(float('-inf')))
 
         return log_prob_truncated
 
     def cdf(self, value):
         # Cumulative distribution function
-        transformed_value = (value - self.loc) / self.scale
+        lower_bound_tensor = torch.tensor(self.lower_bound, dtype=torch.float32)
+        value = torch.tensor(value, dtype=torch.float32)
+        transformed_value = (torch.max(value, lower_bound_tensor) - self.loc) / self.scale
         transformed_value_tensor = torch.tensor(transformed_value, dtype=torch.float32)
         cdf_transformed = self.base_lognormal.cdf(transformed_value_tensor)
 
@@ -311,7 +314,9 @@ class TruncatedLogNormal(torch.distributions.Distribution):
 
     def pdf(self, x):
         # Probability density function
-        log_pdf_base = self.base_lognormal.log_prob(x)
+        lower_bound_tensor = torch.tensor(self.lower_bound, dtype=torch.float32)
+        x = torch.tensor(x, dtype=torch.float32)
+        log_pdf_base = self.base_lognormal.log_prob(torch.max(x, lower_bound_tensor))
         pdf_truncated = torch.exp(log_pdf_base - torch.log(self.cdf(self.upper_bound)))
 
         return pdf_truncated
