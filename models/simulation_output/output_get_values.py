@@ -22,7 +22,7 @@ from multiprocessing import Pool
 """STEP 1. Read the parameter combinations from a csv file."""
 
 csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv'
+                'check_simulation/Ecolight_parameter_combinations.csv'
 combinations = pd.read_csv(csv_file_path)
 
 
@@ -73,8 +73,7 @@ combinations_df["filename"] = string_id
 so that each file can be accessed in the order defined by the list of file IDs."""
 
 # Specify path to the folder containing the output files
-folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
-              'EL_test_2_dec2023/EL_test_2_dec2023'
+folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation/setup_test2'
 file_ids = combinations_df["filename"]
 
 # Create an empty list to store the filepaths
@@ -111,8 +110,8 @@ def process_file(file_path):
 
 # Apply the function to all the files
 def main():
-    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Dec2023_lognormal_priors/' \
-                  'simulated_rrs_dec23_lognorm.csv'
+    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation/' \
+                  'simulated_rrs_check_simulation.csv'
 
     # Number of processes to use (adjust as needed)
     num_processes = 4
