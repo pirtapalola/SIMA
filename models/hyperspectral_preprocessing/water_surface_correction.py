@@ -14,7 +14,7 @@ import pandas as pd
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
-                   'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2022/smooth_surface_reflectance_2022.csv'
+                   'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2023/smooth_surface_reflectance_2023.csv'
 obs_df = pd.read_csv(observation_path)
 
 # Create a list of sample IDs
@@ -46,4 +46,4 @@ Rrs_df = pd.DataFrame(Rrs_list)
 Rrs_df = Rrs_df.transpose()
 print(Rrs_df)
 Rrs_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-              "In_water_calibration_2022/above_water_reflectance_2022_Mobley.csv")
+              "In_water_calibration_2023/above_water_reflectance_2023_Mobley.csv")
