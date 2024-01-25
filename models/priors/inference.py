@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 19 December 2023 by Pirta Palola
+Last updated on 25 January 2024 by Pirta Palola
 
 """
 
@@ -22,7 +22,7 @@ from models.tools import TruncatedLogNormal
 """STEP 1. Access the Ecolight setup file."""
 
 # Define the path
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation/priors/'
+PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/priors/'
 
 # Open the file. Each line is saved as a string in a list.
 
@@ -31,7 +31,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 100
+num_simulations = 10000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
@@ -71,15 +71,11 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-# prior_chl = prior_lognormal_truncated('chl', 0, 2.5, 5)
-# prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 3)
-# prior_spm = prior_lognormal_truncated('spm', 0, 2.5, 40)
+prior_chl = prior_lognormal_truncated('chl', 0, 2.5, 5)
+prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 3)
+prior_spm = prior_lognormal_truncated('spm', 0, 5, 30)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
-prior_depth = prior_uniform_distribution('depth', 0.1, 2.0)
-
-prior_chl = prior_uniform_distribution('chl', 0.001, 0.6)
-prior_cdom = prior_uniform_distribution('cdom', 0.001, 0.3)
-prior_spm = prior_uniform_distribution('spm', 0.001, 2)
+prior_depth = prior_uniform_distribution('depth', 0.1, 10.0)
 
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
@@ -124,7 +120,7 @@ df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 's
 # print(df)
 df_combinations.to_csv('C:/Users/pirtapalola/'
                        'Documents/DPhil/Chapter2/Methods'
-                       '/Methods_Ecolight/check_simulation/Ecolight_parameter_combinations.csv')
+                       '/Methods_Ecolight/Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
 
 '''
 # Check that the sampled prior distributions look realistic
@@ -252,7 +248,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[65] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation/' \
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/' \
            'setup/Icorals' \
            + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
@@ -271,7 +267,7 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation/'
+f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
           'setup/Icorals'
           + string_id[100] + '_coralbrown' + '.txt', 'r')
 f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt', 'r')
