@@ -20,7 +20,7 @@ import numpy as np
 
 # Specify file location
 path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2022/calibrated_surface_reflectance_2022.csv"
+       "Methods_Ecolight/In_water_calibration_2022/test_correction_ONE03.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
@@ -83,5 +83,5 @@ interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
 interpolated_reflectance_df = interpolated_reflectance_df.transpose()
 print(interpolated_reflectance_df)
 interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                   "In_water_calibration_2022/interpolated_surface_reflectance_2022.csv")
+                                   "In_water_calibration_2022/test_correction_ONe03_interpolated.csv")
 
