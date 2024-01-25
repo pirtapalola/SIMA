@@ -17,29 +17,28 @@ import pandas as pd
 
 # Access the calibration factors from a csv file
 calibration_factors = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/"
-                                  "Methods_Ecolight/In_water_calibration_2022/correction_factors_2022.csv")
+                                  "Methods_Ecolight/In_water_calibration_2023/correction_factors_2023.csv")
 
-air_878A_2022 = calibration_factors["Air_878A_2022"]  # Air calibration factor for the irradiance (E) sensor
-aq_878A_2022 = calibration_factors["Aq_878A_2022"]  # In-water calibration factor for the irradiance (E) sensor
-air_8789_2022 = calibration_factors["Air_8789_2022"]  # Air calibration factor for the radiance (L) sensor
-aq_8789_2022 = calibration_factors["Aq_8789_2022"]  # In-water calibration factor for the radiance (L) sensor
+air_878A_2022 = calibration_factors["Air_878A_2023"]  # Air calibration factor for the irradiance (E) sensor
+aq_878A_2022 = calibration_factors["Aq_878A_2023"]  # In-water calibration factor for the irradiance (E) sensor
+air_8789_2022 = calibration_factors["Air_8789_2023"]  # Air calibration factor for the radiance (L) sensor
+aq_8789_2022 = calibration_factors["Aq_8789_2023"]  # In-water calibration factor for the radiance (L) sensor
 
 # Access the TriOS RAMSES data
 measurement = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                          "In_water_calibration_2022/uncorrected_surface_measurements_tetiaroa_2022.csv")
+                          "In_water_calibration_2023/uncorrected_AUR01_AUR03_COO20_COO26_surface_2023.csv")
 
 # List of sample IDs
 sample_IDs = list(measurement.columns)
-sample_IDs = sample_IDs[1::]  # Delete the first element of the list
 print(sample_IDs)
 
 # List of irradiance sample IDs
 e_sample_IDs = sample_IDs[0::2]
-print(len(e_sample_IDs))
+print(e_sample_IDs)
 
 # List of radiance sample IDs
 l_sample_IDs = sample_IDs[1::2]
-print(len(l_sample_IDs))
+print(l_sample_IDs)
 
 "STEP 2. Calibrate the reflectance data."
 
@@ -72,4 +71,4 @@ calibrated_reflectance_df = pd.DataFrame(refl_list)
 calibrated_reflectance_df = calibrated_reflectance_df.transpose()
 print(calibrated_reflectance_df)
 calibrated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                 "In_water_calibration_2022/calibrated_surface_reflectance_2022.csv")
+                                 "In_water_calibration_2023/calibrated_surface_reflectance_2023.csv")
