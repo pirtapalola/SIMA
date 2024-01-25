@@ -1,6 +1,6 @@
 """
 
-Calculate just-above water reflectance from just-below water reflectance following Eq. A9 from Lee et al. (1999).
+Calculate just-above water reflectance from just-below water reflectance.
 STEP 1. Read the data.
 STEP 2. Calculate just-above water reflectance.
 
@@ -28,7 +28,7 @@ print(sample_IDs)
 def water_surface_correction(sample_id):
     results = []
     for value in obs_df[sample_id]:
-        result = (0.5*value)/(1-1.5*value)
+        result = 0.541*(1-0.028)*value
         results.append(result)
     return results
 
@@ -46,4 +46,4 @@ Rrs_df = pd.DataFrame(Rrs_list)
 Rrs_df = Rrs_df.transpose()
 print(Rrs_df)
 Rrs_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-              "In_water_calibration_2022/above_water_reflectance.csv")
+              "In_water_calibration_2022/above_water_reflectance_2022_Mobley.csv")
