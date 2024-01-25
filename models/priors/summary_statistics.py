@@ -34,18 +34,16 @@ stats = ["Means", "Standard deviation", "Minimum", "Maximum", "10th percentile",
 means = statistics.mean(chl_list), statistics.mean(cdom_list), statistics.mean(spm_list)
 std_list = statistics.stdev(chl_list), statistics.stdev(cdom_list), statistics.stdev(spm_list)
 medians = statistics.median(chl_list), statistics.median(cdom_list), statistics.median(spm_list)
-percentile10 = np.percentile(chl_list, 10), np.percentile(cdom_list, 10), np.percentile(spm_list, 10)
-percentile33 = np.percentile(chl_list, 33), np.percentile(cdom_list, 33), np.percentile(spm_list, 33)
-percentile90 = np.percentile(chl_list, 90), np.percentile(cdom_list, 90), np.percentile(spm_list, 90)
+percentile5 = np.percentile(chl_list, 5), np.percentile(cdom_list, 5), np.percentile(spm_list, 5)
+percentile95 = np.percentile(chl_list, 95), np.percentile(cdom_list, 95), np.percentile(spm_list, 95)
 min_list = min(chl_list), min(cdom_list), min(spm_list)
 max_list = max(chl_list), max(cdom_list), max(spm_list)
 
 # Print the summary statistics
 print("Mean: ", means)
 print("Median: ", medians)
-print("10th percentile: ", percentile10)
-print("33rd percentile: ", percentile33)
-print("90th percentile: ", percentile90)
+print("10th percentile: ", percentile5)
+print("90th percentile: ", percentile95)
 print("Min: ", min_list)
 print("Max: ", max_list)
 
@@ -56,8 +54,7 @@ summary_stats["Standard deviation"] = std_list
 summary_stats["Median"] = medians
 summary_stats["Minimum"] = min_list
 summary_stats["Maximum"] = max_list
-summary_stats["10th percentile"] = percentile10
-summary_stats["33rd percentile"] = percentile33
-summary_stats["90th percentile"] = percentile90
-#summary_stats.to_csv(path + "prior_summary_stats.csv")
-#print(summary_stats)
+summary_stats["5th percentile"] = percentile5
+summary_stats["95th percentile"] = percentile95
+summary_stats.to_csv(path + "prior_summary_stats.csv")
+print(summary_stats)
