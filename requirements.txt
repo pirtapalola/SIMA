@@ -123,6 +123,7 @@ pykdtree==1.3.7.post0
 pyknos==0.15.1
 pyogrio==0.5.1
 pyparsing==3.0.9
+pypiwin32==223
 pyproj==3.5.0
 pyresample==1.26.1
 pyro-api==0.1.2
