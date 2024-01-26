@@ -28,7 +28,6 @@ colorama==0.4.6
 colorlog==6.7.0
 configobj==5.0.8
 contourpy==1.0.7
-copernicus-marine-client==0.10.1
 coverage==7.3.0
 cryptography==40.0.1
 cycler==0.11.0
@@ -136,6 +135,7 @@ python-box==7.0.1
 python-dateutil==2.8.2
 pytz==2023.3
 PyWavelets==1.4.1
+pywin32==306
 PyYAML==6.0
 rasterio==1.3.6
 requests==2.28.2
