@@ -6,7 +6,7 @@ STEP 1. Read the data.
 STEP 2. Calibrate the reflectance data.
 STEP 3. Save the calibrated values into a csv file.
 
-Last updated on 20 January 2024 by Pirta Palola
+Last updated on 30 January 2024 by Pirta Palola
 
 """
 
@@ -26,7 +26,7 @@ aq_8789_2022 = calibration_factors["Aq_8789_2023"]  # In-water calibration facto
 
 # Access the TriOS RAMSES data
 measurement = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                          "In_water_calibration_2023/uncorrected_AUR01_AUR03_COO20_COO26_surface_2023.csv")
+                          "In_water_calibration_2023/uncorrected_COO28_44_surface_2023.csv")
 
 # List of sample IDs
 sample_IDs = list(measurement.columns)
@@ -71,4 +71,4 @@ calibrated_reflectance_df = pd.DataFrame(refl_list)
 calibrated_reflectance_df = calibrated_reflectance_df.transpose()
 print(calibrated_reflectance_df)
 calibrated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                 "In_water_calibration_2023/calibrated_surface_reflectance_2023.csv")
+                                 "In_water_calibration_2023/calibrated_COO28_44_surface_reflectance_2023.csv")
