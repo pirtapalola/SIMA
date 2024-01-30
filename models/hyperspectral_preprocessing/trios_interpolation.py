@@ -7,7 +7,7 @@ STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
 STEP 3. Save the interpolated data in csv files.
 
-Last updated on 25 January 2024 by Pirta Palola
+Last updated on 30 January 2024 by Pirta Palola
 
 """
 
@@ -20,7 +20,7 @@ import numpy as np
 
 # Specify file location
 path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2023/calibrated_surface_reflectance_2023.csv"
+       "Methods_Ecolight/In_water_calibration_2023/calibrated_COO28_44_surface_reflectance_2023.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
@@ -83,5 +83,5 @@ interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
 interpolated_reflectance_df = interpolated_reflectance_df.transpose()
 print(interpolated_reflectance_df)
 interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                   "In_water_calibration_2023/interpolated_surface_reflectance_2023.csv")
+                                   "In_water_calibration_2023/interpolated_COO28_44_surface_reflectance_2023.csv")
 
