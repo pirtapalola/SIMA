@@ -2,7 +2,7 @@
 
 Smoothen the reflectance data to get rid of noise.
 
-Last updated on 25 January 2024 by Pirta Palola
+Last updated on 30 January 2024 by Pirta Palola
 
 """
 
@@ -11,7 +11,7 @@ import pandas as pd
 
 # Access the data
 df = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                 "In_water_calibration_2023/processed_surface_reflectance_2023.csv")
+                 "In_water_calibration_2023/processed_COO28_44_surface_reflectance_2023.csv")
 
 # List of sample IDs
 sample_IDs = list(df.columns)
@@ -34,4 +34,4 @@ smooth_df = pd.DataFrame(smooth_list)
 smooth_df = smooth_df.transpose()
 print(smooth_df)
 smooth_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                 "In_water_calibration_2023/smooth_surface_reflectance_2023.csv")
+                 "In_water_calibration_2023/smooth_COO28_44_surface_reflectance_2023.csv")
