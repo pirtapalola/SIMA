@@ -19,8 +19,8 @@ import numpy as np
 """STEP 1. Access the reflectance data."""
 
 # Specify file location
-path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/" \
-       "Methods_Ecolight/In_water_calibration_2023/calibrated_COO28_44_surface_reflectance_2023.csv"
+path = "C:/Users/pirtapalola/Documents/Methodology/In_situ_data/2022/Absorption/" \
+       "cdom_absorption_coefficients/cdom_absorption_2022.csv"
 
 # Create a pandas dataframe
 reflectance_data = pd.read_csv(path)
@@ -38,7 +38,7 @@ print(sample_IDs)
 
 def cubic_spline_interpolation(y0_list, x_list):
     # Define the wavelength range and spectral resolution of the end product
-    xs = np.arange(319, 951, 2)
+    xs = np.arange(249, 801, 1)
     # Create an index list that corresponds to the number of rows in the end product
     index_list = []
     for z in range(len(xs)):
@@ -82,6 +82,5 @@ print("Number of measurements: ", len(interpolation_results_list))
 interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
 interpolated_reflectance_df = interpolated_reflectance_df.transpose()
 print(interpolated_reflectance_df)
-interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-                                   "In_water_calibration_2023/interpolated_COO28_44_surface_reflectance_2023.csv")
-
+interpolated_reflectance_df.to_csv("C:/Users/pirtapalola/Documents/Methodology/In_situ_data/2022/"
+                                   "Absorption/cdom_absorption_coefficients/interpolated_cdom_absorption_2022.csv")
