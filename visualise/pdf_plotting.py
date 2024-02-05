@@ -17,6 +17,7 @@ prior1 = TruncatedLogNormal(loc=0, scale=4, upper_bound=upper_bound)
 prior2 = TruncatedLogNormal(loc=0, scale=5, upper_bound=upper_bound)
 prior3 = TruncatedLogNormal(loc=0, scale=7, upper_bound=upper_bound)
 
+
 # Plot the PDF for visualization
 x_values = np.linspace(0.01, upper_bound, 1000)
 pdf_values1 = prior1.pdf(torch.tensor(x_values))
