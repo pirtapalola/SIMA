@@ -2,6 +2,8 @@
 
 Calculate summary statistics from samples drawn from the prior distributions.
 
+Last updated on 5 February 2024 by Pirta Palola
+
 """
 
 # Import libraries
@@ -30,7 +32,6 @@ spm_list = spm_list.to_list()
 print(chl_list)
 print(len(chl_list), len(cdom_list), len(spm_list))
 
-stats = ["Means", "Standard deviation", "Minimum", "Maximum", "10th percentile", "33rd percentile", "90th percentile"]
 means = statistics.mean(chl_list), statistics.mean(cdom_list), statistics.mean(spm_list)
 std_list = statistics.stdev(chl_list), statistics.stdev(cdom_list), statistics.stdev(spm_list)
 medians = statistics.median(chl_list), statistics.median(cdom_list), statistics.median(spm_list)
