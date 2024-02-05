@@ -15,11 +15,11 @@ import os
 
 """"STEP 1. Save the input file names into a list."""
 
-os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/setup')
+os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation_Feb2024/setup')
 the_list = []
 
 for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                                 r'Jan2024_lognormal_priors/setup'):
+                                 r'check_simulation_Feb2024/setup'):
     for file in files:
         if file.endswith('.txt'):
             the_list.append(file)
@@ -30,7 +30,7 @@ for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2
 
 def new_runlist_file(path_list):
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/runlist.txt'
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/check_simulation_Feb2024/runlist.txt'
     with open(path, 'w') as fp:
         for item in path_list:
             fp.write(item + ' \n')
