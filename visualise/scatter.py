@@ -32,11 +32,11 @@ print(highlight_x, highlight_y, highlight_z)
 # ax.scatter(highlight_x, highlight_y, highlight_z, c='red', marker='X', s=100, label='Highlighted Samples')
 
 # Add colorbar for reference
-cbar = fig.colorbar(scatter, ax=ax, label='NAP', pad=0.2)
+cbar = fig.colorbar(scatter, ax=ax, label='SPM', pad=0.2)
 
 # Adjust label positions
 ax.set_xlabel('CDOM', labelpad=10)
-ax.set_ylabel('NAP', labelpad=10)
+ax.set_ylabel('SPM', labelpad=10)
 ax.set_zlabel('Phytoplankton', labelpad=10)
 
 # Show the plot
