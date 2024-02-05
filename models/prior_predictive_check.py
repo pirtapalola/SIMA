@@ -28,9 +28,9 @@ print(sample_IDs)
 # Sample from the prior distributions
 prior_chl = TruncatedLogNormal(0, 5, 5)
 samples_chl = prior_chl.sample(torch.Size([10000]))
-prior_cdom = TruncatedLogNormal(0, 5, 5)
+prior_cdom = TruncatedLogNormal(0, 5, 2)
 samples_cdom = prior_cdom.sample(torch.Size([10000]))
-prior_spm = TruncatedLogNormal(0, 5, 30)
+prior_spm = TruncatedLogNormal(0, 5, 20)
 samples_spm = prior_spm.sample(torch.Size([10000]))
 prior_wind = torch.distributions.LogNormal(1.85, 0.33)
 samples_wind = prior_wind.sample(torch.Size([10000]))
@@ -67,7 +67,7 @@ observation_parameters = dataframe_to_tensor(obs_parameters)
 _ = pairplot(
     samples=prior_samples,
     points=observation_parameters,
-    limits=[[0, 5], [0, 3], [0, 30], [0, 20], [0, 10]],
+    limits=[[0, 5], [0, 2], [0, 20], [0, 20], [0, 10]],
     points_colors=["red", "red", "red"],
     figsize=(8, 8),
     offdiag="scatter",
