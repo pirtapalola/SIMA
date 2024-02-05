@@ -27,45 +27,52 @@ print(sample_IDs)
 
 # Sample from the prior distributions
 prior_chl = TruncatedLogNormal(0, 5, 5)
-samples_chl = prior_chl.sample(torch.Size([1000]))
+samples_chl = prior_chl.sample(torch.Size([10000]))
 prior_cdom = TruncatedLogNormal(0, 5, 5)
-samples_cdom = prior_cdom.sample(torch.Size([1000]))
+samples_cdom = prior_cdom.sample(torch.Size([10000]))
 prior_spm = TruncatedLogNormal(0, 5, 30)
-samples_spm = prior_spm.sample(torch.Size([1000]))
+samples_spm = prior_spm.sample(torch.Size([10000]))
 prior_wind = torch.distributions.LogNormal(1.85, 0.33)
-samples_wind = prior_wind.sample(torch.Size([1000]))
+samples_wind = prior_wind.sample(torch.Size([10000]))
 prior_depth = torch.distributions.uniform.Uniform(0.1, 10.0)
-samples_depth = prior_depth.sample(torch.Size([1000]))
+samples_depth = prior_depth.sample(torch.Size([10000]))
 
 # Store the samples in a dataframe
 prior_df = pd.DataFrame({"chl": samples_chl, "cdom": samples_cdom, "spm": samples_spm,
                          "wind": samples_wind, "depth": samples_depth})
 
-# Create an empty list
-prior_list = []
 
-# Iterate over each row
-for index, rows in prior_df.iterrows():
-    # Create list for the current row
-    my_list = [rows.chl, rows.cdom, rows.spm, rows.wind, rows.depth]
-    # append the list to the final list
-    prior_list.append(my_list)
+# Convert the dataframe into a tensor
+def dataframe_to_tensor(dataframe):
+    # Create an empty list
+    empty_list = []
+    # Iterate over each row
+    for index, rows in dataframe.iterrows():
+        # Create a list for the current row
+        my_list = [rows.chl, rows.cdom, rows.spm, rows.wind, rows.depth]
+        # Append the list to the empty_list
+        empty_list.append(my_list)
+    # Print the length of the list
+    print(len(empty_list))
+    # Create a tensor
+    data_torch = torch.tensor(empty_list)
+    return data_torch
 
-# Print the list
-print(len(prior_list))
 
-prior_samples = torch.tensor(prior_list)
+# Apply the function
+prior_samples = dataframe_to_tensor(prior_df)
+observation_parameters = dataframe_to_tensor(obs_parameters)
 
 # Conduct the prior predictive check
 _ = pairplot(
     samples=prior_samples,
-    points=obs_parameters["RIM04"],
+    points=observation_parameters,
     limits=[[0, 5], [0, 3], [0, 30], [0, 20], [0, 10]],
     points_colors=["red", "red", "red"],
     figsize=(8, 8),
     offdiag="scatter",
     scatter_offdiag=dict(marker=".", s=5),
-    points_offdiag=dict(marker="+", markersize=20)
+    points_offdiag=dict(marker="+", markersize=5)
 )
 
 plt.show()
