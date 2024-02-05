@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 25 January 2024 by Pirta Palola
+Last updated on 5 February 2024 by Pirta Palola
 
 """
 
@@ -71,9 +71,9 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_truncated('chl', 0, 2.5, 5)
-prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 3)
-prior_spm = prior_lognormal_truncated('spm', 0, 5, 30)
+prior_chl = prior_lognormal_truncated('chl', 0, 5, 5)
+prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 2)
+prior_spm = prior_lognormal_truncated('spm', 0, 5, 20)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
 prior_depth = prior_uniform_distribution('depth', 0.1, 10.0)
 
