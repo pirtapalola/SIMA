@@ -140,7 +140,7 @@ embedding_net = CNNEmbedding(input_shape=(150,))
 
 # instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="maf", embedding_net=embedding_net, hidden_features=10, num_transforms=2)
+    model="maf", embedding_net=embedding_net, hidden_features=20, num_transforms=2)
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
