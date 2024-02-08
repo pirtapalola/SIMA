@@ -43,9 +43,9 @@ sample_IDs = list(obs_df.columns)
 print(sample_IDs)
 
 # Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
-x_o_test = x_dataframe.iloc[1]
+x_o_test = x_dataframe.iloc[10]
 posterior_samples_test = loaded_posterior.sample((1000,), x=x_o_test)  # Sample from the posterior p(θ|x)
-print(posterior_samples_test)
+print(x_o_test)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 results_path = 'C:/Users/pirtapalola/Documents/Methodology/Inference/test_results/'
@@ -86,5 +86,20 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function
-for item in sample_IDs:
-    infer_from_observation(item)
+# for item in sample_IDs:
+# infer_from_observation(x_o_test)
+
+posterior_samples = loaded_posterior.sample((1000,), x=x_o_test)
+
+_ = analysis.pairplot(
+    samples=posterior_samples,
+    points=x_o_test,
+    limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]],
+    points_colors=["red", "red", "red"],
+    figsize=(8, 8),
+    offdiag="scatter",
+    scatter_offdiag=dict(marker=".", s=5),
+    points_offdiag=dict(marker="+", markersize=20)
+    )
+
+plt.show()
