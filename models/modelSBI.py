@@ -20,8 +20,10 @@ from sbi.inference import SNPE
 from torch import tensor
 from models.tools import MultipleIndependent, min_max_normalisation
 import pickle
-from sbi.neural_nets.embedding_nets import CNNEmbedding
+from sbi.neural_nets.embedding_nets import FCEmbedding
 from sbi import utils
+import matplotlib.pyplot as plt
+import numpy as np
 
 """
 STEP 1. Prepare the simulated data
@@ -136,11 +138,12 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 """
 
 # Define the embedding net
-embedding_net = CNNEmbedding(input_shape=(150,))
+# Alternative: CNNEmbedding(input_shape=(150,))
+embedding_net = FCEmbedding(input_dim=150)
 
 # instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="maf", embedding_net=embedding_net, hidden_features=20, num_transforms=2)
+    model="nsf", embedding_net=embedding_net, hidden_features=50, num_transforms=3)
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -156,6 +159,17 @@ STEP 4. Train the neural density estimator and build the posterior.
 
 # Train the neural density estimator
 density_estimator = inference.train()
+
+# Plot the training and validation curves
+plt.figure(1, figsize=(4, 3), dpi=200)
+plt.plot(-np.array(inference.summary["training_log_probs"]), label="training")
+plt.plot(
+    -np.array(inference.summary["validation_log_probs"]), label="validation", alpha=1
+)
+plt.xlabel("epoch")
+plt.ylabel("-log(p)")
+plt.legend()
+plt.show()
 
 # Use the trained neural density estimator to build the posterior
 posterior = inference.build_posterior(density_estimator)
