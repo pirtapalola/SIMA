@@ -86,20 +86,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function
-# for item in sample_IDs:
-# infer_from_observation(x_o_test)
-
-posterior_samples = loaded_posterior.sample((1000,), x=x_o_test)
-
-_ = analysis.pairplot(
-    samples=posterior_samples,
-    points=x_o_test,
-    limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]],
-    points_colors=["red", "red", "red"],
-    figsize=(8, 8),
-    offdiag="scatter",
-    scatter_offdiag=dict(marker=".", s=5),
-    points_offdiag=dict(marker="+", markersize=20)
-    )
-
-plt.show()
+for item in sample_IDs:
+    infer_from_observation(item)
