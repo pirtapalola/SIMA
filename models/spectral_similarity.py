@@ -65,7 +65,7 @@ def calculate_all_similarity_scores(target_spectrum, dataframe, similarity_funct
 
 
 # Calculate similarity scores for the target spectrum against all spectra in the simulated dataset
-target_spectrum = obs_df['ONE03']
+target_spectrum = sim_df['2843']
 all_similarity_scores = calculate_all_similarity_scores(target_spectrum, sim_df,
                                                         similarity_function=calculate_sam_similarity)
 
