@@ -87,4 +87,4 @@ def infer_from_observation(sample_id):
 
 # Apply the function
 for item in sample_IDs:
-    infer_from_observation(x_o_test)
+    infer_from_observation(item)
