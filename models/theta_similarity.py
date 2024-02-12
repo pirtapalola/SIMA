@@ -10,7 +10,7 @@ from scipy.spatial.distance import euclidean
 
 # Read the data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Dec2023_lognormal_priors/'
+       'Jan2024_lognormal_priors/'
 theta_df = pd.read_csv(path + "Ecolight_parameter_combinations.csv")
 theta_df = theta_df.drop(['water', 'wind'], axis=1)
 reference_theta = [0.1, 3.0, 0.1, 1.1]
@@ -40,3 +40,4 @@ for index, row in theta_df.iterrows():
 # Display the selected rows
 selected_df = theta_df.loc[selected_rows]
 print(selected_df)
+print(len(selected_rows))
