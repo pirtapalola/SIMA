@@ -12,7 +12,7 @@ obs_df = pd.read_csv(path + "downscaled_above_water_reflectance_2022_Mobley.csv"
 sim_df = pd.read_csv(path + "downscaled_simulated_reflectance.csv")  # simulated data
 # sim_df = sim_df.drop(['wavelength'], axis=1)
 
-sam_distance_test = distance.NormXCorr(obs_df["RIM03"], sim_df["2879"])
+sam_distance_test = distance.SAM(obs_df["RIM03"], sim_df["2879"])
 print(sam_distance_test)
 
 
@@ -23,14 +23,14 @@ def calculate_cosine_similarity(spectrum1, spectrum2):
 
 # Calculate similarity between two spectra using Spectral Angle Mapping.
 def calculate_sam_similarity(spectrum1, spectrum2):
-    sam_distance = distance.NormXCorr(spectrum1, spectrum2)
+    sam_distance = distance.SAM(spectrum1, spectrum2)
     return sam_distance
 
 
 # Find the 10 most similar spectra
 def find_most_similar_spectra(target, dataframe, num_similar=10):
     similarities = dataframe.apply(lambda col1: calculate_sam_similarity(target, col1), axis=0)
-    most_similar_columns = similarities.nlargest(num_similar).index
+    most_similar_columns = similarities.nsmallest(num_similar).index
     most_similar_spectra = dataframe[most_similar_columns]
     similarity_scores = similarities[most_similar_columns]
 
