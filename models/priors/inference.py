@@ -31,7 +31,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 10000
+num_simulations = 20000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
@@ -72,10 +72,10 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
 prior_chl = prior_lognormal_truncated('chl', 0, 5, 5)
-prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 2)
+prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 2.5)
 prior_spm = prior_lognormal_truncated('spm', 0, 5, 20)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
-prior_depth = prior_uniform_distribution('depth', 0.1, 10.0)
+prior_depth = prior_uniform_distribution('depth', 0.1, 20.0)
 
 prior_chl = prior_chl.tolist()
 prior_cdom = prior_cdom.tolist()
