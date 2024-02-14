@@ -71,9 +71,9 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_truncated('chl', 0, 5, 5)
+prior_chl = prior_lognormal_truncated('chl', 0, 5, 6.5)
 prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 2.5)
-prior_spm = prior_lognormal_truncated('spm', 0, 5, 20)
+prior_spm = prior_lognormal_truncated('spm', 0, 5, 25)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
 prior_depth = prior_uniform_distribution('depth', 0.1, 20.0)
 
@@ -213,9 +213,9 @@ for i in combination_ID:
 # print(dict_parameters[0].concentration['combination'])
 
 # Check the lines of the input file that specify wind speed, depth, and benthic cover type
-print(concentrations[51])  # The first element on line 51 specifies wind speed
-print(concentrations[53])  # The last element on line 53 specifies depth
-print(concentrations[61])  # Line 61 specifies the benthic cover type
+print(concentrations[43])  # The first element on line 51 specifies wind speed
+print(concentrations[45])  # The last element on line 53 specifies depth
+print(concentrations[53])  # Line 61 specifies the benthic cover type
 
 # Create a list that only contains information on water constituents
 
