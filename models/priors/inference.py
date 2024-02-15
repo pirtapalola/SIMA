@@ -31,7 +31,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 20000
+num_simulations = 30000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
@@ -243,8 +243,8 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[44] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
     hydrolight_file[52] = 'coral_brown.txt' + '\n'  # specify the benthic reflectance
     hydrolight_file[12] = r'..\data\defaults\apstarchl.txt' + '\n'
-    hydrolight_file[14] = r'..\data\defaults\astarmin_average.txt' + '\n'
-    hydrolight_file[22] = r'..\data\defaults\bstarmin_average.txt' + '\n'
+    hydrolight_file[14] = r'..\data\defaults\astarmin_calcareoussand.txt' + '\n'
+    hydrolight_file[22] = r'..\data\defaults\bstarmin_calcareoussand.txt' + '\n'
     hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
