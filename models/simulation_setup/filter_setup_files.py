@@ -99,6 +99,6 @@ def modify_setup_files(setup_file_path):
     with open(setup_file_path, 'w') as setup_file:
         setup_file.writelines(lines)
 
-
+print(file_paths)
 for selected_file in file_paths:
     modify_setup_files(selected_file)
