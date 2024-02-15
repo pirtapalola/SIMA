@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 5 February 2024 by Pirta Palola
+Last updated on 15 February 2024 by Pirta Palola
 
 """
 
@@ -71,9 +71,9 @@ def prior_lognormal_distribution(parameter_name, mean, std):
 
 
 # Apply the functions to generate the prior distributions that will be used for the simulations
-prior_chl = prior_lognormal_truncated('chl', 0, 5, 6.5)
+prior_chl = prior_lognormal_truncated('chl', 0, 5, 7)
 prior_cdom = prior_lognormal_truncated('cdom', 0, 5, 2.5)
-prior_spm = prior_lognormal_truncated('spm', 0, 5, 25)
+prior_spm = prior_lognormal_truncated('spm', 0, 5, 30)
 prior_wind = prior_lognormal_distribution('wind', 1.85, 0.33)
 prior_depth = prior_uniform_distribution('depth', 0.1, 20.0)
 
@@ -213,9 +213,9 @@ for i in combination_ID:
 # print(dict_parameters[0].concentration['combination'])
 
 # Check the lines of the input file that specify wind speed, depth, and benthic cover type
-print(concentrations[43])  # The first element on line 51 specifies wind speed
-print(concentrations[45])  # The last element on line 53 specifies depth
-print(concentrations[53])  # Line 61 specifies the benthic cover type
+print(concentrations[42])  # The first element on line 51 specifies wind speed
+print(concentrations[44])  # The last element on line 53 specifies depth
+print(concentrations[52])  # Line 61 specifies the benthic cover type
 
 # Create a list that only contains information on water constituents
 
@@ -239,13 +239,13 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     str2 = str(combination_d)
     hydrolight_file[2] = 'coralbrown' + id_string + '\n'  # rename the output file
     hydrolight_file[6] = str0 + ', \n'  # change the water constituent concentrations
-    hydrolight_file[51] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
-    hydrolight_file[53] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
-    hydrolight_file[61] = 'coral_brown.txt' + '\n'  # specify the benthic reflectance
+    hydrolight_file[42] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
+    hydrolight_file[44] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
+    hydrolight_file[52] = 'coral_brown.txt' + '\n'  # specify the benthic reflectance
     hydrolight_file[12] = r'..\data\defaults\apstarchl.txt' + '\n'
     hydrolight_file[14] = r'..\data\defaults\astarmin_average.txt' + '\n'
     hydrolight_file[22] = r'..\data\defaults\bstarmin_average.txt' + '\n'
-    hydrolight_file[65] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
+    hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
     path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/' \
@@ -269,7 +269,7 @@ for i in combination_ID:
 # reading files
 f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
           'setup/Icorals'
-          + string_id[100] + '_coralbrown' + '.txt', 'r')
+          + string_id[1] + '_coralbrown' + '.txt', 'r')
 f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
