@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 15 February 2024 by Pirta Palola
+Last updated on 16 February 2024 by Pirta Palola
 
 """
 
@@ -31,7 +31,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 3
+num_simulations = 30000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
