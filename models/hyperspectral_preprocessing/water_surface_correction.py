@@ -29,7 +29,7 @@ print(sample_IDs)
 def water_surface_correction(sample_id):
     results = []
     for value in obs_df[sample_id]:
-        result = (0.5*value)/(1-1.5*value)
+        result = (0.5*value)/(1-1.5*value)  # Lee et al. (1999)
         results.append(result)
     return results
 
