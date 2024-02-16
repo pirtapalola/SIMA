@@ -8,10 +8,11 @@ import matplotlib.pyplot as plt
 # Read the csv files containing the data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
        'Dec2023_lognormal_priors/'
-obs_df = pd.read_csv(path + 'above_water_reflectance_2022_Mobley.csv')  # observation data
-sim_df = pd.read_csv(path + "simulated_reflectance.csv")  # simulated data
+obs_df = pd.read_csv(path + "downscaled_above_water_reflectance_2022_Mobley.csv")  # observation data
+sim_df = pd.read_csv(path + "downscaled_simulated_reflectance.csv")  # simulated data
+# sim_df = sim_df.drop(['wavelength'], axis=1)
 
-sam_distance_test = distance.SAM(sim_df["10"], sim_df["10"])
+sam_distance_test = distance.SAM(obs_df["RIM03"], sim_df["2879"])
 print(sam_distance_test)
 
 
@@ -26,7 +27,7 @@ def calculate_sam_similarity(spectrum1, spectrum2):
     return sam_distance
 
 
-# Find the most similar spectra
+# Find the 10 most similar spectra
 def find_most_similar_spectra(target, dataframe, num_similar=10):
     similarities = dataframe.apply(lambda col1: calculate_sam_similarity(target, col1), axis=0)
     most_similar_columns = similarities.nsmallest(num_similar).index
@@ -65,7 +66,7 @@ def calculate_all_similarity_scores(target_spectrum, dataframe, similarity_funct
 
 
 # Calculate similarity scores for the target spectrum against all spectra in the simulated dataset
-target_spectrum = sim_df['2843']
+target_spectrum = obs_df['RIM03']
 all_similarity_scores = calculate_all_similarity_scores(target_spectrum, sim_df,
                                                         similarity_function=calculate_sam_similarity)
 
@@ -73,5 +74,5 @@ all_similarity_scores = calculate_all_similarity_scores(target_spectrum, sim_df,
 plt.hist(all_similarity_scores, bins=3000, edgecolor='black')
 plt.xlabel('Similarity Score')
 plt.ylabel('Frequency')
-plt.title('Histogram of Similarity Scores')
+plt.title('Spectral Angle Mapping')
 plt.show()

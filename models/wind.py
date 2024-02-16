@@ -6,7 +6,7 @@ Last updated on 19 December 2023 by Pirta Palola
 
 """
 
-import copernicus_marine_client as copernicus_marine
+# import copernicus_marine_client as copernicus_marine
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -79,6 +79,7 @@ average_wind_speed = average_wind(dates, wind_df)
 
 # Convert the data into a numpy array.
 wind = average_wind_speed["wind_speed"].values
+print("Mean wind speed: ", wind.mean())
 
 size = len(wind)
 x = np.linspace(0, 20, size)  # Use linspace to create x-values

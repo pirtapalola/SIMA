@@ -29,7 +29,6 @@ cdom_list = cdom_list.to_list()
 spm_list = spm_list.to_list()
 
 # Calculate summary statistics
-print(chl_list)
 print(len(chl_list), len(cdom_list), len(spm_list))
 
 means = statistics.mean(chl_list), statistics.mean(cdom_list), statistics.mean(spm_list)
