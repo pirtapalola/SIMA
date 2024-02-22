@@ -2,9 +2,9 @@
 
 # reading files
 f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'Jan2024_lognormal_priors/setup/Icorals_00_04_131_2274_415_1927_coralbrown.txt', 'r')
+          'Jan2024_lognormal_priors/setup/Icorals_00_032_016_671_799_1261_coralbrown.txt', 'r')
 f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'Jan2024_lognormal_priors/setup/Icorals_00_248_151_007_422_1348_coralbrown.txt', 'r')
+          'Jan2024_lognormal_priors/setup/Icorals_00_018_207_2198_528_1834_coralbrown.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()

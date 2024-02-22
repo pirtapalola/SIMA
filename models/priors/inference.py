@@ -31,7 +31,7 @@ with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 3
+num_simulations = 30000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
