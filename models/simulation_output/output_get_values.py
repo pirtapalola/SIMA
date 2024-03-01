@@ -9,6 +9,8 @@ STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
 STEP 6. Extract reflectance from the EL output files.
 
+Last updated on 1 March 2024 by Pirta Palola
+
 """
 
 # Import libraries
