@@ -4,9 +4,10 @@ Calculate just-above water reflectance from just-below water reflectance.
 STEP 1. Read the data.
 STEP 2. Calculate just-above water reflectance.
 
-Last updated on 13 February 2024 by Pirta Palola
+Last updated on 4 March 2024 by Pirta Palola
 
 """
+
 # Import libraries
 import pandas as pd
 
