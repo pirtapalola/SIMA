@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 5 February 2024 by Pirta Palola
+Last updated on 5 March 2024 by Pirta Palola
 
 """
 
@@ -21,34 +21,38 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Dec2023_lognormal_priors/loaded_posterior.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_reflectance.csv')
 x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[-1]})
 
 """STEP 2. Load the observation data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/pirtapalola/Documents/Methodology/In_situ_data/2022/'
-obs_df = pd.read_csv(observation_path + 'just_above_surface_reflectance_tetiaroa_2022_coralbrown.csv')
+observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
+                   'Jan2024_lognormal_priors/field_data/'
+obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_brown_coral.csv')
 
 # Read the file containing the corresponding parameters
-obs_parameters = pd.read_csv(observation_path + 'parameters_tetiaroa_2022.csv')
+obs_parameters = pd.read_csv(observation_path + 'parameters_brown_coral.csv')
+obs_parameters = obs_parameters.drop(columns="unique_ID")
+print(obs_parameters)
 
 # Create a list of sample IDs
 sample_IDs = list(obs_df.columns)
 print(sample_IDs)
 
-# Test simulation run no. 2, correct input parameters: [0.28, 0.11, 1.18, 4.69, 6.23]
-x_o_test = x_dataframe.iloc[10]
-posterior_samples_test = loaded_posterior.sample((1000,), x=x_o_test)  # Sample from the posterior p(θ|x)
-print(x_o_test)
+# Test simulation run
+# x_o_test = x_dataframe.iloc[10]
+# posterior_samples_test = loaded_posterior.sample((1000,), x=x_o_test)  # Sample from the posterior p(θ|x)
+# print(x_o_test)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
-results_path = 'C:/Users/pirtapalola/Documents/Methodology/Inference/test_results/'
+results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
+               'Jan2024_lognormal_priors/results/'
 
 
 def infer_from_observation(sample_id):
