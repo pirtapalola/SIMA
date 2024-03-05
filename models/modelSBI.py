@@ -20,7 +20,7 @@ from sbi.inference import SNPE
 from torch import tensor
 from models.tools import MultipleIndependent, min_max_normalisation
 import pickle
-from sbi.neural_nets.embedding_nets import FCEmbedding
+from sbi.neural_nets.embedding_nets import FCEmbedding, CNNEmbedding
 from sbi import utils
 import matplotlib.pyplot as plt
 import numpy as np
@@ -138,12 +138,12 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 """
 
 # Define the embedding net
-# Alternative: CNNEmbedding(input_shape=(61,))
-embedding_net = FCEmbedding(input_dim=61)
+# embedding_net = CNNEmbedding(input_shape=(61,))
+# embedding_net = FCEmbedding(input_dim=61)
 
 # instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="nsf", embedding_net=embedding_net, hidden_features=50, num_transforms=3)
+    model="nsf", hidden_features=50, num_transforms=3)  # z_score_theta="independent",
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -177,5 +177,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior6.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
