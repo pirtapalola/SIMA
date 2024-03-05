@@ -1,6 +1,6 @@
 """
 
-Conduct a prior predictive check.
+Conduct inference on simulated data.
 
 Last updated on 5 March 2024 by Pirta Palola
 
@@ -11,44 +11,58 @@ import pandas as pd
 from sbi.analysis import pairplot
 import torch
 import matplotlib.pyplot as plt
+import pickle
 
-"""STEP 2. Convert the data into tensors."""
+"""STEP 1."""
+
+# Read the csv file containing the simulated reflectance data into a pandas dataframe
+simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/check0/check0_x.csv')
+
+# Read the csv file containing the inputs of each of the HydroLight simulation runs
+ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
+                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/check0/check0_theta.csv')
+
+# Define theta and x.
+theta_dataframe = ecolight_input  # Theta contains the five input variables.
+x_dataframe = simulated_reflectance  # X contains the simulated spectra.
+
+# Convert the pandas DataFrames to numpy arrays
+theta_array = theta_dataframe.to_numpy()
+x_array = x_dataframe.to_numpy()
+
+# Convert the numpy arrays to PyTorch tensors
+theta_tensor = torch.tensor(theta_array[0], dtype=torch.float32)
+x_tensor = torch.tensor(x_array[0], dtype=torch.float32)
 
 
-# Convert the dataframe into a tensor
-def dataframe_to_tensor(dataframe):
-    # Create an empty list
-    empty_list = []
-    # Iterate over each row
-    for index, rows in dataframe.iterrows():
-        # Create a list for the current row
-        my_list = [rows.chl, rows.cdom, rows.spm, rows.wind, rows.depth]
-        # Append the list to the empty_list
-        empty_list.append(my_list)
-    # Print the length of the list
-    print(len(empty_list))
-    # Create a tensor
-    data_torch = torch.tensor(empty_list)
-    return data_torch
+"""STEP 2. Conduct inference on simulated data."""
+
+# Load the posterior
+with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
+          "Jan2024_lognormal_priors/loaded_posterior0.pkl", "rb") as handle:
+    loaded_posterior = pickle.load(handle)
 
 
-# Apply the function
-prior_samples = dataframe_to_tensor(prior_df)
-observation_parameters = dataframe_to_tensor(prior_param)
+results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
+               'Jan2024_lognormal_priors/check0/'
 
 
-"""STEP 3. Conduct the prior predictive check."""
+def infer_from_simulated_spectra(x_sim, x_sim_parameters):
+    posterior_samples = loaded_posterior.sample((1000,), x=x_sim)  # Sample from the posterior p(θ|x)
+    # Create the figure
+    _ = pairplot(
+        samples=posterior_samples,
+        points=x_sim_parameters,
+        limits=[[0, 1], [0, 1], [0, 10], [0, 10], [0, 2]],
+        points_colors=["red"],
+        figsize=(8, 8),
+        labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
+        offdiag="scatter",
+        scatter_offdiag=dict(marker=".", s=5),
+        points_offdiag=dict(marker="+", markersize=20)
+    )
+    plt.show()
 
-# Plot
-_ = pairplot(
-    samples=prior_samples,
-    points=prior_param,
-    limits=[[0, 7], [0, 2.5], [0, 30], [0, 20], [0, 20]],
-    points_colors=["red", "red", "red"],
-    figsize=(8, 8),
-    offdiag="scatter",
-    scatter_offdiag=dict(marker=".", s=5),
-    points_offdiag=dict(marker="+", markersize=5)
-)
 
-plt.show()
+infer_from_simulated_spectra(x_tensor, theta_tensor)
