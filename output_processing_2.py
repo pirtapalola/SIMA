@@ -3,14 +3,13 @@
 Extract reflectance from the EL output files.
 STEP 1. Read the data from the csv file.
 STEP 2. Select which lines to extract from the txt files.
-STEP 3. Save the extracted data into a pickled file.
+STEP 3. Save the extracted data into a csv file.
 
 """
 
 import pandas as pd
 from io import StringIO
 from multiprocessing import Pool
-import pickle
 
 """STEP 1. Read the data from the csv file."""
 
@@ -26,10 +25,10 @@ file_path_list = file_paths_df["file_paths"]
 def process_file(file_path):
     with open(file_path, 'r') as output_file:
         text = output_file.read()
-        lines = text.strip().split('\n')[629:780]  # Extract lines 630-780
+        lines = text.strip().split('\n')[273:335]  # Extract lines 630-780
         data = "\n".join(lines)  # Join the lines and create a StringIO object
         data_io = StringIO(data)
-        df = pd.read_csv(data_io, sep=r'\s+', header=None, dtype='float32')  # Read the data into a pandas DataFrame
+        df = pd.read_csv(data_io, sep=r'\s+', header=None)  # Read the data into a pandas DataFrame
         df = df.T  # Transpose the DataFrame to get the desired format
         df.columns = df.iloc[0]  # Set the first row as the header
         df = df.iloc[:3]
@@ -37,14 +36,32 @@ def process_file(file_path):
     return df
 
 
-test = process_file(file_path_list[0])
-print(test)
+"""STEP 3. Save the extracted data into a csv file."""
 
-"""STEP 3. Save the extracted data into a pickled file."""
+# Apply the function to all the files.
 
-# Apply the function to all the files
+
+def main():
+    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
+                  'Jan2024_lognormal_priors/simulated_reflectance.csv'
+    # Number of processes to use (adjust as needed)
+    num_processes = 4
+    # Create a Pool of processes
+    with Pool(num_processes) as pool:
+        data_frames = pool.map(process_file, file_path_list)
+    # Concatenate DataFrames
+    combined_df = pd.concat(data_frames, ignore_index=True)
+    # Save the combined DataFrame to a CSV file
+    combined_df.to_csv(output_path, index=False)
+
+
+# This condition checks if the script is being run directly as the main program
+# (not imported as a module into another script).
+if __name__ == '__main__':  # Check if the script is being run directly
+    main()  # If so, call the main() function to start executing the script
 
 """
+# Save the results in a pickled file
 def main():
     output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/' \
                   'simulated_reflectance.pkl'
