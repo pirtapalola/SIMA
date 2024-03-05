@@ -2,44 +2,17 @@
 
 Conduct a prior predictive check.
 
-Last updated on 5 February 2024 by Pirta Palola
+Last updated on 5 March 2024 by Pirta Palola
 
 """
 
 # Import libraries
 import pandas as pd
 from sbi.analysis import pairplot
-from models.tools import TruncatedLogNormal
 import torch
 import matplotlib.pyplot as plt
 
-"""STEP 1. Load the observation data."""
-
-# Read the csv file containing the observation data
-observation_path = 'C:/Users/pirtapalola/Documents/Methodology/In_situ_data/2022/'
-
-# Read the file containing the observed parameters
-obs_parameters = pd.read_csv(observation_path + 'parameters_tetiaroa_2022.csv')
-
-# Create a list of sample IDs
-sample_IDs = list(obs_parameters.columns)
-print(sample_IDs)
-
-# Sample from the prior distributions
-prior_chl = TruncatedLogNormal(0, 5, 5)
-samples_chl = prior_chl.sample(torch.Size([10000]))
-prior_cdom = TruncatedLogNormal(0, 5, 2)
-samples_cdom = prior_cdom.sample(torch.Size([10000]))
-prior_spm = TruncatedLogNormal(0, 5, 20)
-samples_spm = prior_spm.sample(torch.Size([10000]))
-prior_wind = torch.distributions.LogNormal(1.85, 0.33)
-samples_wind = prior_wind.sample(torch.Size([10000]))
-prior_depth = torch.distributions.uniform.Uniform(0.1, 10.0)
-samples_depth = prior_depth.sample(torch.Size([10000]))
-
-# Store the samples in a dataframe
-prior_df = pd.DataFrame({"chl": samples_chl, "cdom": samples_cdom, "spm": samples_spm,
-                         "wind": samples_wind, "depth": samples_depth})
+"""STEP 2. Convert the data into tensors."""
 
 
 # Convert the dataframe into a tensor
@@ -61,13 +34,16 @@ def dataframe_to_tensor(dataframe):
 
 # Apply the function
 prior_samples = dataframe_to_tensor(prior_df)
-observation_parameters = dataframe_to_tensor(obs_parameters)
+observation_parameters = dataframe_to_tensor(prior_param)
 
-# Conduct the prior predictive check
+
+"""STEP 3. Conduct the prior predictive check."""
+
+# Plot
 _ = pairplot(
     samples=prior_samples,
-    points=observation_parameters,
-    limits=[[0, 5], [0, 2], [0, 20], [0, 20], [0, 10]],
+    points=prior_param,
+    limits=[[0, 7], [0, 2.5], [0, 30], [0, 20], [0, 20]],
     points_colors=["red", "red", "red"],
     figsize=(8, 8),
     offdiag="scatter",
