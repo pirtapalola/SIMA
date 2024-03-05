@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior8.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
@@ -38,7 +38,6 @@ obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_brown_coral.c
 
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + 'parameters_brown_coral.csv')
-obs_parameters = obs_parameters.drop(columns="unique_ID")
 print(obs_parameters)
 
 # Create a list of sample IDs
@@ -57,7 +56,7 @@ results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ec
 
 def infer_from_observation(sample_id):
     x_obs = obs_df[sample_id]
-    x_obs_parameters = obs_parameters[sample_id]
+    x_obs_parameters = [obs_parameters[sample_id]]
     # x_o = min_max_normalisation(x_obs)  # Apply max-min normalisation
     posterior_samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
     # Evaluate the log-probability of the posterior samples
@@ -79,9 +78,10 @@ def infer_from_observation(sample_id):
     _ = analysis.pairplot(
         samples=posterior_samples,
         points=x_obs_parameters,
-        limits=[[0, 10], [0, 5], [0, 30], [0, 10], [0, 20]],
-        points_colors=["red", "red", "red"],
+        limits=[[0, 1], [0, 1], [0, 10], [0, 10], [0, 2]],
+        points_colors=["red"],
         figsize=(8, 8),
+        labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
         offdiag="scatter",
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20)
@@ -89,6 +89,6 @@ def infer_from_observation(sample_id):
     plt.savefig(results_path + 'figures/' + sample_id + '.png')
 
 
-# Apply the function
-for item in sample_IDs:
-    infer_from_observation(item)
+# Apply the function to real observations
+# for item in sample_IDs:
+#    infer_from_observation(item)
