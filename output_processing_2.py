@@ -5,6 +5,8 @@ STEP 1. Read the data from the csv file.
 STEP 2. Select which lines to extract from the txt files.
 STEP 3. Save the extracted data into a csv file.
 
+Last updated on 5 March 2024 by Pirta Palola
+
 """
 
 import pandas as pd
