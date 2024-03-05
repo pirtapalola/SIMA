@@ -7,9 +7,8 @@ STEP 3. Create the file ID associated with each tuple.
 STEP 4. Add the file IDs as a column in the dataframe.
 STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
-STEP 6. Extract reflectance from the EL output files.
 
-Last updated on 4 March 2024 by Pirta Palola
+Last updated on 5 March 2024 by Pirta Palola
 
 """
 
