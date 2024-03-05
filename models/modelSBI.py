@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 18 January 2024 by Pirta Palola
+Last updated on 5 March 2024 by Pirta Palola
 
 """
 
@@ -27,7 +27,7 @@ import numpy as np
 
 """
 STEP 1. Prepare the simulated data
-    -The simulated data is split into input_parameters (5 parameters) and output_values (150 values).
+    -The simulated data is split into input_parameters (5 parameters) and output_values (61 values).
     -After converting them to PyTorch tensors, they are concatenated into combined_input.
 """
 
@@ -37,18 +37,18 @@ print("Current working directory:", current_dir)
 
 # Create a list of all the filenames
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Dec2023_lognormal_priors/EL_test_2_dec2023/EL_test_2_dec2023'
+       'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_dataset/simulated_dataset'
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
 num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
 print("Number of simulations: ", num_simulation_runs)
 num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
-num_output_values = 150  # Hyperspectral reflectance between 400nm and 700nm at 2nm spectral resolution
+num_output_values = 61  # Hyperspectral reflectance between 400nm and 700nm at 5 nm spectral resolution
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Dec2023_lognormal_priors/simulated_rrs_dec23_lognorm.csv')
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_reflectance.csv')
 simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
 simulated_reflectance_drop = simulated_reflectance.drop(columns="File_ID")
@@ -71,7 +71,7 @@ for i in normalised_simulated_reflectance:
 
 # Read the csv file containing the inputs of each of the HydroLight simulation runs
 hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                               'Dec2023_lognormal_priors/Ecolight_parameter_combinations.csv')
+                               'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
 hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
 # print(hydrolight_input)  # Check that the dataframe contains the correct information.
 
@@ -106,9 +106,9 @@ STEP 2. Define the prior.
 """
 
 # Define individual prior distributions
-prior_dist_phy = LogNormal(tensor([0.1]), tensor([1.7]))
-prior_dist_cdom = LogNormal(tensor([0.05]), tensor([1.7]))
-prior_dist_spm = LogNormal(tensor([0.4]), tensor([1.1]))
+prior_dist_phy = LogNormal(tensor([0.01]), tensor([5]))
+prior_dist_cdom = LogNormal(tensor([0.01]), tensor([5]))
+prior_dist_spm = LogNormal(tensor([0.01]), tensor([5]))
 prior_dist_wind = LogNormal(tensor([1.85]), tensor([0.33]))
 prior_dist_depth = Uniform(tensor([0.10]), tensor([20.0]))
 
@@ -138,8 +138,8 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 """
 
 # Define the embedding net
-# Alternative: CNNEmbedding(input_shape=(150,))
-embedding_net = FCEmbedding(input_dim=150)
+# Alternative: CNNEmbedding(input_shape=(61,))
+embedding_net = FCEmbedding(input_dim=61)
 
 # instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
@@ -177,5 +177,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Dec2023_lognormal_priors/loaded_posterior.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
