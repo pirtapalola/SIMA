@@ -24,17 +24,20 @@ ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                              'Methods/Methods_Ecolight/Jan2024_lognormal_priors/check0/check0_theta.csv')
 
 # Define theta and x.
-theta_dataframe = ecolight_input  # Theta contains the five input variables.
-x_dataframe = simulated_reflectance  # X contains the simulated spectra.
+theta_dataframe = ecolight_input.iloc[20]  # Theta contains the five input variables.
+x_dataframe = simulated_reflectance.iloc[20]  # X contains the simulated spectra.
 
 # Convert the pandas DataFrames to numpy arrays
 theta_array = theta_dataframe.to_numpy()
 x_array = x_dataframe.to_numpy()
+print(theta_dataframe)
+print(x_dataframe)
 
 # Convert the numpy arrays to PyTorch tensors
-theta_tensor = torch.tensor(theta_array[0], dtype=torch.float32)
-x_tensor = torch.tensor(x_array[0], dtype=torch.float32)
-
+theta_tensor = torch.tensor(theta_dataframe, dtype=torch.float32)
+x_tensor = torch.tensor(x_dataframe, dtype=torch.float32)
+print(theta_tensor)
+print(x_tensor)
 
 """STEP 2. Conduct inference on simulated data."""
 
@@ -54,7 +57,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 1], [0, 1], [0, 10], [0, 10], [0, 2]],
+        limits=[[0, 7], [0, 2.5], [0, 30], [0, 20], [0, 20]],
         points_colors=["red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],

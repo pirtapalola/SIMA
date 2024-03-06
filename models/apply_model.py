@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior8.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior9.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
@@ -38,11 +38,15 @@ obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_brown_coral.c
 
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + 'parameters_brown_coral.csv')
-print(obs_parameters)
 
 # Create a list of sample IDs
 sample_IDs = list(obs_df.columns)
 print(sample_IDs)
+
+# Log-transform the parameter values
+for sample in sample_IDs:
+    obs_parameters[sample] = np.log(obs_parameters[sample])
+
 
 # Test simulation run
 # x_o_test = x_dataframe.iloc[10]
