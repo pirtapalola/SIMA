@@ -41,7 +41,7 @@ obs_parameters = pd.read_csv(observation_path + 'parameters_brown_coral.csv')
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
-samples_phy = [i+constant for i in obs_parameters["phy"]]
+samples_phy = [i+constant for i in obs_parameters["chl"]]
 samples_cdom = [i+constant for i in obs_parameters["cdom"]]
 samples_nap = [i+constant for i in obs_parameters["spm"]]
 samples_wind = obs_parameters["wind"]
@@ -54,7 +54,8 @@ samples_nap = np.log(samples_nap)
 samples_wind = np.log(samples_wind)
 
 # Save the transformed data in a dataframe
-transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
+transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
+                          "phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
@@ -71,7 +72,7 @@ results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ec
 
 def infer_from_observation(sample_id):
     x_obs = obs_df[sample_id]
-    x_obs_parameters = [obs_parameters[sample_id]]
+    x_obs_parameters = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
     # x_o = min_max_normalisation(x_obs)  # Apply max-min normalisation
     posterior_samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
     # Evaluate the log-probability of the posterior samples
