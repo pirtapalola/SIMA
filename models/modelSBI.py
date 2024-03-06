@@ -73,18 +73,35 @@ for i in normalised_simulated_reflectance:
 hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                                'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
 hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
-hydrolight_input["phy"] = np.log(hydrolight_input["phy"])
-hydrolight_input["cdom"] = np.log(hydrolight_input["cdom"])
-hydrolight_input["spm"] = np.log(hydrolight_input["spm"])
 
-# print(hydrolight_input)  # Check that the dataframe contains the correct information.
+# Add a constant to avoid issues with the log-transformation of small values
+constant = 1.0
+samples_phy = [i+constant for i in hydrolight_input["phy"] if i != 0]
+samples_cdom = [i+constant for i in hydrolight_input["cdom"] if i != 0]
+samples_nap = [i+constant for i in hydrolight_input["spm"] if i != 0]
+samples_wind = hydrolight_input["wind"]
+samples_depth = hydrolight_input["depth"]
+
+# Conduct the log-transformation
+samples_phy = np.log(samples_phy)
+samples_cdom = np.log(samples_cdom)
+samples_nap = np.log(samples_nap)
+samples_wind = np.log(samples_wind)
+
+# Save the transformed data in a dataframe
+transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
+                          "wind": samples_wind, "depth": samples_depth}
+
+transformed_theta = pd.DataFrame(data=transformed_dictionary)
+
+print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
 
 # Print the minimum and maximum values of each column in the dataframe.
 # These should correspond to the empirically realistic range of values.
 # minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
 
 # Define theta and x.
-theta_dataframe = hydrolight_input  # Theta contains the five input variables.
+theta_dataframe = transformed_theta  # Theta contains the five input variables.
 x_dataframe = simulated_reflectance_drop
 print(x_dataframe)
 
@@ -181,5 +198,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior6.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/loaded_posterior9.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
