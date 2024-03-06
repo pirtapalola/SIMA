@@ -73,6 +73,10 @@ for i in normalised_simulated_reflectance:
 hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                                'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
 hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
+hydrolight_input["phy"] = np.log(hydrolight_input["phy"])
+hydrolight_input["cdom"] = np.log(hydrolight_input["cdom"])
+hydrolight_input["spm"] = np.log(hydrolight_input["spm"])
+
 # print(hydrolight_input)  # Check that the dataframe contains the correct information.
 
 # Print the minimum and maximum values of each column in the dataframe.
