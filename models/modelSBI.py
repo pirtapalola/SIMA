@@ -49,7 +49,7 @@ num_output_values = 61  # Hyperspectral reflectance between 400nm and 700nm at 5
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_with_noise.csv')
+                                    'simulated_reflectance_with_noise_500STR.csv')
 simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
 simulated_reflectance_drop = simulated_reflectance.drop(columns="File_ID")
@@ -185,5 +185,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior9.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9_500STR.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
