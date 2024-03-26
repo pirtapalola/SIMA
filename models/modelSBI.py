@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 5 March 2024 by Pirta Palola
+Last updated on 26 March 2024 by Pirta Palola
 
 """
 
@@ -41,33 +41,20 @@ path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
 files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
 
 # Define the simulated dataset
-num_simulation_runs = len(files)  # Number of reflectances simulated in HydroLight
+num_simulation_runs = len(files)  # Number of reflectance spectra simulated in HydroLight
 print("Number of simulations: ", num_simulation_runs)
 num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
 num_output_values = 61  # Hyperspectral reflectance between 400nm and 700nm at 5 nm spectral resolution
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_reflectance.csv')
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
+                                    'simulated_reflectance_with_noise.csv')
 simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
 simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
 simulated_reflectance_drop = simulated_reflectance.drop(columns="File_ID")
 # print(simulated_reflectance_drop)
 # print(simulated_reflectance_drop.iloc[0])
-
-# Conduct min-max normalisation
-normalised_simulated_reflectance = []
-for x in range(num_simulation_runs):
-    normalised_list = min_max_normalisation(simulated_reflectance_drop.iloc[x])
-    normalised_simulated_reflectance.append(normalised_list)
-
-# Save the results in a dataframe
-list_len = [*range(len(normalised_simulated_reflectance[0]))]
-normalised_simulated_reflectance_df = pd.DataFrame(columns=list_len)
-for i in normalised_simulated_reflectance:
-    normalised_simulated_reflectance_df.loc[len(normalised_simulated_reflectance_df)] = i
-
-# print(normalised_simulated_reflectance_df)
 
 # Read the csv file containing the inputs of each of the HydroLight simulation runs
 hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
