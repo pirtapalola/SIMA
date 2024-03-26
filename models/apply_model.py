@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 6 March 2024 by Pirta Palola
+Last updated on 26 March 2024 by Pirta Palola
 
 """
 
@@ -17,17 +17,12 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 
-"""STEP 1. Load the posterior and the simulated reflectance data."""
+"""STEP 1. Load the posterior."""
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/loaded_posterior9.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
-
-# Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_reflectance.csv')
-x_dataframe = simulated_reflectance.drop(columns={simulated_reflectance.columns[-1]})
 
 """STEP 2. Load the observation data."""
 
@@ -68,7 +63,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/results/'
+               'Jan2024_lognormal_priors/results_with_noise/'
 
 
 def infer_from_observation(sample_id):
