@@ -2,6 +2,8 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
+Last updated on 26 March 2024 by Pirta Palola
+
 """
 
 # Import libraries
@@ -27,7 +29,7 @@ no_noise = simulated_spectra_original.iloc[10]
 # Define parameters
 num_spectra = 30000  # number of simulated spectra
 num_wavelengths = 61  # 400-700nm at 5nm resolution
-STR = 1000  # signal-to-noise ration recommended by NASA for ocean color applications
+STR = 500  # signal-to-noise ration recommended by NASA for ocean color applications
 
 # Generate unique random numbers for each spectrum
 unique_random_numbers = np.random.rand(num_spectra, num_wavelengths)
@@ -55,5 +57,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/simulated_reflectance_with_noise.csv'
+              'Jan2024_lognormal_priors/simulated_reflectance_with_noise_500STR.csv'
 simulated_spectra.to_csv(output_path)
