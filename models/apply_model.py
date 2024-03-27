@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior0.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -29,7 +29,7 @@ with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                    'Jan2024_lognormal_priors/field_data/'
-obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_brown_coral.csv')
+obs_df = pd.read_csv(observation_path + 'field_reflectance_with_noise_1000STR.csv')
 print(obs_df)
 
 # Read the file containing the corresponding parameters
@@ -63,7 +63,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/results_with_noise/'
+               'Jan2024_lognormal_priors/results_with_noise_model0_noise/'
 
 
 def infer_from_observation(sample_id):
@@ -76,7 +76,7 @@ def infer_from_observation(sample_id):
     posterior_samples = loaded_posterior.sample((1000,), x=x_obs)
 
     # Define theta
-    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
+    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
     theta_obs = torch.tensor(theta_obs, dtype=torch.float32)
