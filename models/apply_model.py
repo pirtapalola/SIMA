@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 26 March 2024 by Pirta Palola
+Last updated on 27 March 2024 by Pirta Palola
 
 """
 
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior0.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -33,7 +33,7 @@ obs_df = pd.read_csv(observation_path + 'field_reflectance_with_noise_1000STR.cs
 print(obs_df)
 
 # Read the file containing the corresponding parameters
-obs_parameters = pd.read_csv(observation_path + 'parameters_brown_coral.csv')
+obs_parameters = pd.read_csv(observation_path + 'parameters.csv')
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
@@ -45,9 +45,13 @@ samples_depth = obs_parameters["depth"]
 
 # Conduct the log-transformation
 samples_phy = np.log(samples_phy)
+samples_phy = [round(item, 3) for item in samples_phy]
 samples_cdom = np.log(samples_cdom)
+samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
+samples_nap = [round(item, 3) for item in samples_nap]
 samples_wind = np.log(samples_wind)
+samples_wind = [round(item, 3) for item in samples_wind]
 
 # Save the transformed data in a dataframe
 transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
@@ -55,6 +59,7 @@ transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
+print("Transformed theta: ", transformed_theta)
 
 # Create a list of sample IDs
 sample_IDs = obs_parameters["unique_ID"]
@@ -63,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/results_with_noise_model0_noise/'
+               'Jan2024_lognormal_priors/noise_in_observation/'
 
 
 def infer_from_observation(sample_id):
@@ -73,12 +78,14 @@ def infer_from_observation(sample_id):
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
 
     # Sample from the posterior p(θ|x)
-    posterior_samples = loaded_posterior.sample((1000,), x=x_obs)
+    posterior_samples = loaded_posterior.sample((5000,), x=x_obs)
 
     # Define theta
-    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
+    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
+    print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
+    print("Theta obs list: ", theta_obs)
     theta_obs = torch.tensor(theta_obs, dtype=torch.float32)
 
     # Evaluate the log-probability of the posterior samples
@@ -114,5 +121,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in sample_IDs:
-    infer_from_observation(i)
+#for i in sample_IDs:
+infer_from_observation("RIM04")
