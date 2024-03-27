@@ -14,83 +14,59 @@ Last updated on 26 March 2024 by Pirta Palola
 # Import libraries
 import pandas as pd
 import torch
-import os
 from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
 from torch import tensor
-from models.tools import MultipleIndependent, min_max_normalisation
+from models.tools import MultipleIndependent
 import pickle
-from sbi.neural_nets.embedding_nets import FCEmbedding, CNNEmbedding
 from sbi import utils
 import matplotlib.pyplot as plt
 import numpy as np
 
 """
-STEP 1. Prepare the simulated data
-    -The simulated data is split into input_parameters (5 parameters) and output_values (61 values).
-    -After converting them to PyTorch tensors, they are concatenated into combined_input.
+
+STEP 1. Prepare the simulated data.
+
 """
-
-# Print the current working directory
-current_dir = os.getcwd()
-print("Current working directory:", current_dir)
-
-# Create a list of all the filenames
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/' \
-       'Methods/Methods_Ecolight/Jan2024_lognormal_priors/simulated_dataset/simulated_dataset'
-files = [f for f in os.listdir(path) if f.endswith('.txt')]  # Create a list of all the files in the folder
-
-# Define the simulated dataset
-num_simulation_runs = len(files)  # Number of reflectance spectra simulated in HydroLight
-print("Number of simulations: ", num_simulation_runs)
-num_parameters = 5  # Chl-a, SPM, CDOM, wind speed, and depth
-num_output_values = 61  # Hyperspectral reflectance between 400nm and 700nm at 5 nm spectral resolution
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
                                     'simulated_reflectance_with_noise.csv')
-simulated_reflectance.iloc[:, -1:] = files  # Replace the first column repeating "Rrs" with the corresponding file names
-simulated_reflectance.rename(columns={simulated_reflectance.columns[-1]: "File_ID"}, inplace=True)  # Rename the column
-simulated_reflectance_drop = simulated_reflectance.drop(columns="File_ID")
-# print(simulated_reflectance_drop)
-# print(simulated_reflectance_drop.iloc[0])
 
-# Read the csv file containing the inputs of each of the HydroLight simulation runs
-hydrolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                               'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
-hydrolight_input = hydrolight_input.drop(columns="water")  # Remove the "water" column.
+# Read the csv file containing the inputs of each of the EcoLight simulation runs
+simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
+                              'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
+simulator_input = simulator_input.drop(columns="water")  # Remove the "water" column.
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
-samples_phy = [i+constant for i in hydrolight_input["phy"] if i != 0]
-samples_cdom = [i+constant for i in hydrolight_input["cdom"] if i != 0]
-samples_nap = [i+constant for i in hydrolight_input["spm"] if i != 0]
-samples_wind = hydrolight_input["wind"]
-samples_depth = hydrolight_input["depth"]
+samples_phy = [i+constant for i in simulator_input["phy"] if i != 0]
+samples_cdom = [i+constant for i in simulator_input["cdom"] if i != 0]
+samples_nap = [i+constant for i in simulator_input["spm"] if i != 0]
+samples_wind = simulator_input["wind"]
+samples_depth = simulator_input["depth"]
 
 # Conduct the log-transformation
 samples_phy = np.log(samples_phy)
+samples_phy = [round(item, 3) for item in samples_phy]
 samples_cdom = np.log(samples_cdom)
+samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
+samples_nap = [round(item, 3) for item in samples_nap]
 samples_wind = np.log(samples_wind)
+samples_wind = [round(item, 3) for item in samples_wind]
 
 # Save the transformed data in a dataframe
 transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
                           "wind": samples_wind, "depth": samples_depth}
-
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
-
+print("Untransformed theta: ", simulator_input)
 print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
 
-# Print the minimum and maximum values of each column in the dataframe.
-# These should correspond to the empirically realistic range of values.
-# minimum_maximum(hydrolight_input, ["phy", "cdom", "spm", "wind", "depth"])
-
 # Define theta and x.
-theta_dataframe = hydrolight_input  # Theta contains the five input variables.
-x_dataframe = simulated_reflectance_drop
-print(x_dataframe)
+theta_dataframe = transformed_theta  # Theta contains the five input variables.
+x_dataframe = simulated_reflectance  # X contains the reflectance spectra.
 
 # Convert the pandas DataFrames to numpy arrays
 theta_array = theta_dataframe.to_numpy()
@@ -100,7 +76,6 @@ print("No. of parameter sets", len(theta_array))
 print("No. of simulation outputs", len(x_array))
 print("Length of theta: ", len(theta_array[0]))
 print("Length of x: ", len(x_array[0]))
-# print(x_array[0])
 
 # Convert the numpy arrays to PyTorch tensors
 theta_tensor = torch.tensor(theta_array, dtype=torch.float32)
@@ -109,7 +84,6 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 """
 
 STEP 2. Define the prior.
-    -Each parameter is associated with its own distribution and name.
 
 """
 
@@ -133,12 +107,6 @@ prior_distributions = [
 prior = MultipleIndependent(prior_distributions)
 print(prior)
 
-
-# Combine input parameters and corresponding output values
-# combined_train_data = torch.cat([train_input_tensor, train_output_tensor], dim=1)
-# print(train_input_tensor)
-# print(train_output_tensor)
-
 """
 
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
@@ -149,7 +117,7 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 # embedding_net = CNNEmbedding(input_shape=(61,))
 # embedding_net = FCEmbedding(input_dim=61)
 
-# instantiate the neural density estimator
+# Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
     model="nsf", hidden_features=50, num_transforms=3)  # z_score_theta="independent",
 
