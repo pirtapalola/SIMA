@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior11.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior10.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/1000SNR/results_with_noise_model11/model11'
+               'Jan2024_lognormal_priors/1000SNR/results_with_noise_model10/model10'
 
 
 def infer_from_observation(sample_id):
@@ -81,7 +81,7 @@ def infer_from_observation(sample_id):
     posterior_samples = loaded_posterior.sample((5000,), x=x_obs)
 
     # Define theta
-    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
+    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
     print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
@@ -109,7 +109,7 @@ def infer_from_observation(sample_id):
     _ = analysis.pairplot(
         samples=posterior_samples,
         points=theta_obs,
-        limits=[[0, 1], [0, 1], [0, 5], [0, 10], [0, 2]],
+        limits=[[0, 1], [0, 1], [0, 10], [0, 10], [0, 2]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
@@ -121,5 +121,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM03", "RIM04", "RIM05"]:
+for i in sample_IDs:
     infer_from_observation(i)
