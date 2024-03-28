@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior10.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/50000SNR/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/1000SNR/results_with_noise_model10/model10'
+               'Jan2024_lognormal_priors/50000SNR/results_model1/model1'
 
 
 def infer_from_observation(sample_id):
@@ -81,7 +81,7 @@ def infer_from_observation(sample_id):
     posterior_samples = loaded_posterior.sample((5000,), x=x_obs)
 
     # Define theta
-    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
+    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
     print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
