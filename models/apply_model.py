@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 27 March 2024 by Pirta Palola
+Last updated on 28 March 2024 by Pirta Palola
 
 """
 
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior11.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -29,7 +29,7 @@ with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                    'Jan2024_lognormal_priors/field_data/'
-obs_df = pd.read_csv(observation_path + 'field_reflectance_with_noise_1000STR.csv')
+obs_df = pd.read_csv(observation_path + 'field_surface_reflectance.csv')
 print(obs_df)
 
 # Read the file containing the corresponding parameters
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/noise_in_observation/'
+               'Jan2024_lognormal_priors/1000SNR/results_with_noise_model11/model11'
 
 
 def infer_from_observation(sample_id):
@@ -121,5 +121,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-#for i in sample_IDs:
-infer_from_observation("RIM04")
+for i in ["RIM03", "RIM04", "RIM05"]:
+    infer_from_observation(i)
