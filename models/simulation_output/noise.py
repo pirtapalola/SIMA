@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 26 March 2024 by Pirta Palola
+Last updated on 28 March 2024 by Pirta Palola
 
 """
 
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/field_reflectance_no_noise.csv'
+       'Jan2024_lognormal_priors/simulated_reflectance_no_noise.csv'
 simulated_spectra = pd.read_csv(path)
 
 # Create a list of wavelengths
@@ -27,9 +27,9 @@ print(simulated_spectra_original.iloc[1])
 no_noise = simulated_spectra_original.iloc[1]
 
 # Define parameters
-num_spectra = 3  # number of spectra
+num_spectra = 30000  # number of spectra
 num_wavelengths = 61  # 400-700nm at 5nm resolution
-STR = 1000  # signal-to-noise ration recommended by NASA for ocean color applications
+SNR = 50000  # signal-to-noise ratio
 
 # Generate unique random numbers for each spectrum
 unique_random_numbers = np.random.rand(num_spectra, num_wavelengths)
@@ -37,7 +37,7 @@ unique_random_numbers = np.random.rand(num_spectra, num_wavelengths)
 # Add Gaussian noise to each wavelength for all spectra
 for i in range(num_spectra):
     # Calculate standard deviation for current spectrum
-    std_dev = 1 / STR * unique_random_numbers[i]
+    std_dev = 1 / SNR * unique_random_numbers[i]
 
     # Generate Gaussian noise
     noise = np.random.normal(0, std_dev, num_wavelengths)
@@ -57,5 +57,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/field_reflectance_with_noise_1000STR.csv'
+              'Jan2024_lognormal_priors/simulated_reflectance_with_noise_50000SNR.csv'
 simulated_spectra.to_csv(output_path)
