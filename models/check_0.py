@@ -28,14 +28,16 @@ ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
 print(ecolight_input)
 
 # Define theta and x.
-theta_example = ecolight_input.iloc[7]  # Theta contains the five input variables
+theta_example = ecolight_input.iloc[90]  # Theta contains the five input variables
+
+"""
 print(theta_example)
 constant = 1.0  # Add a constant to avoid issues with the log-transformation of small values
 theta_example[:3] += constant  # Only add the constant to the first 3 theta parameters
 for x in range(4):  # Apply the log-transformation to the first 4 theta parameters
-    theta_example[x] = np.log(theta_example[x])
+    theta_example[x] = np.log(theta_example[x])"""
 
-x_array = simulated_reflectance.iloc[7]  # X contains the simulated spectra
+x_array = simulated_reflectance.iloc[90]  # X contains the simulated spectra
 print(x_array)
 
 # Convert to tensors
@@ -46,7 +48,7 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior9.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/posteriors_saved/loaded_posterior12.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 
@@ -56,7 +58,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 5], [0, 5], [0, 10], [0, 5], [0, 20]],
+        limits=[[0, 5], [0, 5], [0, 10], [0, 20], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
