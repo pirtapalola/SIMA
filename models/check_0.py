@@ -17,13 +17,13 @@ import pickle
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'noise_5percent/check0/check0_x.csv')
+                                    'noise_10percent/check0/check0_x.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                              'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                             'noise_5percent/check0/check0_theta.csv')
+                             'noise_10percent/check0/check0_theta.csv')
 
 print(ecolight_input)
 
@@ -47,7 +47,7 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_10percent/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 
