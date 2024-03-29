@@ -18,32 +18,25 @@ simulated_spectra = pd.read_csv(path)
 
 # Create a list of wavelengths
 wavelengths = list(simulated_spectra.columns)
-wavelengths = [float(i) for i in wavelengths]
+wavelengths = [int(i) for i in wavelengths]
 print(wavelengths)
 
 # Check what the data looks like before adding noise
 simulated_spectra_original = pd.read_csv(path)
-print(simulated_spectra_original.iloc[1])
 no_noise = simulated_spectra_original.iloc[1]
+print(no_noise)
 
 # Define parameters
 num_spectra = 30000  # number of spectra
 num_wavelengths = 61  # 400-700nm at 5nm resolution
-SNR = 50000  # signal-to-noise ratio
 
-# Generate unique random numbers for each spectrum
-unique_random_numbers = np.random.rand(num_spectra, num_wavelengths)
-
-# Add Gaussian noise to each wavelength for all spectra
+# Add Gaussian noise
 for i in range(num_spectra):
-    # Calculate standard deviation for current spectrum
-    std_dev = 1 / SNR * unique_random_numbers[i]
-
-    # Generate Gaussian noise
-    noise = np.random.normal(0, std_dev, num_wavelengths)
-
-    # Add noise to current spectrum
-    simulated_spectra.iloc[i] += noise
+    spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
+    for wavelength in range(len(wavelengths)):
+        std_dev = spectrum[wavelength] * 0.025
+        noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
+        spectrum[wavelength] += noise  # Add noise to the current wavelength
 
 # Print an example
 noise_added = simulated_spectra.iloc[1]
@@ -57,5 +50,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/simulated_reflectance_with_noise_50000SNR.csv'
+              'Jan2024_lognormal_priors/simulated_reflectance_with_noise_5percent.csv'
 simulated_spectra.to_csv(output_path)
