@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_10percent/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/noise_10percent/results_model1/model1'
+               'Jan2024_lognormal_priors/noise_5percent/results_model2/model2'
 
 
 def infer_from_observation(sample_id):
@@ -81,7 +81,7 @@ def infer_from_observation(sample_id):
     posterior_samples = loaded_posterior.sample((10000,), x=x_obs)
 
     # Define theta
-    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
+    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
     print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
@@ -121,5 +121,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in sample_IDs:
+for i in ["RIM03", "RIM04", "RIM05"]:
     infer_from_observation(i)
