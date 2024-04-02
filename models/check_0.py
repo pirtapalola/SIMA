@@ -9,7 +9,6 @@ import pandas as pd
 from sbi.analysis import pairplot
 import torch
 import matplotlib.pyplot as plt
-import numpy as np
 import pickle
 
 """STEP 1."""
@@ -28,14 +27,14 @@ ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
 print(ecolight_input)
 
 # Define theta and x.
-spectrum_id = 50
+spectrum_id = 10
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
-
+"""
 print(theta_example)
 constant = 1.0  # Add a constant to avoid issues with the log-transformation of small values
 theta_example[:3] += constant  # Only add the constant to the first 3 theta parameters
 for x in range(4):  # Apply the log-transformation to the first 4 theta parameters
-    theta_example[x] = np.log(theta_example[x])
+    theta_example[x] = np.log(theta_example[x])"""
 
 x_array = simulated_reflectance.iloc[spectrum_id]  # X contains the simulated spectra
 print(x_array)
@@ -48,11 +47,11 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "noise_5percent/check0/"
+               "noise_5percent/check0_model2/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
@@ -75,7 +74,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20)
     )
-    plt.show()
+    plt.savefig(results_path + str(spectrum_id) + '.png')
 
 
 infer_from_simulated_spectra(x_tensor, theta_tensor)
