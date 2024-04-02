@@ -32,7 +32,7 @@ STEP 1. Prepare the simulated data.
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_with_noise_10percent.csv')
+                                    'simulated_reflectance_with_noise_5percent.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
@@ -65,7 +65,7 @@ print("Untransformed theta: ", simulator_input)
 print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
 
 # Define theta and x.
-theta_dataframe = transformed_theta  # Theta contains the five input variables.
+theta_dataframe = simulator_input  # Theta contains the five input variables.
 x_dataframe = simulated_reflectance  # X contains the reflectance spectra.
 
 # Convert the pandas DataFrames to numpy arrays
@@ -153,5 +153,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_10percent/loaded_posteriors/loaded_posterior1.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
