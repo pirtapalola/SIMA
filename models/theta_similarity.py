@@ -7,6 +7,7 @@ Filter a dataframe.
 # Import libraries
 import pandas as pd
 from sklearn.metrics import mean_squared_error
+import numpy as np
 
 """STEP 1. Mean squared error."""
 
@@ -23,6 +24,14 @@ mean_theta = [
     2.065,
     1.832,
     0.603]
+
+phy_original = (np.exp(0.010))-1
+cdom_original = (np.exp(0.277))-1
+nap_original = (np.exp(2.065))-1
+wind_original = np.exp(1.832)
+
+print(phy_original, cdom_original, nap_original, wind_original)
+
 
 # Calculate MSE between the mean theta and all rows in the DataFrame
 MSE_values = [mean_squared_error(mean_theta, row) for _, row in theta_df.iterrows()]
@@ -48,12 +57,20 @@ The results were:
 24150  0.656337
 """
 
-"""STEP 2. Filter the dataframe."""
+"""STEP 2. Filter the dataframe.
+
+0.10896802
+0.38263
+7.102253
+6.5983033
+0.61579853
+
+"""
 
 # Specify the range for each column
-column_ranges = {'phy': (0.005, 0.05),
-                 'cdom': (0.1, 0.5),
-                 'spm': (1.8, 2.2),
+column_ranges = {'phy': (0.01, 0.4),
+                 'cdom': (0.1, 0.7),
+                 'spm': (6.5, 7.5),
                  'depth': (0.5, 0.9)}
 
 # Iterate over rows and check if values are within the specified range for each column
