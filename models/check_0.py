@@ -23,11 +23,11 @@ print(simulated_reflectance)
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                              'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
                              'Ecolight_parameter_combinations.csv')
-
+ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
 # Define theta and x.
-spectrum_id = 10
+spectrum_id = 2
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
 """
 print(theta_example)
@@ -47,14 +47,15 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior3.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "noise_5percent/check0_model3/"
+               "noise_5percent/check0_model2/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
+    loaded_posterior.set_default_x(x_sim)
     posterior_samples = loaded_posterior.sample((10000,), x=x_sim)  # Sample from the posterior p(θ|x)
 
     # Mean estimates for each parameter
