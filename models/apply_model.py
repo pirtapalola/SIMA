@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior4.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior0.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -35,7 +35,6 @@ print(obs_df)
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + 'parameters.csv')
 
-"""
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
 samples_phy = [i+constant for i in obs_parameters["chl"]]
@@ -60,7 +59,7 @@ transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
-print("Transformed theta: ", transformed_theta)"""
+print("Transformed theta: ", transformed_theta)
 
 # Create a list of sample IDs
 sample_IDs = obs_parameters["unique_ID"]
@@ -69,10 +68,13 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/noise_5percent/results_model4/model4'
+               'Jan2024_lognormal_priors/noise_0025/results_model0/model0_'
 
 
 def infer_from_observation(sample_id):
+
+    # Create an empty dataframe
+    results_df = pd.DataFrame()
 
     # Define x
     x_obs = obs_df[sample_id].to_list()
@@ -80,9 +82,10 @@ def infer_from_observation(sample_id):
 
     # Sample from the posterior p(θ|x)
     posterior_samples = loaded_posterior.sample((10000,), x=x_obs)
+    theta_samples = posterior_samples.numpy()  # Convert to NumPy array
 
     # Define theta
-    theta_obs = obs_parameters.loc[obs_parameters['unique_ID'] == sample_id]
+    theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
     print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
@@ -93,17 +96,40 @@ def infer_from_observation(sample_id):
     log_probability = loaded_posterior.log_prob(posterior_samples, x=x_obs)
     log_prob_np = log_probability.numpy()  # Convert to Numpy array
     log_prob_df = pd.DataFrame(log_prob_np)  # Convert to a dataframe
-    log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv')
-    theta_samples = posterior_samples.numpy()  # Convert to NumPy array
 
     # Mean estimates for each parameter
     theta_means = torch.mean(posterior_samples, dim=0)
-    theta_means_df = pd.DataFrame(theta_means)  # Convert to a dataframe
-    theta_means_df.to_csv(results_path + sample_id + '_theta_means.csv')
+    theta_exp = theta_means
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        theta_exp[i] = np.exp(theta_means[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        theta_exp[i] = theta_exp[i] - constant
+    results_df["Mean"] = theta_exp  # Save the calculated values in a column
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
     theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
     theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
+
+    interval1 = theta_intervals_df.iloc[0]
+    interval1_exp = interval1
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        interval1_exp[i] = np.exp(interval1[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        interval1_exp[i] = interval1[i] - constant
+
+    interval2 = theta_intervals_df.iloc[1]
+    interval2_exp = interval2
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        interval2_exp[i] = np.exp(interval2[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        interval2_exp[i] = interval2[i] - constant
+
+    results_df["2.5percent"] = interval1_exp
+    results_df["97.5percent"] = interval2_exp
+
+    # Save the dataframes
+    log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv')
+    results_df.to_csv(results_path + sample_id + '_results.csv')
     theta_intervals_df.to_csv(results_path + sample_id + '_theta_intervals.csv')
 
     # Create the figure
@@ -122,5 +148,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM03", "RIM04", "RIM05"]:
+for i in ["RIM03", "RIM04", "RIM05", "ONE05", "ONE06"]:
     infer_from_observation(i)
