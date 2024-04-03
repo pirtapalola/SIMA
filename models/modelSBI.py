@@ -38,14 +38,14 @@ simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapte
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                               'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
-simulator_input = simulator_input.drop(columns="water")  # Remove the "water" column.
+simulator_input = simulator_input.drop(columns=["water", "phy", "cdom", "wind"])  # Remove the "water" column.
 
 """
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
-samples_phy = [i+constant for i in simulator_input["phy"] if i != 0]
-samples_cdom = [i+constant for i in simulator_input["cdom"] if i != 0]
-samples_nap = [i+constant for i in simulator_input["spm"] if i != 0]
+samples_phy = [i+constant for i in simulator_input["phy"]]
+samples_cdom = [i+constant for i in simulator_input["cdom"]]
+samples_nap = [i+constant for i in simulator_input["spm"]]
 samples_wind = simulator_input["wind"]
 samples_depth = simulator_input["depth"]
 
@@ -84,6 +84,8 @@ print("Length of x: ", len(x_array[0]))
 theta_tensor = torch.tensor(theta_array, dtype=torch.float32)
 x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
+print(theta_tensor.shape)
+
 """
 
 STEP 2. Define the prior.
@@ -91,19 +93,19 @@ STEP 2. Define the prior.
 """
 
 # Define individual prior distributions
-prior_dist_phy = LogNormal(tensor([0.01]), tensor([5]))
-prior_dist_cdom = LogNormal(tensor([0.01]), tensor([5]))
-prior_dist_spm = LogNormal(tensor([0.01]), tensor([5]))
-prior_dist_wind = LogNormal(tensor([1.85]), tensor([0.33]))
-prior_dist_depth = Uniform(tensor([0.10]), tensor([20.0]))
+prior_dist_phy = Uniform(tensor([0]), tensor([100]))
+prior_dist_cdom = Uniform(tensor([0]), tensor([100]))
+prior_dist_spm = Uniform(tensor([0.]), tensor([100.]))
+prior_dist_wind = Uniform(tensor([0]), tensor([100]))
+prior_dist_depth = Uniform(tensor([0.]), tensor([100.]))
 
 # Create a list of prior distributions
 prior_distributions = [
-    prior_dist_phy,
-    prior_dist_cdom,
+    #prior_dist_phy,
+    #prior_dist_cdom,
     prior_dist_spm,
-    prior_dist_wind,
-    prior_dist_depth,
+    #prior_dist_wind,
+    prior_dist_depth
 ]
 
 # Create the combined distribution using MultipleIndependent
@@ -118,11 +120,11 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Define the embedding net
 # embedding_net = CNNEmbedding(input_shape=(61,))
-embedding_net = FCEmbedding(input_dim=61)
+# embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="nsf", hidden_features=50, num_transforms=3, embedding_net=embedding_net)  # num_components=2
+    model="mdn", hidden_features=50, num_components=3)  # num_transforms=3
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -156,5 +158,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior4.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior_depth.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
