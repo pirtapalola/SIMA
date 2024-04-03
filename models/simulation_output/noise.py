@@ -34,7 +34,7 @@ num_wavelengths = 61  # 400-700nm at 5nm resolution
 for i in range(num_spectra):
     spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
     for wavelength in range(len(wavelengths)):
-        std_dev = spectrum[wavelength] * 0.05
+        std_dev = np.mean(spectrum) * 0.05
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
