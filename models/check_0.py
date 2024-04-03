@@ -47,11 +47,11 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior3.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "noise_5percent/check0_model2/"
+               "noise_5percent/check0_model3/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
