@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior3.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -35,6 +35,7 @@ print(obs_df)
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + 'parameters.csv')
 
+"""
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
 samples_phy = [i+constant for i in obs_parameters["chl"]]
@@ -59,7 +60,7 @@ transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
-print("Transformed theta: ", transformed_theta)
+print("Transformed theta: ", transformed_theta)"""
 
 # Create a list of sample IDs
 sample_IDs = obs_parameters["unique_ID"]
@@ -68,7 +69,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/noise_5percent/results_model2/model2'
+               'Jan2024_lognormal_priors/noise_5percent/results_model3/model3'
 
 
 def infer_from_observation(sample_id):
@@ -121,5 +122,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM03", "RIM04", "RIM05"]:
+for i in sample_IDs:
     infer_from_observation(i)
