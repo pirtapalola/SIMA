@@ -16,6 +16,7 @@ import pandas as pd
 import torch
 from torch.distributions import Uniform, LogNormal
 from sbi.inference import SNPE
+from sbi.neural_nets.embedding_nets import FCEmbedding
 from torch import tensor
 from models.tools import MultipleIndependent
 import pickle
@@ -39,6 +40,7 @@ simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Met
                               'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
 simulator_input = simulator_input.drop(columns="water")  # Remove the "water" column.
 
+"""
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
 samples_phy = [i+constant for i in simulator_input["phy"] if i != 0]
@@ -63,6 +65,7 @@ transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": sampl
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Untransformed theta: ", simulator_input)
 print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
+"""
 
 # Define theta and x.
 theta_dataframe = simulator_input  # Theta contains the five input variables.
@@ -115,11 +118,11 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Define the embedding net
 # embedding_net = CNNEmbedding(input_shape=(61,))
-# embedding_net = FCEmbedding(input_dim=61)
+embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=50, num_components=2)  # num_transforms=3,
+    model="nsf", hidden_features=50, num_transforms=3, embedding_net=embedding_net)  # num_components=2
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -153,5 +156,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior2.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/noise_5percent/loaded_posteriors/loaded_posterior4.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
