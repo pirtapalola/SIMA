@@ -1,7 +1,7 @@
 """
 Conduct inference on simulated data.
 
-Last updated on 29 March 2024 by Pirta Palola
+Last updated on 4 April 2024 by Pirta Palola
 """
 
 # Import libraries
@@ -50,11 +50,11 @@ print("Shape of the x tensor: ", x_tensor.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior0.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "noise_0025/check0_model0/"
+               "noise_0025/check1_model1/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
