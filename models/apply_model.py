@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 29 March 2024 by Pirta Palola
+Last updated on 4 April 2024 by Pirta Palola
 
 """
 
@@ -29,7 +29,7 @@ with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                    'Jan2024_lognormal_priors/field_data/'
-obs_df = pd.read_csv(observation_path + 'field_surface_reflectance.csv')
+obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_0025noise.csv')
 print(obs_df)
 
 # Read the file containing the corresponding parameters
