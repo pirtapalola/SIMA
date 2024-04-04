@@ -1,26 +1,37 @@
+"""
+
+Simulation-based calibration
+STEP 1. Read the simulated dataset.
+STEP 2. Define theta and x.
+STEP 3. Load the posterior.
+STEP 4. Run SBC.
+
+"""
+
 # Import libraries
 import pandas as pd
-from sbi.analysis import pairplot, check_sbc, run_sbc
+from sbi.analysis import check_sbc, run_sbc
 import torch
 import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 from sbi.analysis.plot import sbc_rank_plot
 
-"""STEP 1."""
+"""STEP 1. Read the simulated dataset."""
 
-# Read the csv file containing the simulated reflectance data sbi/diagnostics/sbc.py
+# Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_with_noise_0025.csv')
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/noise_0025/sbc_model0/xs.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                             'Ecolight_parameter_combinations.csv')
+                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/noise_0025/sbc_model0/'
+                             'thetas.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
+
+"""STEP 2. Define theta and x."""
 
 # Define theta and x.
 # Add a constant to avoid issues with the log-transformation of small values
@@ -48,38 +59,43 @@ transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": sampl
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Transformed theta: ", transformed_theta)
 
+# Define thetas as a tensor
 param_list = []
-for param in range(1000):
+for param in range(len(transformed_theta["phy"])):
     param_tensor = transformed_theta.iloc[param]
     param_list.append(param_tensor)
 
 thetas = torch.tensor(param_list)
-print(thetas)
-print(len(thetas))
+print("Thetas: ", thetas)
+print("Number of parameter sets: ", len(thetas))
+print("Shape of thetas: ", thetas.shape)
 
+# Define xs as a tensor
 refl_list = []
-for refl in range(1000):
+for refl in range(len(transformed_theta["phy"])):
     refl_value = simulated_reflectance.iloc[refl]
     refl_list.append(refl_value)
 
 xs = torch.tensor(refl_list)
-print(xs)
-print(len(xs))
+print("X: ", xs)
+print("Number of reflectance sets: ", len(xs))
+print("Shape of X: ", xs.shape)
 
-"""STEP 2. Load the posterior."""
+"""STEP 3. Load the posterior."""
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior0.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
 
-# run SBC: for each inference we draw 1000 posterior samples.
-num_posterior_samples = 1_000
+# For each inference, draw 1000 posterior samples.
+num_posterior_samples = 1000
 ranks, dap_samples = run_sbc(
     thetas, xs, loaded_posterior, num_posterior_samples=num_posterior_samples)
 
+# Calculate and print stats.
 check_stats = check_sbc(
     ranks, thetas, dap_samples, num_posterior_samples=num_posterior_samples)
 print(
@@ -96,5 +112,5 @@ f, ax = sbc_rank_plot(
     num_bins=None,  # by passing None we use a heuristic for the number of bins.
 )
 
-f, ax = sbc_rank_plot(ranks, 1_000, plot_type="cdf")
+f, ax = sbc_rank_plot(ranks=ranks, num_posterior_samples=num_posterior_samples, plot_type="cdf")
 plt.show()
