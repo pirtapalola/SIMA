@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 4 April 2024 by Pirta Palola
+Last updated on 5 April 2024 by Pirta Palola
 
 """
 
@@ -124,7 +124,7 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=60, num_components=3, z_score_theta="independent")  # num_transforms=3,
+    model="mdn", hidden_features=50, num_components=4)  # num_transforms=3, z_score_theta="independent"
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -158,5 +158,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior3.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior12.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
