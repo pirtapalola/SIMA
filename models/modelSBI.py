@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 5 April 2024 by Pirta Palola
+Last updated on 14 April 2024 by Pirta Palola
 
 """
 
@@ -33,7 +33,7 @@ STEP 1. Prepare the simulated data.
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_with_noise_0025.csv')
+                                    'simulated_reflectance_1000SNR_noise.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
@@ -124,7 +124,7 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="maf", hidden_features=60, num_transforms=3)  # z_score_theta="independent", num_components=5
+    model="mdn", hidden_features=65, num_components=4)  # num_transforms=3, z_score_theta="independent"
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -158,5 +158,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior2.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior8.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
