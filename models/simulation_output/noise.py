@@ -39,7 +39,7 @@ for i in range(len(num_spectra)):
     spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
     # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
-        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(1000)
+        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(500)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
@@ -56,5 +56,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/simulated_reflectance_1000SNR_noise.csv'
+              'Jan2024_lognormal_priors/simulated_reflectance_500SNR_noise.csv'
 simulated_spectra.to_csv(output_path)
