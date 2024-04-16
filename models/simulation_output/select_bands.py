@@ -10,8 +10,8 @@ simulated_hyperspectral = pd.read_csv(path)
 wavelengths = []
 for wavelength in range(400, 705, 5):
     wavelengths.append(wavelength)
-print("Wavelengths: ", wavelengths)
-print("Number of wavelengths: ", len(wavelengths))
+# print("Wavelengths: ", wavelengths)
+print("Number of wavelengths in the hyperspectral dataset: ", len(wavelengths))
 
 # Define satellite bands
 
