@@ -35,14 +35,14 @@ no_noise = simulated_spectra_original.iloc[0]
 print(no_noise)
 
 snr_df = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                     'Jan2024_lognormal_priors/SNR_CHIME/Chime.csv')
+                     'Jan2024_lognormal_priors/SNR_CHIME/SNR_w.csv')
 
 # Add Gaussian noise
 for i in range(len(num_spectra)):
     spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
+    snr_w = snr_df[str(i)]
     # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
-        snr_w = snr_df["SNR_Lw"]
         std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(snr_w[wavelength])
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
