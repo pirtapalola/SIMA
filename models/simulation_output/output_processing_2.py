@@ -33,8 +33,8 @@ def process_file(file_path):
         df = pd.read_csv(data_io, sep=r'\s+', header=None)  # Read the data into a pandas DataFrame
         df = df.T  # Transpose the DataFrame to get the desired format
         df.columns = df.iloc[0]  # Set the first row as the header
-        df = df.iloc[:3]
-        df = df.drop([0, 2])
+        df = df.iloc[:4]
+        df = df.drop([0, 1, 3])
     return df
 
 
@@ -45,7 +45,7 @@ def process_file(file_path):
 
 def main():
     output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                  'Jan2024_lognormal_priors/simulated_reflectance.csv'
+                  'Jan2024_lognormal_priors/simulated_Ed_no_noise.csv'
     # Number of processes to use (adjust as needed)
     num_processes = 4
     # Create a Pool of processes
