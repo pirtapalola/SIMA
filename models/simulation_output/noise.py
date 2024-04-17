@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 29 March 2024 by Pirta Palola
+Last updated on 17 April 2024 by Pirta Palola
 
 """
 
