@@ -1,6 +1,6 @@
 """
 
-This code applies cubic spline interpolation to SNR values of the Chime satellite.
+This code applies cubic spline interpolation to SNR and Lref values of the Chime satellite.
 The reflectance data is interpolated to 1nm intervals.
 
 STEP 1. Access the reflectance data.
@@ -8,7 +8,7 @@ STEP 2. Apply the cubic spline method to the data.
 STEP 3. Create a plot to visualise the interpolation.
 STEP 4. Save the interpolated data in a csv file.
 
-This code was last modified by Pirta Palola on 19 November 2023.
+This code was last modified by Pirta Palola on 17 April 2024.
 
 """
 
