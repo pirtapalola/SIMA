@@ -3,7 +3,7 @@ import pandas as pd
 
 # Read the simulated reflectance data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/simulated_reflectance_no_noise.csv'
+       'Jan2024_lognormal_priors/field_data/field_surface_reflectance_transposed.csv'
 simulated_hyperspectral = pd.read_csv(path)
 
 # Create a list of wavelengths
@@ -23,8 +23,8 @@ planet_green2 = [str(n) for n in range(550, 590, 5)]
 planet_yellow = [str(n) for n in range(600, 625, 5)]
 planet_red = [str(n) for n in range(650, 685, 5)]
 planet_rededge = [str(700)]
-planet_bands = planet_coastal_blue + planet_blue + planet_green1 + planet_green2 \
-               + planet_yellow + planet_red + planet_rededge
+planet_bands = planet_coastal_blue + planet_blue + planet_green1 + planet_green2 + planet_yellow + planet_red + planet_rededge
+print(planet_bands[1])
 planet_SNR = [193, 170, 150, 154, 138, 63, 57]
 
 # Sentinel-2 bands and associated SNR values
@@ -59,3 +59,8 @@ S2_df["b3"] = S2_data[S2_b3].mean(axis=1)
 S2_df["b4"] = S2_data[S2_b4].mean(axis=1)
 S2_df["b5"] = S2_data[S2_b5].mean(axis=1)
 print("Sentinel-2\n", S2_df)
+
+# Save the results into a csv file
+output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
+              'Jan2024_lognormal_priors/field_data/field_rrs_planet_1000SNR.csv'
+planet_df.to_csv(output_path, index=False)
