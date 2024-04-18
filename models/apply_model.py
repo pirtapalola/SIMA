@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Planet/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -29,7 +29,7 @@ with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                    'Jan2024_lognormal_priors/field_data/'
-obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_1000SNR_noise.csv')
+obs_df = pd.read_csv(observation_path + 'field_rrs_planet_1000SNR.csv')
 print(obs_df)
 
 # Read the file containing the corresponding parameters
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/model11_'
+               'Jan2024_lognormal_priors/Planet/results_model1/model1_'
 
 
 def infer_from_observation(sample_id):
@@ -136,7 +136,7 @@ def infer_from_observation(sample_id):
     _ = analysis.pairplot(
         samples=posterior_samples,
         points=theta_obs,
-        limits=[[0, 1], [0, 1], [0, 10], [0, 10], [0, 2]],
+        limits=[[0, 0.3], [0, 0.5], [0, 3], [0, 5], [0, 2]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
@@ -148,5 +148,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM03", "RIM04", "RIM05", "ONE05", "ONE06"]:
+for i in ["ONE05", "ONE12", "RIM03", "RIM04", "RIM05"]:
     infer_from_observation(i)
