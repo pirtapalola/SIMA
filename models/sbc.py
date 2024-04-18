@@ -24,13 +24,15 @@ from sbi.analysis.plot import sbc_rank_plot
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/Noise_1000SNR/sbc_model/xs.csv')
-print(simulated_reflectance)
+#wavelengths = [443, 490, 531, 565, 610, 665, 700]
+#wavelengths = [str(item) for item in wavelengths]
+#simulated_reflectance = simulated_reflectance[wavelengths]
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
                              'Methods/Methods_Ecolight/Jan2024_lognormal_priors/Noise_1000SNR/sbc_model/'
                              'thetas.csv')
-ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
+ecolight_input = ecolight_input.drop(columns=["water", "cdom", "wind"])  # Remove the "water" column.
 print(ecolight_input)
 
 """STEP 2. Define theta and x."""
@@ -39,24 +41,24 @@ print(ecolight_input)
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
 samples_phy = [i+constant for i in ecolight_input["phy"]]
-samples_cdom = [i+constant for i in ecolight_input["cdom"]]
+# samples_cdom = [i+constant for i in ecolight_input["cdom"]]
 samples_nap = [i+constant for i in ecolight_input["spm"]]
-samples_wind = ecolight_input["wind"]
+# samples_wind = ecolight_input["wind"]
 samples_depth = ecolight_input["depth"]
 
 # Conduct the log-transformation
 samples_phy = np.log(samples_phy)
 samples_phy = [round(item, 3) for item in samples_phy]
-samples_cdom = np.log(samples_cdom)
-samples_cdom = [round(item, 3) for item in samples_cdom]
+# samples_cdom = np.log(samples_cdom)
+# samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
 samples_nap = [round(item, 3) for item in samples_nap]
-samples_wind = np.log(samples_wind)
-samples_wind = [round(item, 3) for item in samples_wind]
+# samples_wind = np.log(samples_wind)
+# samples_wind = [round(item, 3) for item in samples_wind]
 
-# Save the transformed data in a dataframe
-transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
-                          "wind": samples_wind, "depth": samples_depth}
+# Save the transformed data in a dataframe "cdom": samples_cdom, "wind": samples_wind,
+transformed_dictionary = {"phy": samples_phy, "spm": samples_nap,
+                          "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Transformed theta: ", transformed_theta)
@@ -87,7 +89,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior14.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
