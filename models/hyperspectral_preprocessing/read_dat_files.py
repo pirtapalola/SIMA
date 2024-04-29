@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 """ STEP 1. Access the datafiles. """
 
 # Define the sample ID
-sample_ID = "OPU07"
+sample_ID = "LAG01"
 
 # Create a list of all the filenames
 path = "C:/Users/pirtapalola/Documents/Data/Fieldwork2023/Tetiaroa2023/Hyperspectral/LAG01/"  # Define the file location
@@ -30,6 +30,9 @@ data_files = all_files[1::2]
 print(all_files)
 print(data_files)
 print("The number of calibrated data files is " + str(len(all_files)) + "/2 = " + str((len(data_files))))
+example = pd.read_csv(path + '/LAG01_bottom_00000.dat')  # Check an example
+example = example.iloc[0:20]  # Print the first lines of the example to check that the correct files are accessed
+print(example)
 
 
 # Save the data into a list
@@ -45,7 +48,7 @@ def read_trios_files(file_name, path_name):
 # Save the wavelength range of the TriOS radiometers into a list
 trios_wavelength_df = pd.read_csv("C:/Users/pirtapalola/Documents/Data/Fieldwork2023/trios_wavelength_range.csv")
 trios_wavelength = trios_wavelength_df["wavelength"]
-print(trios_wavelength)
+# print(trios_wavelength)
 
 # Create an empty pandas dataframe
 trios_data = pd.DataFrame(columns=data_files)  # Name the columns with the filenames
@@ -55,7 +58,7 @@ trios_data["wavelength"] = trios_wavelength  # Add the wavelengths as a column
 for item in data_files:
     trios_data[item] = read_trios_files(item, path)
 
-print(trios_data)
+# print(trios_data)
 
 """ STEP 2. Visualise the data. """
 
@@ -67,5 +70,5 @@ plt.show()
 
 """ STEP 3. Save the data into a csv file. """
 
-trios_data.to_csv("C:/Users/pirtapalola/Documents/Data/Fieldwork2023/Moorea2023/Hyperspectral/Uncorrected/"
+trios_data.to_csv("C:/Users/pirtapalola/Documents/Data/Fieldwork2023/Tetiaroa2023/Hyperspectral/Uncorrected/"
                   + sample_ID + "_2023_uncorrected.csv")
