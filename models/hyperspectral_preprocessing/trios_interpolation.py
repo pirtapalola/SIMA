@@ -7,7 +7,7 @@ STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
 STEP 3. Save the interpolated data in csv files.
 
-Last updated on 4 March 2024 by Pirta Palola
+Last updated on 29 April 2024 by Pirta Palola
 
 """
 
@@ -20,8 +20,8 @@ import numpy as np
 
 # Read the csv files containing the data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'In_water_calibration_2022/'
-reflectance_data = pd.read_csv(path + "calibrated_surface_measurements_tetiaroa_2022_v2.csv")
+       'In_water_calibration_2023/'
+reflectance_data = pd.read_csv(path + "calibrated_surface_tetiaroa_2023.csv")
 
 # Wavelengths measured by the TriOS RAMSES radiometers
 trios_wavelength = reflectance_data['wavelength'].to_numpy()
@@ -80,4 +80,4 @@ print("Number of measurements: ", len(interpolation_results_list))
 interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
 interpolated_reflectance_df = interpolated_reflectance_df.transpose()
 print(interpolated_reflectance_df)
-interpolated_reflectance_df.to_csv(path + "just_below_surface_reflectance_5nm_tetiaroa_2022_v2.csv")
+interpolated_reflectance_df.to_csv(path + "just_below_surface_reflectance_5nm_tetiaroa_2023.csv")
