@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 sample_ID = "OPU07"
 
 # Create a list of all the filenames
-path = "C:/Users/pirtapalola/Documents/Data/Fieldwork2023/Moorea2023/Hyperspectral/OPU07/"  # Define the file location
+path = "C:/Users/pirtapalola/Documents/Data/Fieldwork2023/Tetiaroa2023/Hyperspectral/LAG01/"  # Define the file location
 all_files = [f for f in os.listdir(path) if f.endswith('.dat')]  # Create a list of all the files in the folder
 
 # Create a list with the calibrated data files (exclude the raw data files)
