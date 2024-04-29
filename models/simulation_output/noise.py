@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 17 April 2024 by Pirta Palola
+Last updated on 29 April 2024 by Pirta Palola
 
 """
 
@@ -13,13 +13,15 @@ import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/planet_no_noise.csv'
+       'Jan2024_lognormal_priors/field_data_18April2024/field_surface_reflectance_TET23_no_noise.csv'
 simulated_spectra = pd.read_csv(path)
+simulated_spectra = simulated_spectra.drop(columns=["wavelength"])
 
-# Create a list of wavelengths
-wavelengths = [443, 490, 531, 565, 610, 665, 700]
-#for wavelength in range(400, 705, 5):
- #   wavelengths.append(wavelength)
+# Create a list
+# wavelengths = [443, 490, 531, 565, 610, 665, 700]
+wavelengths = []
+for wavelength in range(400, 705, 5):
+   wavelengths.append(wavelength)
 print("Wavelengths: ", wavelengths)
 print("Number of wavelengths: ", len(wavelengths))
 
@@ -43,7 +45,7 @@ for i in range(len(num_spectra)):
     # snr_w = snr_df[str(i)]
     # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
-        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(100)
+        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(1000)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
@@ -60,5 +62,6 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/planet_100SNR.csv'
+              'Jan2024_lognormal_priors/field_surface_reflectance_TET23_no_noise/' \
+              'field_surfance_reflectance_TET23_1000SNR.csv'
 simulated_spectra.to_csv(output_path, index=False)
