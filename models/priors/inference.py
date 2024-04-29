@@ -9,7 +9,7 @@ STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
 
-Last updated on 16 February 2024 by Pirta Palola
+Last updated on 29 April 2024 by Pirta Palola
 
 """
 
@@ -22,16 +22,17 @@ from models.tools import TruncatedLogNormal
 """STEP 1. Access the Ecolight setup file."""
 
 # Define the path
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/priors/'
+PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/priors/'
 
 # Open the file. Each line is saved as a string in a list.
 
-with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt') as f:
+with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
+          'Simulated_evaluation_dataset/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
 """STEP 2. Create the priors."""
 # Specify the number of simulations
-num_simulations = 30000
+num_simulations = 5000
 
 
 # Define a function that generates and samples the prior assuming a gamma distribution
@@ -118,9 +119,8 @@ for x in range(0, len(prior_chl)):
 # Save the combinations in a csv file
 df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
 # print(df)
-df_combinations.to_csv('C:/Users/pirtapalola/'
-                       'Documents/DPhil/Chapter2/Methods'
-                       '/Methods_Ecolight/Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
+df_combinations.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
+                       'Simulated_evaluation_dataset/Ecolight_parameter_combinations_evaluation.csv')
 
 '''
 # Check that the sampled prior distributions look realistic
@@ -248,7 +248,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/' \
+    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/' \
            'setup/Icorals' \
            + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
@@ -267,10 +267,11 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
+f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
           'setup/Icorals'
           + string_id[1] + '_coralbrown' + '.txt', 'r')
-f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/final_setup/Icorals_final.txt', 'r')
+f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
+          'Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
