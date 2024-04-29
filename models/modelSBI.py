@@ -7,7 +7,7 @@ STEP 2. Define the prior.
 STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 4. Train the neural density estimator and build the posterior.
 
-Last updated on 14 April 2024 by Pirta Palola
+Last updated on 29 April 2024 by Pirta Palola
 
 """
 
