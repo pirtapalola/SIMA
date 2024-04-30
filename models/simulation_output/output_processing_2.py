@@ -5,7 +5,7 @@ STEP 1. Read the data from the csv file.
 STEP 2. Select which lines to extract from the txt files.
 STEP 3. Save the extracted data into a csv file.
 
-Last updated on 5 March 2024 by Pirta Palola
+Last updated on 30 April 2024 by Pirta Palola
 
 """
 
@@ -16,7 +16,7 @@ from multiprocessing import Pool
 """STEP 1. Read the data from the csv file."""
 
 csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Jan2024_lognormal_priors/file_paths_output_processing.csv'
+                'Simulated_evaluation_dataset/file_paths_output_processing.csv'
 file_paths_df = pd.read_csv(csv_file_path)
 file_path_list = file_paths_df["file_paths"]
 
@@ -33,8 +33,10 @@ def process_file(file_path):
         df = pd.read_csv(data_io, sep=r'\s+', header=None)  # Read the data into a pandas DataFrame
         df = df.T  # Transpose the DataFrame to get the desired format
         df.columns = df.iloc[0]  # Set the first row as the header
-        df = df.iloc[:4]
-        df = df.drop([0, 1, 3])
+        df = df.iloc[:3]  # These two lines extract Rrs data
+        df = df.drop([0, 2])
+        # df = df.iloc[:4] These two lines extract Ed data
+        # df = df.drop([0, 1, 3])
     return df
 
 
@@ -45,7 +47,7 @@ def process_file(file_path):
 
 def main():
     output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                  'Jan2024_lognormal_priors/simulated_Ed_no_noise.csv'
+                  'Simulated_evaluation_dataset/simulated_reflectance_no_noise.csv'
     # Number of processes to use (adjust as needed)
     num_processes = 4
     # Create a Pool of processes
