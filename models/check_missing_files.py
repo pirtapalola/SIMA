@@ -21,15 +21,15 @@ import shutil
 """STEP 1. Specify paths."""
 
 csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                'Methods_Ecolight/Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv'
+                'Methods_Ecolight/Simulated_evaluation_dataset/Ecolight_parameter_combinations_evaluation.csv'
 data_folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-              'Methods_Ecolight/Jan2024_lognormal_priors/simulated_dataset/simulated_dataset/'
+              'Methods_Ecolight/Simulated_evaluation_dataset/simulated_dataset/simulated_dataset/'
 file_runlist_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                    'Methods_Ecolight/Jan2024_lognormal_priors/runlist_all.txt'
+                    'Methods_Ecolight/Simulated_evaluation_dataset/runlist_all.txt'
 output_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                   'Methods_Ecolight/Jan2024_lognormal_priors/runlist.txt'
+                   'Methods_Ecolight/Simulated_evaluation_dataset/runlist.txt'
 all_setup_folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                   'Methods_Ecolight/Jan2024_lognormal_priors/setup_all_files/'
+                   'Methods_Ecolight/Simulated_evaluation_dataset/setup/'
 
 """STEP 2. Create a list of file IDs corresponding to the parameter combinations."""
 
@@ -138,7 +138,7 @@ def copy_selected_files(source_folder, destination_folder, selected_files):
 
 
 new_folder = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                     'Methods_Ecolight/Jan2024_lognormal_priors/missing_files/'
+                     'Methods_Ecolight/Simulated_evaluation_dataset/missing_files/'
 
 # Copy selected files from source to destination folder
 copy_selected_files(all_setup_folder_path, new_folder, non_match_values_runlist)
