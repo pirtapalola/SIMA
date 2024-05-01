@@ -16,11 +16,11 @@ import os
 """"STEP 1. Save the input file names into a list."""
 
 os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-         r'Simulated_evaluation_dataset/missing_files')
+         r'Simulated_evaluation_dataset/missing_files2')
 the_list = []
 
 for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                                 r'Simulated_evaluation_dataset/missing_files'):
+                                 r'Simulated_evaluation_dataset/missing_files2'):
     for file in files:
         if file.endswith('.txt'):
             the_list.append(file)
