@@ -36,7 +36,7 @@ cbar = fig.colorbar(scatter, ax=ax, label='SPM', pad=0.2)
 
 # Adjust label positions
 ax.set_xlabel('CDOM', labelpad=10)
-ax.set_ylabel('SPM', labelpad=10)
+ax.set_ylabel('NAP', labelpad=10)
 ax.set_zlabel('Phytoplankton', labelpad=10)
 
 # Show the plot
