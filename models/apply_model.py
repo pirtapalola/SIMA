@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 5 April 2024 by Pirta Palola
+Last updated on 1 May 2024 by Pirta Palola
 
 """
 
@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Planet/loaded_posteriors/loaded_posterior1.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -29,11 +29,11 @@ with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecoligh
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
                    'Jan2024_lognormal_priors/field_data/'
-obs_df = pd.read_csv(observation_path + 'field_rrs_planet_1000SNR.csv')
+obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_no_noise.csv')
 print(obs_df)
 
 # Read the file containing the corresponding parameters
-obs_parameters = pd.read_csv(observation_path + 'parameters.csv')
+obs_parameters = pd.read_csv(observation_path + 'parameters_TET22.csv')
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
@@ -62,13 +62,13 @@ transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Transformed theta: ", transformed_theta)
 
 # Create a list of sample IDs
-sample_IDs = obs_parameters["unique_ID"]
+sample_IDs = obs_df.columns.tolist()
 print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/Planet/results_model1/model1_'
+               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/tet22_model11_'
 
 
 def infer_from_observation(sample_id):
