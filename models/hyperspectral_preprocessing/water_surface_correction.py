@@ -4,7 +4,7 @@ Calculate just-above water reflectance from just-below water reflectance.
 STEP 1. Read the data.
 STEP 2. Calculate just-above water reflectance.
 
-Last updated on 29 April 2024 by Pirta Palola
+Last updated on 1 May 2024 by Pirta Palola
 
 """
 
@@ -16,7 +16,7 @@ import pandas as pd
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
                    'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2023/' \
-                   'just_below_surface_reflectance_5nm_tetiaroa_2023.csv'
+                   'just_below_surface_reflectance_5nm_moorea_2023.csv'
 obs_df = pd.read_csv(observation_path)
 obs_df = obs_df.drop(columns=["wavelength"])
 
@@ -49,4 +49,4 @@ Rrs_df = pd.DataFrame(Rrs_list)
 Rrs_df = Rrs_df.transpose()
 print(Rrs_df)
 Rrs_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-              "In_water_calibration_2023/just_above_surface_reflectance_5nm_tetiaroa_2023.csv", index=False)
+              "In_water_calibration_2023/just_above_surface_reflectance_5nm_moorea_2023.csv", index=False)
