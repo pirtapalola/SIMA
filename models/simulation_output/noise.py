@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 29 April 2024 by Pirta Palola
+Last updated on 1 May 2024 by Pirta Palola
 
 """
 
@@ -27,12 +27,12 @@ print("Number of wavelengths: ", len(wavelengths))
 
 # Define parameters
 # num_spectra = 10  # number of spectra
-num_spectra = simulated_spectra.columns.tolist()
+site_IDs = simulated_spectra.columns.tolist()
 num_wavelengths = len(wavelengths)  # 400-700nm at 5nm resolution
 
 # Check what the data looks like before adding noise
 simulated_spectra_original = pd.read_csv(path)
-no_noise = simulated_spectra_original.iloc[0]
+no_noise = simulated_spectra_original[site_IDs[0]]
 # no_noise = simulated_spectra_original["ONE05"]
 print(no_noise)
 
@@ -40,17 +40,17 @@ print(no_noise)
                      #'Jan2024_lognormal_priors/SNR_CHIME/SNR_w.csv')
 
 # Add Gaussian noise
-for i in range(len(num_spectra)):
-    spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
+for i in site_IDs:
+    # spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
     # snr_w = snr_df[str(i)]
-    # spectrum = simulated_spectra[i]
+    spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
         std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(1000)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
 # Print an example
-noise_added = simulated_spectra.iloc[0]
+noise_added = simulated_spectra[site_IDs[0]]
 # noise_added = simulated_spectra["ONE05"]
 print(noise_added)
 
@@ -62,6 +62,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/field_surface_reflectance_TET23_no_noise/' \
-              'field_surfance_reflectance_TET23_1000SNR.csv'
+              'Jan2024_lognormal_priors/field_data_18April2024/field_surface_reflectance_TET23_1000SNR.csv'
 simulated_spectra.to_csv(output_path, index=False)
