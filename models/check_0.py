@@ -17,7 +17,7 @@ import numpy as np
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_with_noise_0025.csv')
+                                    'simulated_reflectance_1000SNR_noise.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
@@ -28,7 +28,7 @@ ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" co
 print(ecolight_input)
 
 # Define theta and x.
-spectrum_id = 10
+spectrum_id = 22
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
 
 print(theta_example)
@@ -50,11 +50,11 @@ print("Shape of the x tensor: ", x_tensor.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/noise_0025/loaded_posteriors/loaded_posterior4.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "noise_0025/check0_model4/"
+               "Noise_1000SNR/check0_model11/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
@@ -76,7 +76,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 5], [0, 5], [0, 10], [0, 20], [0, 20]],
+        limits=[[0, 0.25], [0, 0.5], [0, 0.5], [0, 3], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
