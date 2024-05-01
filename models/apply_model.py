@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/tet22_model11_'
+               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/final/tet22_model11_'
 
 
 def infer_from_observation(sample_id):
@@ -136,7 +136,7 @@ def infer_from_observation(sample_id):
     _ = analysis.pairplot(
         samples=posterior_samples,
         points=theta_obs,
-        limits=[[0, 0.3], [0, 0.5], [0, 3], [0, 5], [0, 2]],
+        limits=[[0, 1], [0, 0.5], [0, 3], [0, 5], [0, 2]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
@@ -148,5 +148,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["ONE05", "ONE12", "RIM03", "RIM04", "RIM05"]:
+for i in ["RIM05"]:
     infer_from_observation(i)
