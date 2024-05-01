@@ -7,7 +7,7 @@ STEP 3. Check for matching files.
 STEP 4. Create a new runlist.txt file for the missing simulations.
 STEP 5. Copy the missing set-up files into a new folder.
 
-Last updated on 1 March 2024 by Pirta Palola
+Last updated on 1 May 2024 by Pirta Palola
 
 """
 
@@ -138,7 +138,7 @@ def copy_selected_files(source_folder, destination_folder, selected_files):
 
 
 new_folder = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                     'Methods_Ecolight/Simulated_evaluation_dataset/missing_files/'
+                     'Methods_Ecolight/Simulated_evaluation_dataset/missing_files2/'
 
 # Copy selected files from source to destination folder
 copy_selected_files(all_setup_folder_path, new_folder, non_match_values_runlist)
