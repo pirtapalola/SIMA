@@ -89,7 +89,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior15.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
