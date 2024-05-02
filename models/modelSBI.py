@@ -38,28 +38,28 @@ simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapte
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                               'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv')
-simulator_input = simulator_input.drop(columns=["water", "cdom", "wind"])  # Remove the "water" column.
+simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
 samples_phy = [i+constant for i in simulator_input["phy"]]
-# samples_cdom = [i+constant for i in simulator_input["cdom"]]
+samples_cdom = [i+constant for i in simulator_input["cdom"]]
 samples_nap = [i+constant for i in simulator_input["spm"]]
-# samples_wind = simulator_input["wind"]
+samples_wind = simulator_input["wind"]
 samples_depth = simulator_input["depth"]
 
 # Conduct the log-transformation
 samples_phy = np.log(samples_phy)
 samples_phy = [round(item, 3) for item in samples_phy]
-# samples_cdom = np.log(samples_cdom)
-# samples_cdom = [round(item, 3) for item in samples_cdom]
+samples_cdom = np.log(samples_cdom)
+samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
 samples_nap = [round(item, 3) for item in samples_nap]
-# samples_wind = np.log(samples_wind)
-# samples_wind = [round(item, 3) for item in samples_wind]
+samples_wind = np.log(samples_wind)
+samples_wind = [round(item, 3) for item in samples_wind]
 
-# Save the transformed data in a dataframe "cdom": samples_cdom, "wind": samples_wind,
-transformed_dictionary = {"phy": samples_phy, "spm": samples_nap,
+# Save the transformed data in a dataframe
+transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap, "wind": samples_wind,
                           "depth": samples_depth}
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Untransformed theta: ", simulator_input)
@@ -124,7 +124,7 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=40, num_transforms=3)
+    model="mdn", hidden_features=50, num_transforms=4)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net, num_components=3
 
 # Instantiate the SNPE inference method
@@ -159,5 +159,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior17.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior15.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
