@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior13.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -68,7 +68,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/final/tet22_model11_'
+               'Jan2024_lognormal_priors/Noise_1000SNR/results_model13/tet22_model13_'
 
 
 def infer_from_observation(sample_id):
