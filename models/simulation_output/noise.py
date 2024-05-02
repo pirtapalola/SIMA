@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 1 May 2024 by Pirta Palola
+Last updated on 2 May 2024 by Pirta Palola
 
 """
 
@@ -13,16 +13,17 @@ import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/field_data_18April2024/field_surface_reflectance_TET23_no_noise.csv'
+       'Jan2024_lognormal_priors/simulated_reflectance.csv'
 simulated_spectra = pd.read_csv(path)
+wavelengths = simulated_spectra["wavelength"]
 simulated_spectra = simulated_spectra.drop(columns=["wavelength"])
 
 # Create a list
 # wavelengths = [443, 490, 531, 565, 610, 665, 700]
-wavelengths = []
-for wavelength in range(400, 705, 5):
-   wavelengths.append(wavelength)
-print("Wavelengths: ", wavelengths)
+#wavelengths = []
+#for wavelength in range(400, 701, 1):
+ #  wavelengths.append(wavelength)
+#print("Wavelengths: ", wavelengths)
 print("Number of wavelengths: ", len(wavelengths))
 
 # Define parameters
@@ -62,5 +63,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/field_data_18April2024/field_surface_reflectance_TET23_1000SNR.csv'
+              'Jan2024_lognormal_priors/simulated_reflectance_1000SNR.csv'
 simulated_spectra.to_csv(output_path, index=False)
