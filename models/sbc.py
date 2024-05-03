@@ -6,7 +6,7 @@ STEP 2. Define theta and x.
 STEP 3. Load the posterior.
 STEP 4. Run SBC.
 
-Last updated on 16 April 2024 by Pirta Palola
+Last updated on 3 May 2024 by Pirta Palola
 
 """
 
@@ -23,15 +23,16 @@ from sbi.analysis.plot import sbc_rank_plot
 
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/Noise_1000SNR/sbc_model/xs.csv')
+                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
+                                    'simulated_reflectance_1000SNR_noise_sbc.csv')
 #wavelengths = [443, 490, 531, 565, 610, 665, 700]
 #wavelengths = [str(item) for item in wavelengths]
 #simulated_reflectance = simulated_reflectance[wavelengths]
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/Noise_1000SNR/sbc_model/'
-                             'thetas.csv')
+                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
+                             'Ecolight_parameter_combinations_sbc.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
@@ -89,7 +90,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior15.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""

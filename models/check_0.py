@@ -1,7 +1,7 @@
 """
 Conduct inference on simulated data.
 
-Last updated on 4 April 2024 by Pirta Palola
+Last updated on 3 May 2024 by Pirta Palola
 """
 
 # Import libraries
@@ -16,19 +16,19 @@ import numpy as np
 
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_1000SNR_noise.csv')
+                                    'Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
+                                    'simulated_reflectance_1000SNR_1.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                             'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                             'Ecolight_parameter_combinations.csv')
+                             'Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
+                             'Ecolight_parameter_combinations_1.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
 # Define theta and x.
-spectrum_id = 22
+spectrum_id = 34
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
 
 print(theta_example)
@@ -76,15 +76,21 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 0.25], [0, 0.5], [0, 0.5], [0, 3], [0, 20]],
+        limits=[[0, 0.5], [0, 0.5], [0, 3], [0, 4], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
-        labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
+        labels=["Phytoplankton (mg/$\mathregular{m^3}$)",
+                "CDOM $\mathregular{m^-1}$ at 440 nm)",
+                "NAP (g/$\mathregular{m^3}$)",
+                "Wind speed (m/s)",
+                "Depth (m)"],
         offdiag="scatter",
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20)
     )
+    plt.tight_layout(pad=1.0)  # Adjust layout to make more space
     plt.savefig(results_path + str(spectrum_id) + '.png')
+    plt.show()
 
 
 infer_from_simulated_spectra(x_tensor, theta_tensor)
