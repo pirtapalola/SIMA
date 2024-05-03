@@ -7,7 +7,7 @@ STEP 3. Check for matching files.
 STEP 4. Create a new runlist.txt file for the missing simulations.
 STEP 5. Copy the missing set-up files into a new folder.
 
-Last updated on 1 May 2024 by Pirta Palola
+Last updated on 3 May 2024 by Pirta Palola
 
 """
 
