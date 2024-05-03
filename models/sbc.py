@@ -25,6 +25,7 @@ from sbi.analysis.plot import sbc_rank_plot
 simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
                                     'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
                                     'simulated_reflectance_1000SNR_noise_sbc.csv')
+
 #wavelengths = [443, 490, 531, 565, 610, 665, 700]
 #wavelengths = [str(item) for item in wavelengths]
 #simulated_reflectance = simulated_reflectance[wavelengths]
@@ -90,7 +91,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior9.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
