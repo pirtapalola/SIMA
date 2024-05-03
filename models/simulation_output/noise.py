@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the simulated reflectance data.
 
-Last updated on 2 May 2024 by Pirta Palola
+Last updated on 3 May 2024 by Pirta Palola
 
 """
 
@@ -13,18 +13,19 @@ import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
 path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/simulated_reflectance.csv'
+       'Simulated_evaluation_dataset/simulated_reflectance_no_noise.csv'
 simulated_spectra = pd.read_csv(path)
-wavelengths = simulated_spectra["wavelength"]
-simulated_spectra = simulated_spectra.drop(columns=["wavelength"])
+# wavelengths = simulated_spectra["wavelength"]
+# simulated_spectra = simulated_spectra.drop(columns=["wavelength"])
 
 # Create a list
 # wavelengths = [443, 490, 531, 565, 610, 665, 700]
-#wavelengths = []
-#for wavelength in range(400, 701, 1):
- #  wavelengths.append(wavelength)
-#print("Wavelengths: ", wavelengths)
+wavelengths = []
+for wavelength in range(400, 705, 5):
+  wavelengths.append(wavelength)
+print("Wavelengths: ", wavelengths)
 print("Number of wavelengths: ", len(wavelengths))
+print("Number of reflectance spectra: ", len(simulated_spectra["400"]))
 
 # Define parameters
 # num_spectra = 10  # number of spectra
@@ -33,25 +34,25 @@ num_wavelengths = len(wavelengths)  # 400-700nm at 5nm resolution
 
 # Check what the data looks like before adding noise
 simulated_spectra_original = pd.read_csv(path)
-no_noise = simulated_spectra_original[site_IDs[0]]
-# no_noise = simulated_spectra_original["ONE05"]
+# no_noise = simulated_spectra_original[site_IDs[0]]
+no_noise = simulated_spectra_original.iloc[10]
 print(no_noise)
 
 # snr_df = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
                      #'Jan2024_lognormal_priors/SNR_CHIME/SNR_w.csv')
 
 # Add Gaussian noise
-for i in site_IDs:
-    # spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
+for i in range(len(simulated_spectra["400"])):
+    spectrum = simulated_spectra.iloc[i]  # Modify one spectrum at a time
     # snr_w = snr_df[str(i)]
-    spectrum = simulated_spectra[i]
+    # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
         std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(1000)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
 # Print an example
-noise_added = simulated_spectra[site_IDs[0]]
+noise_added = simulated_spectra.iloc[10]
 # noise_added = simulated_spectra["ONE05"]
 print(noise_added)
 
@@ -63,5 +64,5 @@ plt.show()
 
 # Save the results into a csv file
 output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/simulated_reflectance_1000SNR.csv'
+              'Simulated_evaluation_dataset/simulated_reflectance_1000SNR.csv'
 simulated_spectra.to_csv(output_path, index=False)
