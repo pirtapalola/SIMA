@@ -16,7 +16,7 @@ import pandas as pd
 import torch
 from torch.distributions import Uniform
 from sbi.inference import SNPE
-from sbi.neural_nets.embedding_nets import CNNEmbedding
+from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 from torch import tensor
 from models.tools import MultipleIndependent
 import pickle
@@ -120,12 +120,12 @@ STEP 3. Instantiate the inference object and pass the simulated data to the infe
 
 # Define the embedding net
 # embedding_net = CNNEmbedding(input_shape=(61,))
-# embedding_net = FCEmbedding(input_dim=61)
+embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=40, num_components=9)
-# num_transforms=3, z_score_theta="independent", embedding_net=embedding_net, num_components=3
+    model="mdn", hidden_features=45, num_components=3)
+# num_transforms=3, z_score_theta="independent",  z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -159,5 +159,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior9.pkl", "wb") as handle:
+          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior16.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
