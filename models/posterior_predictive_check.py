@@ -22,6 +22,10 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000
     loaded_posterior = pickle.load(handle)
 
 
+# Open the file. Each line is saved as a string in a list.
+with open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Icorals_final.txt') as f:
+    concentrations = [line for line in f.readlines()]
+
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
                                     'simulated_reflectance_1000SNR_noise_sbc.csv')
@@ -53,18 +57,35 @@ _ = pairplot(
 )
 
 # Write the posterior samples into a pandas dataframe
-combinations = pd.DataFrame(posterior_samples)
-water_column = [0 for number in range(len(combinations[0]))]
-combinations.insert(0, 'water', pd.Series(water_column))
+df = pd.DataFrame(posterior_samples)
+water_column = [0 for number in range(len(df[0]))]
+df.insert(0, 'water', pd.Series(water_column))
 
 combinations_columns = ['water', 'phy', 'cdom', 'spm', 'wind', 'depth']
-combinations.columns = combinations_columns
-print(combinations)
+df.columns = combinations_columns
+print(df)
 
 # Save the posterior samples into a csv file
-combinations.to_csv("C:/Users/kell5379/Documents/Chapter2_May2024/PPC/posterior_samples.csv", index=False)
+df.to_csv("C:/Users/kell5379/Documents/Chapter2_May2024/PPC/posterior_samples.csv", index=False)
 
 """STEP 3. Store the simulation parameterizations in a dictionary."""
+
+prior_chl1 = df["phy"]
+prior_cdom1 = df["cdom"]
+prior_spm1 = df["spm"]
+prior_wind1 = df["wind"]
+prior_depth1 = df["depth"]
+
+combinations = []
+for x in range(0, len(df["phy"])):
+    new_combination = (0.0, prior_chl1[x], prior_cdom1[x],
+                       prior_spm1[x], prior_wind1[x], prior_depth1[x])
+    combinations.append(new_combination)
+
+# Save the combinations in a csv file
+df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
+# print(df)
+df_combinations.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv')
 
 
 # Create a new class
@@ -95,8 +116,11 @@ class HydroLightParameters:
 
 
 # Create a dictionary to store all the IDs and the corresponding concentration data
-combination_ID = [i for i in range(len(combinations["water"]))]
+combination_ID = [i for i in range(0, len(combinations))]
 dict_parameters = {k: HydroLightParameters(k) for k in combination_ID}
+
+
+print(combinations[0])
 
 
 # Create strings that contain information of water constituent combinations
@@ -111,15 +135,15 @@ def convert_tuple(tup):
 
 
 string_id = []
-for i in range(len(combinations)):
-    string_id.append(convert_tuple(combinations.iloc[i]))
+for i in combinations:
+    string_id.append(convert_tuple(i))
 
 print(string_id[0])
 
 
 # Define a function that applies the add_concentration() and add_id() functions
 def add_data_to_dict(data_dictionary, num_str):
-    data_dictionary[num_str].add_concentration('combination', pd.Series(combinations.iloc[num_str]))
+    data_dictionary[num_str].add_concentration('combination', pd.Series(combinations[num_str]))
     data_dictionary[num_str].add_id('id', string_id)
 
 
@@ -128,4 +152,80 @@ for i in combination_ID:
     add_data_to_dict(dict_parameters, i)
 
 # Check that each combination of concentrations can be accessed from the dictionary using the correct ID number
-print(dict_parameters[10].concentration['combination'])
+# print(dict_parameters[0].concentration['combination'])
+
+# Check the lines of the input file that specify wind speed, depth, and benthic cover type
+print(concentrations[42])  # The first element on line 51 specifies wind speed
+print(concentrations[44])  # The last element on line 53 specifies depth
+print(concentrations[52])  # Line 61 specifies the benthic cover type
+
+# Create a list that only contains information on water constituents
+
+combinations_water = []
+combinations_wind = []
+combinations_depth = []
+
+for x in combinations:
+    combinations_water.append(x[:-2])
+    combinations_wind.append(x[-2])
+    combinations_depth.append(x[-1])
+
+"""STEP 4. Write the new Ecolight set-up files."""
+
+
+def new_input_files(combination_iop, combination_w, combination_d, hydrolight_file, id_string):
+    str0 = ', '.join(str(round(n, 3)) for n in combination_iop)
+    # strcomb1 = ', '.join(str(n) for n in combination_w)
+    str1 = str(round(combination_w, 3))
+    # strcomb2 = ', '.join(str(n) for n in combination_d)
+    str2 = str(round(combination_d, 3))
+    hydrolight_file[2] = 'coralbrown' + id_string + '\n'  # rename the output file
+    hydrolight_file[6] = str0 + ', \n'  # change the water constituent concentrations
+    hydrolight_file[42] = (str1 + ', 1.34, 20, 35\n')  # change wind speed
+    hydrolight_file[44] = ('0, 2, 0, ' + str2 + ', \n')  # change depth
+    hydrolight_file[52] = 'coral_brown.txt' + '\n'  # specify the benthic reflectance
+    hydrolight_file[12] = r'..\data\defaults\apstarchl.txt' + '\n'
+    hydrolight_file[14] = r'..\data\defaults\astarmin_calcareoussand.txt' + '\n'
+    hydrolight_file[22] = r'..\data\defaults\bstarmin_calcareoussand.txt' + '\n'
+    hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
+
+    # open file in write mode
+    path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/' \
+           'setup/Icorals' \
+           + id_string + '_coralbrown' + '.txt'
+    with open(path, 'w') as fp:
+        for item in hydrolight_file:
+            fp.write(item)
+    return hydrolight_file
+
+
+# Create a list containing the combination IDs as strings
+combination_ID_string = [str(i) for i in combination_ID]
+
+# Apply the function to all the data
+for i in combination_ID:
+    new_input_files(combinations_water[i], combinations_wind[i], combinations_depth[i], concentrations, string_id[i])
+
+# Check that only the 6th, 51st, and 53rd lines were changed
+
+# reading files
+f1 = open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+          'setup/Icorals'
+          + string_id[1] + '_coralbrown' + '.txt', 'r')
+f2 = open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+          'Icorals_final.txt', 'r')
+
+f1_data = f1.readlines()
+f2_data = f2.readlines()
+num_lines = (len(f1_data))
+
+for x in range(0, num_lines):
+    # compare each line one by one
+    if f1_data[x] != f2_data[x]:
+        print("Difference detected - Line ", x, ":")
+        print("\tFile 1:", f1_data[x], end='')
+        print("\tFile 2:", f2_data[x], end='')
+
+# close the files
+f1.close()
+f2.close()
