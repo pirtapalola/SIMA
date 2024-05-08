@@ -20,15 +20,14 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/test/loaded_posterior11.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
+          "loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                   'Jan2024_lognormal_priors/field_data2/'
+observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/field_data2/'
 obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_1000SNR_noise.csv')
 print(obs_df)
 
@@ -67,8 +66,7 @@ print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
-results_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-               'Jan2024_lognormal_priors/Noise_1000SNR/results_model11/test/tet22_model11_'
+results_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/results_model11/tet22_model11_'
 
 
 def infer_from_observation(sample_id):
