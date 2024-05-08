@@ -17,10 +17,8 @@ import glob
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv'
+csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv'
 combinations = pd.read_csv(csv_file_path)
-
 
 """STEP 2. Store each row in the csv file as a tuple in a list."""
 
@@ -68,8 +66,7 @@ for i in filtered_list:
 """STEP 5. Use the list of file IDs to create a list of filepaths."""
 
 # Specify path to the folder containing the set-up files
-folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/setup'
+folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/setup'
 file_ids = string_id
 
 # Create an empty list to store the filepaths
