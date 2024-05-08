@@ -39,7 +39,7 @@ x_o = simulated_reflectance.iloc[0]
 loaded_posterior.set_default_x(x_o)
 
 # Draw theta samples from the posterior
-posterior_samples = loaded_posterior.sample((5000,))
+posterior_samples = loaded_posterior.sample((1000,))
 
 # Print the posterior samples
 # print(posterior_samples)
