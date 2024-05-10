@@ -12,9 +12,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Simulated_evaluation_dataset/simulated_reflectance_no_noise.csv'
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv'
 simulated_spectra = pd.read_csv(path)
+
 # wavelengths = simulated_spectra["wavelength"]
 # simulated_spectra = simulated_spectra.drop(columns=["wavelength"])
 
@@ -63,6 +63,5 @@ plt.legend()
 plt.show()
 
 # Save the results into a csv file
-output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Simulated_evaluation_dataset/simulated_reflectance_1000SNR.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_1000SNR.csv'
 simulated_spectra.to_csv(output_path, index=False)
