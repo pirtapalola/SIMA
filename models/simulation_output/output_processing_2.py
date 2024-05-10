@@ -15,8 +15,7 @@ from multiprocessing import Pool
 
 """STEP 1. Read the data from the csv file."""
 
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Simulated_evaluation_dataset/file_paths_output_processing.csv'
+csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/file_paths_output_processing.csv'
 file_paths_df = pd.read_csv(csv_file_path)
 file_path_list = file_paths_df["file_paths"]
 
@@ -46,8 +45,7 @@ def process_file(file_path):
 
 
 def main():
-    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                  'Simulated_evaluation_dataset/simulated_reflectance_no_noise.csv'
+    output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv'
     # Number of processes to use (adjust as needed)
     num_processes = 4
     # Create a Pool of processes
