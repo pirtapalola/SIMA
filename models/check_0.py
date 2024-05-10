@@ -15,20 +15,18 @@ import numpy as np
 """STEP 1."""
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/' 
-                                    'Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
-                                    'simulated_reflectance_1000SNR_1.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+                                    'simulated_reflectance_1000SNR.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-ecolight_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                             'Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
-                             'Ecolight_parameter_combinations_1.csv')
+ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+                             'Ecolight_parameter_combinations_ppc.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
 # Define theta and x.
-spectrum_id = 34
+spectrum_id = 70
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
 
 print(theta_example)
@@ -49,12 +47,11 @@ print("Shape of the x tensor: ", x_tensor.shape)
 """STEP 2. Conduct inference on simulated data."""
 
 # Load the posterior
-with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior11.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
+          "loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
-results_path = "C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/" \
-               "Noise_1000SNR/check0_model11/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/PPC/test/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
@@ -76,7 +73,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 0.5], [0, 0.5], [0, 3], [0, 4], [0, 20]],
+        limits=[[0, 0.2], [0.1, 0.3], [0, 0.5], [0, 4], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankton (mg/$\mathregular{m^3}$)",
