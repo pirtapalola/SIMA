@@ -8,7 +8,7 @@ STEP 4. Add the file IDs as a column in the dataframe.
 STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
 
-Last updated on 30 April 2024 by Pirta Palola
+Last updated on 10 May by Pirta Palola
 
 """
 
@@ -20,8 +20,7 @@ import glob
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Simulated_evaluation_dataset/Ecolight_parameter_combinations_evaluation.csv'
+csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv'
 combinations = pd.read_csv(csv_file_path)
 print(combinations)
 
@@ -50,18 +49,18 @@ float_data_list = [tuple(map(float, row)) for row in modified_data_list]
 
 
 # Use the same function that was used for naming the EL output files in the "inference" script.
-def convert_tuple(tup):
+def convert_tuple(tup, precisions):
     empty_string = ''
-    for item in tup:
-        element = round(item, 3)
-        empty_string = empty_string + '_' + str(element)
-        new_string = empty_string.replace('.', '')
+    for item, precision in zip(tup, precisions):
+        rounded_item = round(item, precision)
+        empty_string = empty_string + '_' + str(rounded_item)
+    new_string = empty_string.replace('.', '')
     return new_string
 
-
+precisions = [2, 3, 3, 3, 2]
 string_id = []
 for i in float_data_list:
-    string_id.append(convert_tuple(i))
+    string_id.append(convert_tuple(i, precisions))
 
 """STEP 4. Add the file IDs as a column in the dataframe."""
 
@@ -73,8 +72,7 @@ print(combinations_df)
 so that each file can be accessed in the order defined by the list of file IDs."""
 
 # Specify path to the folder containing the output files
-folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Simulated_evaluation_dataset/simulated_dataset/simulated_dataset'
+folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_data/simulated_data'
 file_ids = combinations_df["filename"]
 
 # Create an empty list to store the filepaths
@@ -93,5 +91,4 @@ print("Print paths: ", file_paths)
 # Now, file_paths contains the paths to the files in the order specified by file_ids.
 # Save the file_paths into a csv file.
 df = pd.DataFrame(file_paths)
-df.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'Simulated_evaluation_dataset/file_paths_output_processing.csv')
+df.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/file_paths_output_processing.csv')
