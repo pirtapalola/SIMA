@@ -2,8 +2,7 @@
 import pandas as pd
 
 # Read the simulated reflectance data
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'Jan2024_lognormal_priors/field_data/field_surface_reflectance_transposed.csv'
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/simulated_reflectance_1000SNR_noise_test.csv'
 simulated_hyperspectral = pd.read_csv(path)
 
 # Create a list of wavelengths
@@ -61,6 +60,5 @@ S2_df["b5"] = S2_data[S2_b5].mean(axis=1)
 print("Sentinel-2\n", S2_df)
 
 # Save the results into a csv file
-output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-              'Jan2024_lognormal_priors/field_data/field_rrs_planet_1000SNR.csv'
-planet_df.to_csv(output_path, index=False)
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/simulated_S2_1000SNR.csv'
+S2_df.to_csv(output_path, index=False)
