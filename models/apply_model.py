@@ -28,12 +28,13 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/field_data2/'
-obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_1000SNR_noise.csv')
+obs_df = pd.read_csv(observation_path + 'GLORIA_5nm_1000SNR.csv')
 # obs_df = obs_df.drop(columns=["Unique_ID"])
-print(obs_df)
 
 # Read the file containing the corresponding parameters
-obs_parameters = pd.read_csv(observation_path + 'parameters_TET22.csv')
+obs_parameters = pd.read_csv(observation_path + 'GLORIA_parameters.csv')
+unique_ids = obs_parameters["Unique_ID"]
+print(unique_ids)
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
@@ -54,7 +55,7 @@ samples_wind = np.log(samples_wind)
 samples_wind = [round(item, 3) for item in samples_wind]
 
 # Save the transformed data in a dataframe
-transformed_dictionary = {"unique_ID": obs_parameters["unique_ID"],
+transformed_dictionary = {"unique_ID": unique_ids,
                           "phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
                           "wind": samples_wind, "depth": samples_depth}
 
@@ -82,7 +83,7 @@ def infer_from_observation(sample_id):
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
 
     # Sample from the posterior p(θ|x)
-    posterior_samples = loaded_posterior.sample((10000,), x=x_obs)
+    posterior_samples = loaded_posterior.sample((1000,), x=x_obs)
     theta_samples = posterior_samples.numpy()  # Convert to NumPy array
 
     # Define theta
@@ -149,5 +150,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM05"]:
+for i in ["GID_2505"]:
     infer_from_observation(i)

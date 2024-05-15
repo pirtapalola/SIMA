@@ -7,7 +7,7 @@ STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
 STEP 3. Save the interpolated data in csv files.
 
-Last updated on 1 May 2024 by Pirta Palola
+Last updated on 15 May 2024 by Pirta Palola
 
 """
 
@@ -19,9 +19,8 @@ import numpy as np
 """STEP 1. Access the reflectance data."""
 
 # Read the csv files containing the data
-path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-       'In_water_calibration_2023/'
-reflectance_data = pd.read_csv(path + "calibrated_surface_moorea_2023.csv")
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/GLORIA_filtered/'
+reflectance_data = pd.read_csv(path + "filtered_reflectance_transposed.csv")
 
 # Wavelengths measured by the TriOS RAMSES radiometers
 trios_wavelength = reflectance_data['wavelength'].to_numpy()
@@ -36,7 +35,7 @@ print(sample_IDs)
 
 def cubic_spline_interpolation(y0_list, x_list):
     # Define the wavelength range and spectral resolution of the end product
-    xs = np.arange(320, 950, 5)
+    xs = np.arange(400, 705, 5)
     # Create an index list that corresponds to the number of rows in the end product
     index_list = []
     for z in range(len(xs)):
@@ -80,4 +79,4 @@ print("Number of measurements: ", len(interpolation_results_list))
 interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
 interpolated_reflectance_df = interpolated_reflectance_df.transpose()
 print(interpolated_reflectance_df)
-interpolated_reflectance_df.to_csv(path + "just_below_surface_reflectance_5nm_moorea_2023.csv")
+interpolated_reflectance_df.to_csv(path + "GLORIA_filtered_5nm.csv")
