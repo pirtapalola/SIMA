@@ -31,13 +31,10 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/'
-                                    'Methods/Methods_Ecolight/Jan2024_lognormal_priors/'
-                                    'simulated_reflectance_1000SNR_noise_test.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/simulated_S2_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-simulator_input = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                              'Jan2024_lognormal_priors/Ecolight_parameter_combinations_test.csv')
+simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Ecolight_parameter_combinations_test.csv')
 simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
 # Add a constant to avoid issues with the log-transformation of small values
@@ -158,6 +155,6 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-          "Jan2024_lognormal_priors/Noise_1000SNR/loaded_posteriors/loaded_posterior18.pkl", "wb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/"
+          "loaded_posteriors/loaded_posterior_S2.pkl", "wb") as handle:
     pickle.dump(posterior, handle)

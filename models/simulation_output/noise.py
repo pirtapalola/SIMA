@@ -1,6 +1,6 @@
 """
 
-Add Gaussian noise to the simulated reflectance data.
+Add Gaussian noise to the reflectance data.
 
 Last updated on 3 May 2024 by Pirta Palola
 

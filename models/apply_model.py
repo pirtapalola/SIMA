@@ -29,6 +29,7 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/field_data2/'
 obs_df = pd.read_csv(observation_path + 'field_surface_reflectance_1000SNR_noise.csv')
+# obs_df = obs_df.drop(columns=["Unique_ID"])
 print(obs_df)
 
 # Read the file containing the corresponding parameters
@@ -62,11 +63,12 @@ print("Transformed theta: ", transformed_theta)
 
 # Create a list of sample IDs
 sample_IDs = obs_df.columns.tolist()
+# sample_IDs = list(obs_parameters["unique_ID"])
 print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
-results_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/results_model11/tet22_model11_'
+results_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/results_model17/tet22_model17_'
 
 
 def infer_from_observation(sample_id):
@@ -76,6 +78,7 @@ def infer_from_observation(sample_id):
 
     # Define x
     x_obs = obs_df[sample_id].to_list()
+    print(x_obs)
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
 
     # Sample from the posterior p(θ|x)

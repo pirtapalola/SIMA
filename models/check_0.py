@@ -15,13 +15,13 @@ import numpy as np
 """STEP 1."""
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
-                                    'simulated_reflectance_1000SNR.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
+                                    'simulated_reflectance_1000SNR_noise_sbc.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
-                             'Ecolight_parameter_combinations_ppc.csv')
+ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
+                             'Ecolight_parameter_combinations_sbc.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
@@ -51,7 +51,7 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000
           "loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/PPC/test/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/check0/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
@@ -73,7 +73,7 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 0.2], [0.1, 0.3], [0, 0.5], [0, 4], [0, 20]],
+        limits=[[0, 1.2], [0, 1], [0, 0.2], [0, 4], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankton (mg/$\mathregular{m^3}$)",
