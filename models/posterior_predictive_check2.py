@@ -52,16 +52,16 @@ print("MSE of Posterior Predictive: ", mse_posterior)
 plt.figure(figsize=(10, 5))
 
 # Plot Posterior Predictive
-plot_percentiles(wavelengths, x_pp, alpha_fill=0.3, label=f'Posterior Predictive (MSE={mse_posterior:.2f})',
-                 color='purple')
+plot_percentiles(wavelengths, x_pp, alpha_fill=0.3, label=f'Posterior Predictive (MSE<0.001)',
+                 color='lightgreen')
 
 # Plot Ground Truth (GT)
-plt.plot(wavelengths, x_o, label='Ground Truth (GT)', color='red')
+plt.plot(wavelengths, x_o, label='Ground Truth (GT)', color='dodgerblue')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
 plt.ylim([x_pp.min() - 0.0001, x_pp.max() + 0.0001])
-plt.axvline(x=wavelengths[0], linestyle='--', color='brown')
+# plt.axvline(x=wavelengths[0], linestyle='--', color='brown')
 
 # Labels and legend
 plt.xlabel('Wavelength (nm)')
