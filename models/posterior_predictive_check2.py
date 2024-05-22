@@ -1,6 +1,20 @@
+"""
+
+Posterior predictive check.
+STEP 1. Read the data.
+STEP 2. Plot the posterior predictive.
+
+Last updated on 22 May 2024 by Pirta Palola
+
+"""
+
+
+# Import libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+
+"""STEP 1. Read the data."""
 
 # Read the CSV files containing the simulated reflectance data
 simulated_reflectance = pd.read_csv(
@@ -22,6 +36,8 @@ print("Shape of x_pp: ", x_pp.shape)
 # Create a list of wavelengths
 wavelengths = np.arange(400, 705, 5)
 print("Shape of wavelengths: ", wavelengths.shape)
+
+"""STEP 2. Plot the posterior predictive."""
 
 
 def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
@@ -68,4 +84,5 @@ plt.xlabel('Wavelength (nm)')
 plt.ylabel('Reflectance')
 plt.legend()
 
+# Show the plot
 plt.show()
