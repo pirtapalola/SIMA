@@ -1,18 +1,15 @@
-# Import libraries
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 
-# Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                                    'simulated_reflectance_1000SNR_noise_sbc.csv')
+# Read the CSV files containing the simulated reflectance data
+simulated_reflectance = pd.read_csv(
+    'C:/Users/kell5379/Documents/Chapter2_May2024/simulated_reflectance_1000SNR_noise_sbc.csv')
+simulated_reflectance_ppc = pd.read_csv(
+    'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv')
 
 # Pick one spectrum as an observation
 observed = simulated_reflectance.iloc[0]
-
-# Read the csv file containing the simulated reflectance data
-simulated_reflectance_ppc = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
-                                        'simulated_reflectance_no_noise.csv')
 
 # Define your observed spectrum x_o (shape: [61])
 x_o = np.array(observed)
@@ -23,13 +20,10 @@ x_pp = np.array(simulated_reflectance_ppc)
 print("Shape of x_pp: ", x_pp.shape)
 
 # Create a list of wavelengths
-wavelengths = []
-for wavelength in range(400, 705, 5):
-    wavelengths.append(wavelength)
-wavelengths = np.array(wavelengths)
+wavelengths = np.arange(400, 705, 5)
+print("Shape of wavelengths: ", wavelengths.shape)
 
 
-# Plot
 def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     """Plots the mean and 5th to 95th percentile band of y.
 
@@ -37,6 +31,7 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
         x (array): Shape (l,)
         y (array): Shape (n, l)
     """
+    y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
     perc_5 = np.percentile(y, 5, axis=0)
     perc_95 = np.percentile(y, 95, axis=0)
@@ -51,6 +46,7 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
 
 # Mean Squared Error Calculation
 mse_posterior = np.mean((np.mean(x_pp, axis=0) - x_o) ** 2)
+print("MSE of Posterior Predictive: ", mse_posterior)
 
 # Plotting
 plt.figure(figsize=(10, 5))
@@ -64,12 +60,12 @@ plt.plot(wavelengths, x_o, label='Ground Truth (GT)', color='red')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
-plt.ylim([x_pp.min() - 0.5, x_pp.max() + 0.5])
-plt.axvline(x=0, linestyle='--', color='brown')
+plt.ylim([x_pp.min() - 0.0001, x_pp.max() + 0.0001])
+plt.axvline(x=wavelengths[0], linestyle='--', color='brown')
 
 # Labels and legend
-plt.xlabel('Wavelength')
-plt.ylabel('Spectral Value')
+plt.xlabel('Wavelength (nm)')
+plt.ylabel('Reflectance')
 plt.legend()
 
 plt.show()
