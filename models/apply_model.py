@@ -21,18 +21,18 @@ import matplotlib.pyplot as plt
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
-          "loaded_posteriors/loaded_posterior20.pkl", "rb") as handle:
+          "loaded_posteriors/loaded_posterior20_S2.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/field_data2/'
-obs_file = 'field_surface_reflectance_1000SNR_noise.csv'
+observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/'
+obs_file = 'field_S2_1000SNR.csv'
 param_file = 'parameters_TET22.csv'
 
 obs_df = pd.read_csv(observation_path + obs_file)
-# obs_df = obs_df.drop(columns=["Unique_ID"])
+# obs_df = obs_df.drop(columns=["unique_ID"])
 
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + param_file)
@@ -73,7 +73,8 @@ print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
-results_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/results_model20/tet22_model20_'
+results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/'
+                'results_model20/tet22_model20_S2_')
 
 
 def infer_from_observation(sample_id):
