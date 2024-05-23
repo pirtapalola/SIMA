@@ -156,6 +156,7 @@ def infer_from_observation(sample_id):
     plt.savefig(results_path + sample_id + '.png')
 
 
+# Test new site
 # Apply the function to real observations
 for i in ["RIM03"]:
     infer_from_observation(i)
