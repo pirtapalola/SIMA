@@ -31,8 +31,8 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                                    'simulated_reflectance_1000SNR_noise_test.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/'
+                                    'simulated_planet_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Ecolight_parameter_combinations_test.csv')
@@ -122,7 +122,7 @@ embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="nsf", hidden_features=50, num_transforms=20)
+    model="mdn", hidden_features=50, num_components=20)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -157,5 +157,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
-          "loaded_posteriors/loaded_posterior26.pkl", "wb") as handle:
+          "loaded_posteriors/loaded_posterior20_Planet.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
