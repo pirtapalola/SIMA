@@ -60,5 +60,5 @@ S2_df["b5"] = S2_data[S2_b5].mean(axis=1)
 print("Sentinel-2\n", S2_df)
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/field_S2_1000SNR_sbc.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/downsampled/field_S2_1000SNR.csv'
 S2_df.to_csv(output_path, index=False)
