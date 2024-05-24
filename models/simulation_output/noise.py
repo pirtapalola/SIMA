@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
-path = 'C:/Users/kell5379/Documents/Chapter2_May2024/final/simulated_reflectance_no_noise_train.csv'
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/final/simulated_reflectance_no_noise_validate.csv'
 simulated_spectra = pd.read_csv(path)
 
 # wavelengths = simulated_spectra["wavelength"]
@@ -63,5 +63,5 @@ for i in range(len(simulated_spectra["400"])):
 # plt.show()
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/final/simulated_reflectance_1000SNR_train_5.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/final/simulated_reflectance_1000SNR_validate.csv'
 simulated_spectra.to_csv(output_path, index=False)
