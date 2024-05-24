@@ -14,8 +14,7 @@ import numpy as np
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Ecolight_parameter_combinations_test.csv')
 
 # Define the uncertainty
-uncertainty_water = 15 / 100
-uncertainty_wind_depth = 5/100
+uncertainty_percentage = 5/100
 
 
 # Function to add Gaussian noise based on the uncertainty
@@ -26,15 +25,15 @@ def add_noise(value, uncertainty):
 
 
 # Apply the function to each column
-simulator_input['phy'] = add_noise(simulator_input['phy'].values, uncertainty_water)
-simulator_input['cdom'] = add_noise(simulator_input['cdom'].values, uncertainty_water)
-simulator_input['spm'] = add_noise(simulator_input['spm'].values, uncertainty_water)
-simulator_input['wind'] = add_noise(simulator_input['wind'].values, uncertainty_wind_depth)
-simulator_input['depth'] = add_noise(simulator_input['depth'].values, uncertainty_wind_depth)
+simulator_input['phy'] = add_noise(simulator_input['phy'].values, uncertainty_percentage)
+simulator_input['cdom'] = add_noise(simulator_input['cdom'].values, uncertainty_percentage)
+simulator_input['spm'] = add_noise(simulator_input['spm'].values, uncertainty_percentage)
+simulator_input['wind'] = add_noise(simulator_input['wind'].values, uncertainty_percentage)
+simulator_input['depth'] = add_noise(simulator_input['depth'].values, uncertainty_percentage)
 
 # Display a sample of the modified DataFrame
 print(simulator_input.head())
 
 # Save the noisy data into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/final/Ecolight_parameter_combinations_noise4.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_parameter_combinations_noise4.csv'
 simulator_input.to_csv(output_path, index=False)
