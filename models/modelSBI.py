@@ -3,11 +3,10 @@
 Simulation-based inference
 
 STEP 1. Prepare the simulated data.
-STEP 2. Define the prior.
-STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
-STEP 4. Train the neural density estimator and build the posterior.
+STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
+STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 3 May 2024 by Pirta Palola
+Last updated on 24 May 2024 by Pirta Palola
 
 """
 
@@ -31,11 +30,12 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                                    'simulated_reflectance_1000SNR_noise_test.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Training_data/'
+                                    'Ecolight_parameter_combinations_train.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Ecolight_parameter_combinations_test.csv')
+simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Training_data/'
+                              'Ecolight_parameter_combinations_train.csv')
 simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
 # Add a constant to avoid issues with the log-transformation of small values
@@ -84,35 +84,9 @@ x_tensor = torch.tensor(x_array, dtype=torch.float32)
 print("Shape of the theta tensor: ", theta_tensor.shape)
 print("Shape of the x tensor: ", x_tensor.shape)
 
-"""
-
-STEP 2. Define the prior.
-
-"""
-
-# Define individual prior distributions
-prior_dist_phy = Uniform(tensor([0.]), tensor([100.]))
-prior_dist_cdom = Uniform(tensor([0.]), tensor([100.]))
-prior_dist_spm = Uniform(tensor([0.]), tensor([100.]))
-prior_dist_wind = Uniform(tensor([0.]), tensor([100.]))
-prior_dist_depth = Uniform(tensor([0.]), tensor([100.]))
-
-# Create a list of prior distributions
-prior_distributions = [
-    prior_dist_phy,
-    # prior_dist_cdom,
-    prior_dist_spm,
-    # prior_dist_wind,
-    prior_dist_depth
-]
-
-# Create the combined distribution using MultipleIndependent
-prior = MultipleIndependent(prior_distributions)
-print(prior)
-
 """ 
 
-STEP 3. Instantiate the inference object and pass the simulated data to the inference object.
+STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 
 """
 
@@ -133,7 +107,7 @@ inference.append_simulations(theta_tensor, x_tensor)
 
 """
 
-STEP 4. Train the neural density estimator and build the posterior.
+STEP 3. Train the neural density estimator and build the posterior.
 
 """
 
