@@ -13,11 +13,8 @@ Last updated on 24 May 2024 by Pirta Palola
 # Import libraries
 import pandas as pd
 import torch
-from torch.distributions import Uniform
 from sbi.inference import SNPE
-from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
-from torch import tensor
-from models.tools import MultipleIndependent
+# from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 import pickle
 from sbi import utils
 import matplotlib.pyplot as plt
@@ -92,7 +89,7 @@ STEP 2. Instantiate the inference object and pass the simulated data to the infe
 
 # Define the embedding net
 # embedding_net = CNNEmbedding(input_shape=(61,))
-embedding_net = FCEmbedding(input_dim=61)
+# embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
