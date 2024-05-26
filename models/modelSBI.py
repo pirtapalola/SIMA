@@ -93,7 +93,7 @@ STEP 2. Instantiate the inference object and pass the simulated data to the infe
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="nsf", hidden_features=60, num_transforms=5)
+    model="nsf", hidden_features=60, num_transforms=3)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -128,5 +128,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/"
-          "Trained_nn/1000SNR/Loaded_posteriors/loaded_posterior13.pkl", "wb") as handle:
+          "Trained_nn/1000SNR/Loaded_posteriors/loaded_posterior16.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
