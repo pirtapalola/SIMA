@@ -35,5 +35,5 @@ simulator_input['depth'] = add_noise(simulator_input['depth'].values, uncertaint
 print(simulator_input.head())
 
 # Save the noisy data into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_parameter_combinations_noise4.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_parameter_combinations_noise10.csv'
 simulator_input.to_csv(output_path, index=False)

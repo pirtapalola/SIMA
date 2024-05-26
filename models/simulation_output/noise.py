@@ -63,5 +63,5 @@ for i in range(len(simulated_spectra["400"])):
 # plt.show()
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/simulated_reflectance_1000SNR_5.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/simulated_reflectance_1000SNR_10.csv'
 simulated_spectra.to_csv(output_path, index=False)
