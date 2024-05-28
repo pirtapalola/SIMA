@@ -2,7 +2,7 @@
 import pandas as pd
 
 # Read the simulated reflectance data
-path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
         'field_surface_reflectance_1000SNR_transposed.csv')
 simulated_hyperspectral = pd.read_csv(path)
 simulated_hyperspectral = simulated_hyperspectral.drop(columns=["unique_ID"])  # Remove the "unique_ID" column.
@@ -83,5 +83,5 @@ micasense_df["b7"] = micasense_data[b7].mean(axis=1)
 print("MicaSense\n", S2_df)
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/micasense_field_1000SNR.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/micasense_field_1000SNR.csv'
 micasense_df.to_csv(output_path, index=False)
