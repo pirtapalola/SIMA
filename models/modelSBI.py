@@ -27,8 +27,8 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/Downsampled/'
-                                    'S2_simulated_1000SNR.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
+                                    'simulated_reflectance_100SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -128,5 +128,5 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/"
-          "Trained_nn/1000SNR/Loaded_posteriors/loaded_posterior29_S2.pkl", "wb") as handle:
+          "Trained_nn/100SNR/Loaded_posteriors/loaded_posterior29.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
