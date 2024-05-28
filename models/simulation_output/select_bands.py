@@ -15,22 +15,22 @@ print("Number of wavelengths in the hyperspectral dataset: ", len(wavelengths))
 # Define satellite bands
 
 # Planet SuperDove bands and associated SNR values
-planet_coastal_blue = [str(n) for n in range(430, 455, 5)]
-planet_blue = [str(n) for n in range(465, 520, 5)]
-planet_green1 = [str(n) for n in range(515, 555, 5)]
+planet_coastal_blue = [str(n) for n in range(435, 460, 5)]
+planet_blue = [str(n) for n in range(465, 530, 5)]
+planet_green1 = [str(n) for n in range(510, 550, 5)]
 planet_green2 = [str(n) for n in range(550, 590, 5)]
 planet_yellow = [str(n) for n in range(600, 625, 5)]
 planet_red = [str(n) for n in range(650, 685, 5)]
-planet_rededge = [str(700)]
+planet_rededge = [str(n) for n in range(695, 705, 5)]
 planet_bands = planet_coastal_blue + planet_blue + planet_green1 + planet_green2 + planet_yellow + planet_red + planet_rededge
 print(planet_bands[1])
 planet_SNR = [193, 170, 150, 154, 138, 63, 57]
 
 # Sentinel-2 bands and associated SNR values
-S2_b1 = [str(n) for n in range(430, 455, 5)]
-S2_b2 = [str(n) for n in range(460, 525, 5)]
-S2_b3 = [str(n) for n in range(545, 580, 5)]
-S2_b4 = [str(n) for n in range(650, 685, 5)]
+S2_b1 = [str(n) for n in range(430, 460, 5)]
+S2_b2 = [str(n) for n in range(450, 550, 5)]
+S2_b3 = [str(n) for n in range(540, 590, 5)]
+S2_b4 = [str(n) for n in range(645, 690, 5)]
 S2_b5 = [str(n) for n in range(695, 705, 5)]
 S2_bands = S2_b1 + S2_b2 + S2_b3 + S2_b4 + S2_b5
 S2_SNR = [129, 154, 168, 142, 117]
