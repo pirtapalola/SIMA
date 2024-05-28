@@ -4,7 +4,7 @@ Posterior predictive check
 STEP 1. Draw samples from the posterior.
 STEP 2. Save the samples into a csv file.
 
-Last updated on 8 May 2024 by Pirta Palola
+Last updated on 28 May 2024 by Pirta Palola
 
 """
 
@@ -17,21 +17,21 @@ from sbi.analysis import pairplot
 """STEP 1. Load the posterior and the data."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
-          "loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
+          "loaded_posterior29.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 
 # Open the file. Each line is saved as a string in a list.
-with open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Icorals_final.txt') as f:
+with open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                                    'simulated_reflectance_1000SNR_noise_sbc.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                                    'simulated_reflectance_1000SNR_evaluate.csv')
 
 # Pick one spectrum as an observation
-x_o = simulated_reflectance.iloc[0]
+x_o = simulated_reflectance.iloc[23]
 
 
 """STEP 2. Draw samples from the posterior."""
@@ -66,7 +66,7 @@ df.columns = combinations_columns
 print(df)
 
 # Save the posterior samples into a csv file
-df.to_csv("C:/Users/kell5379/Documents/Chapter2_May2024/PPC/posterior_samples.csv", index=False)
+df.to_csv("C:/Users/kell5379/Documents/Chapter2_May2024/Final/posterior_samples.csv", index=False)
 
 """STEP 3. Store the simulation parameterizations in a dictionary."""
 
@@ -85,7 +85,7 @@ for x in range(0, len(df["phy"])):
 # Save the combinations in a csv file
 df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
 # print(df)
-df_combinations.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv')
+df_combinations.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_parameter_combinations_ppc.csv')
 
 
 # Create a new class
@@ -190,7 +190,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/' \
+    path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/' \
            'setup/Icorals' \
            + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
@@ -209,10 +209,10 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+f1 = open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/'
           'setup/Icorals'
           + string_id[1] + '_coralbrown' + '.txt', 'r')
-f2 = open('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/'
+f2 = open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
           'Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
