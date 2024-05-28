@@ -15,13 +15,13 @@ import numpy as np
 """STEP 1."""
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                                    'simulated_reflectance_1000SNR_noise_sbc.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                                    'simulated_reflectance_1000SNR_evaluate.csv')
 print(simulated_reflectance)
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                             'Ecolight_parameter_combinations_sbc.csv')
+ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                             'Ecolight_parameter_combinations_evaluate.csv')
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
@@ -47,11 +47,11 @@ print("Shape of the x tensor: ", x_tensor.shape)
 """STEP 2. Conduct inference on simulated data."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/"
-          "loaded_posteriors/loaded_posterior17.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
+          "loaded_posterior18.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Noise_1000SNR/Noise_1000SNR/check0/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/Simulated/10_"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
