@@ -20,15 +20,15 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/"
-          "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
+          "Loaded_posteriors/loaded_posterior29_micasense.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'field_surface_reflectance_100SNR.csv'
+obs_file = 'micasense_field_500SNR.csv'
 param_file = 'parameters_TET22.csv'
 
 obs_df = pd.read_csv(observation_path + obs_file)
@@ -73,8 +73,8 @@ print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
-results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/'
-                'Results/model29_')
+results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/'
+                'Results/model29_micasense_')
 
 
 def infer_from_observation(sample_id):
