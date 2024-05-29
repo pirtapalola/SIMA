@@ -26,6 +26,8 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/
 
 """STEP 2. Load the observation data."""
 
+model_spec = '_micasense_100SNR_'
+
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
 obs_file = 'micasense_field_500SNR.csv'
@@ -73,8 +75,8 @@ print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
-results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/'
-                'Results_RIM05/model29_500SNR_micasense_')
+results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
+                'Results/model29_' + model_spec)
 
 
 def infer_from_observation(sample_id):
@@ -135,9 +137,9 @@ def infer_from_observation(sample_id):
     results_df["97.5percent"] = interval2_exp
 
     # Save the dataframes
-    # log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv')
-    # results_df.to_csv(results_path + sample_id + '_results.csv')
-    # theta_intervals_df.to_csv(results_path + sample_id + '_theta_intervals.csv')
+    log_prob_df.to_csv(results_path + sample_id + model_spec + 'log_probability.csv')
+    results_df.to_csv(results_path + sample_id + model_spec + 'results.csv')
+    theta_intervals_df.to_csv(results_path + sample_id + model_spec + 'theta_intervals.csv')
 
     # Create the figure
     _ = analysis.pairplot(
@@ -146,7 +148,7 @@ def infer_from_observation(sample_id):
         limits=[[0, 2], [0, 0.5], [0, 5], [0, 5], [0, 20]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
-        labels=["Phytoplankon", "CDOM", "NAP", "Wind speed", "Depth"],
+        labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind speed", "Depth"],
         offdiag="scatter",
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20),
