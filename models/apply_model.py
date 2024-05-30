@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 28 May 2024 by Pirta Palola
+Last updated on 30 May 2024 by Pirta Palola
 
 """
 
@@ -20,17 +20,17 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
-          "Loaded_posteriors/loaded_posterior29_micasense.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
+          "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
-model_spec = '_micasense_100SNR_'
+model_spec = '_hp_1000SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'micasense_field_500SNR.csv'
+obs_file = 'hp_field_1000SNR.csv'
 param_file = 'parameters_TET22.csv'
 
 obs_df = pd.read_csv(observation_path + obs_file)
@@ -38,9 +38,9 @@ obs_df = pd.read_csv(observation_path + obs_file)
 
 # Read the file containing the corresponding parameters
 obs_parameters = pd.read_csv(observation_path + param_file)
-print(obs_parameters)
+# print(obs_parameters)
 unique_ids = obs_parameters["unique_ID"]
-print(unique_ids)
+# print(unique_ids)
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
@@ -66,12 +66,12 @@ transformed_dictionary = {"unique_ID": unique_ids,
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
-print("Transformed theta: ", transformed_theta)
+# print("Transformed theta: ", transformed_theta)
 
 # Create a list of sample IDs
 sample_IDs = obs_df.columns.tolist()
 # sample_IDs = list(obs_parameters["unique_ID"])
-print(sample_IDs)
+# print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
@@ -86,7 +86,7 @@ def infer_from_observation(sample_id):
 
     # Define x
     x_obs = obs_df[sample_id].to_list()
-    print(x_obs)
+    print('Reflectance data: ', x_obs)
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
 
     # Sample from the posterior p(θ|x)
@@ -95,10 +95,10 @@ def infer_from_observation(sample_id):
 
     # Define theta
     theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
-    print(theta_obs)
+    # print(theta_obs)
     theta_obs = theta_obs.drop(columns="unique_ID")
     theta_obs = theta_obs.iloc[0].to_list()
-    print("Theta obs list: ", theta_obs)
+    print("Log-transformed theta: ", theta_obs)
     theta_obs = torch.tensor(theta_obs, dtype=torch.float32)
 
     # Evaluate the log-probability of the posterior samples
@@ -109,11 +109,13 @@ def infer_from_observation(sample_id):
     # Mean estimates for each parameter
     theta_means = torch.mean(posterior_samples, dim=0)
     theta_exp = theta_means
+    print("Log mean values: ", theta_exp)
     for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
         theta_exp[i] = np.exp(theta_means[i])
     for i in range(3):  # Remove the constant from the first 3 theta parameters
         theta_exp[i] = theta_exp[i] - constant
     results_df["Mean"] = theta_exp  # Save the calculated values in a column
+    print("Exp mean values: ", theta_exp)
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
     theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
@@ -121,17 +123,21 @@ def infer_from_observation(sample_id):
 
     interval1 = theta_intervals_df.iloc[0]
     interval1_exp = interval1
+    print("Log interval1 values: ", interval1_exp)
     for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
         interval1_exp[i] = np.exp(interval1[i])
     for i in range(3):  # Remove the constant from the first 3 theta parameters
         interval1_exp[i] = interval1[i] - constant
+    print("Exp interval1 values: ", interval1_exp)
 
     interval2 = theta_intervals_df.iloc[1]
     interval2_exp = interval2
+    print("Log interval2 values: ", interval2_exp)
     for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
         interval2_exp[i] = np.exp(interval2[i])
     for i in range(3):  # Remove the constant from the first 3 theta parameters
         interval2_exp[i] = interval2[i] - constant
+    print("Exp interval2 values: ", interval2_exp)
 
     results_df["2.5percent"] = interval1_exp
     results_df["97.5percent"] = interval2_exp
@@ -159,5 +165,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["RIM05"]:
+for i in ["ONE05"]:
     infer_from_observation(i)
