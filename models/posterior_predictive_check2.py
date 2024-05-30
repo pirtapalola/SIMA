@@ -4,7 +4,7 @@ Posterior predictive check.
 STEP 1. Read the data.
 STEP 2. Plot the posterior predictive.
 
-Last updated on 22 May 2024 by Pirta Palola
+Last updated on 30 May 2024 by Pirta Palola
 
 """
 
@@ -17,13 +17,13 @@ import matplotlib.pyplot as plt
 """STEP 1. Read the data."""
 
 # Read the CSV files containing the simulated reflectance data
-simulated_reflectance = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/simulated_reflectance_1000SNR_noise_sbc.csv')
 simulated_reflectance_ppc = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv')
+    'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/simulated_reflectance_no_noise.csv')
+simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                                    'simulated_reflectance_1000SNR_evaluate.csv')
 
 # Pick one spectrum as an observation
-observed = simulated_reflectance.iloc[0]
+observed = simulated_reflectance.iloc[23]
 
 # Define your observed spectrum x_o (shape: [61])
 x_o = np.array(observed)
@@ -49,8 +49,8 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     """
     y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
-    perc_5 = np.percentile(y, 5, axis=0)
-    perc_95 = np.percentile(y, 95, axis=0)
+    perc_5 = np.percentile(y, 1, axis=0)
+    perc_95 = np.percentile(y, 99, axis=0)
 
     (base_line,) = plt.plot(x, mean, **kwargs)
     kwargs["label"] = None
