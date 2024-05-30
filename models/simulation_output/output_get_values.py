@@ -8,7 +8,7 @@ STEP 4. Add the file IDs as a column in the dataframe.
 STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
 
-Last updated on 10 May by Pirta Palola
+Last updated on 30 May by Pirta Palola
 
 """
 
@@ -20,7 +20,7 @@ import glob
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv'
+csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/Ecolight_parameter_combinations_ppc.csv'
 combinations = pd.read_csv(csv_file_path)
 print(combinations)
 
@@ -51,7 +51,9 @@ float_data_list = [tuple(map(float, row)) for row in modified_data_list]
 # Use the same function that was used for naming the EL output files in the "inference" script.
 def convert_tuple(tup, precisions):
     empty_string = ''
-    for item, precision in zip(tup, precisions):
+    for index, (item, precision) in enumerate(zip(tup, precisions)):
+        if index == 4:  # Skip the fifth element
+            continue
         rounded_item = round(item, precision)
         empty_string = empty_string + '_' + str(rounded_item)
     new_string = empty_string.replace('.', '')
@@ -72,7 +74,7 @@ print(combinations_df)
 so that each file can be accessed in the order defined by the list of file IDs."""
 
 # Specify path to the folder containing the output files
-folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_data/simulated_data'
+folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/simulated_data/simulated_data'
 file_ids = combinations_df["filename"]
 
 # Create an empty list to store the filepaths
@@ -91,4 +93,5 @@ print("Print paths: ", file_paths)
 # Now, file_paths contains the paths to the files in the order specified by file_ids.
 # Save the file_paths into a csv file.
 df = pd.DataFrame(file_paths)
-df.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/PPC/file_paths_output_processing.csv')
+print(len(file_paths))
+df.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/file_paths_output_processing.csv')
