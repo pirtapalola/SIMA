@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 30 May 2024 by Pirta Palola
+Last updated on 31 May 2024 by Pirta Palola
 
 """
 
@@ -71,12 +71,12 @@ transformed_theta = pd.DataFrame(data=transformed_dictionary)
 # Create a list of sample IDs
 sample_IDs = obs_df.columns.tolist()
 # sample_IDs = list(obs_parameters["unique_ID"])
-# print(sample_IDs)
+print(sample_IDs)
 
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results/model29_' + model_spec)
+                'Results/model29' + model_spec)
 
 
 def infer_from_observation(sample_id):
@@ -92,6 +92,7 @@ def infer_from_observation(sample_id):
     # Sample from the posterior p(θ|x)
     posterior_samples = loaded_posterior.sample((1000,), x=x_obs)
     theta_samples = posterior_samples.numpy()  # Convert to NumPy array
+    theta_df = pd.DataFrame(theta_samples)  # Convert to a dataframe
 
     # Define theta
     theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
@@ -100,6 +101,7 @@ def infer_from_observation(sample_id):
     theta_obs = theta_obs.iloc[0].to_list()
     print("Log-transformed theta: ", theta_obs)
     theta_obs = torch.tensor(theta_obs, dtype=torch.float32)
+    # theta_obs_array = theta_obs.numpy()  # Convert to NumPy array
 
     # Evaluate the log-probability of the posterior samples
     log_probability = loaded_posterior.log_prob(posterior_samples, x=x_obs)
@@ -143,9 +145,10 @@ def infer_from_observation(sample_id):
     results_df["97.5percent"] = interval2_exp
 
     # Save the dataframes
-    log_prob_df.to_csv(results_path + sample_id + model_spec + 'log_probability.csv')
-    results_df.to_csv(results_path + sample_id + model_spec + 'results.csv')
-    theta_intervals_df.to_csv(results_path + sample_id + model_spec + 'theta_intervals.csv')
+    theta_df.to_csv(results_path + sample_id + '_posterior_samples.csv', index=False)
+    log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv', index=False)
+    results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
+    theta_intervals_df.to_csv(results_path + sample_id + '_theta_intervals.csv', index=False)
 
     # Create the figure
     _ = analysis.pairplot(
@@ -165,5 +168,5 @@ def infer_from_observation(sample_id):
 
 
 # Apply the function to real observations
-for i in ["ONE05"]:
+for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
     infer_from_observation(i)
