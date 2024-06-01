@@ -6,7 +6,7 @@ STEP 2. Read the ground-truth data.
 STEP 3. Define functions to assess inference performance.
 STEP 4. Apply the functions.
 
-Last updated on 31 May 2024 by Pirta Palola
+Last updated on 1 June 2024 by Pirta Palola
 
 """
 
@@ -22,7 +22,6 @@ import torch
 
 # Define sample IDs
 sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
-sample_id_index = 3
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
@@ -45,7 +44,13 @@ def posterior_sampling(sample_id, observation_dataframe):
     return posterior_samples_array
 
 
-posterior_samples = posterior_sampling(sample_id_list[sample_id_index], obs_df)
+# Create an empty list
+posterior_list = []
+
+# Add the posterior samples of each field site as elements into the list
+for item in sample_id_list:
+    samples_i = posterior_sampling(item, obs_df)
+    posterior_list.append(samples_i)
 
 """STEP 2. Read the ground-truth data."""
 
@@ -76,14 +81,24 @@ transformed_dictionary = {"unique_ID": unique_ids,
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
-# print("Ground truth dataframe: ", transformed_theta)
 
-# Define theta
-theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id_list[sample_id_index]]
-theta_obs = theta_obs.drop(columns="unique_ID")
-theta_obs = theta_obs.iloc[0].to_list()
-theta_obs_array = np.array(theta_obs)  # Convert to NumPy array
-# print("Ground truth array: ", theta_obs_array)
+
+# Function to define ground-truth parameters
+def groundtruth(sample_id, theta_dataframe):
+    theta_obs = theta_dataframe.loc[theta_dataframe['unique_ID'] == sample_id]
+    theta_obs = theta_obs.drop(columns="unique_ID")
+    theta_obs = theta_obs.iloc[0].to_list()
+    theta_obs_array = np.array(theta_obs)  # Convert to NumPy array
+    return theta_obs_array
+
+
+# Create an empty list
+gt_list = []
+
+# Add the posterior samples of each field site as elements into the list
+for item in sample_id_list:
+    gt_i = groundtruth(item, transformed_theta)
+    gt_list.append(gt_i)
 
 """STEP 3. Define functions to assess inference performance."""
 
@@ -127,10 +142,13 @@ def log_score(post_samples, true_values):
 
 """STEP 4. Apply the functions."""
 
-coverage = coverage_probability(posterior_samples, theta_obs_array)
-crps_value = crps(posterior_samples, theta_obs_array)
-wasserstein_dist = wasserstein(posterior_samples, theta_obs_array)
-pmse_value = pmse(posterior_samples, theta_obs_array)
+posterior_samples = posterior_list[0]
+gt_array = gt_list[0]
+
+coverage = coverage_probability(posterior_samples, gt_array)
+crps_value = crps(posterior_samples, gt_array)
+wasserstein_dist = wasserstein(posterior_samples, gt_array)
+pmse_value = pmse(posterior_samples, gt_array)
 
 print(f"Coverage Probability: {coverage}")
 print(f"CRPS: {crps_value}")
