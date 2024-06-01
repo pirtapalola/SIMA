@@ -20,9 +20,11 @@ import torch
 
 """STEP 1. Sample from the posterior."""
 
+# Define parameter of interest (0 = phy, 1 = spm, 2 = wind, 3 = depth)
+param_index = 0
+
 # Define sample IDs
-sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
-sample_id_index = 1
+sample_id_list = ['ONE05', 'RIM03']
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
@@ -139,23 +141,36 @@ def log_score(post_samples, true_values):
 
 """STEP 4. Apply the functions."""
 
-# Access the data corresponding to one sampling site
-posterior_samples = posterior_list[sample_id_index]
-gt_array = gt_list[sample_id_index]
 
 # From the ground-truth array, access each parameter
-phy_gt = gt_array[0]
-spm_gt = gt_array[1]
-wind_gt = gt_array[2]
-depth_gt = gt_array[3]
+def gt_per_parameter(gt_theta_index):
+    empty_list = []  # Create an empty list
+    for i in range(len(sample_id_list)):
+        gt_array = gt_list[i]  # Loop through each sampling site
+        theta_gt = gt_array[gt_theta_index]  # Extract a single theta parameter value
+        empty_list.append(theta_gt)  # Append the extracted value to the list
+    return empty_list  # The list contains the values of the selected theta parameter at each of the sampling sites
 
-# Extracting elements
-phy_posterior = [row[0] for row in posterior_samples]
-spm_posterior = [row[1] for row in posterior_samples]
-wind_posterior = [row[2] for row in posterior_samples]
-depth_posterior = [row[3] for row in posterior_samples]
 
-coverage = coverage_probability(wind_posterior, wind_gt)
+# From the dataset containing the posterior samples, access the samples associated with each parameter
+def posterior_per_parameter(theta_index):
+    empty_l = []
+    for i in range(len(sample_id_list)):
+        posterior_samples = posterior_list[i]  # Loop through each sampling site
+        # Extract posterior samples corresponding to the specified theta parameter
+        theta_posterior = [row[theta_index] for row in posterior_samples]
+        empty_l.append(theta_posterior)
+    return empty_l
+
+
+gt = gt_per_parameter(param_index)
+print("GT: ", gt)
+post = posterior_per_parameter(param_index)
+print("Post: ", post)
+
+
+coverage = coverage_probability(post, gt)
+
 #wasserstein_dist = wasserstein(first_elements, phy_gt)
 #pmse_value = pmse(first_elements, phy_gt)
 
