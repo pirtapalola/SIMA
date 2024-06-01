@@ -20,6 +20,10 @@ import torch
 
 """STEP 1. Sample from the posterior."""
 
+# Define sample IDs
+sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
+sample_id_index = 3
+
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
           "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
@@ -28,24 +32,20 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
 obs_file = 'hp_field_1000SNR.csv'
-param_file = 'parameters_TET22.csv'
-
 obs_df = pd.read_csv(observation_path + obs_file)
 
-# Define sample ID
-sample_id = 'ONE05'
 
-# Define x
-x_obs = obs_df[sample_id].to_list()
-x_obs = torch.tensor(x_obs, dtype=torch.float32)
+# Define a function to sample from the posterior
+def posterior_sampling(sample_id, observation_dataframe):
+    x_obs = observation_dataframe[sample_id].to_list()
+    x_obs = torch.tensor(x_obs, dtype=torch.float32)
+    samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
+    modified_data = torch.cat((samples[:, :1], samples[:, 2:]), dim=1)
+    posterior_samples_array = modified_data.numpy()  # Convert to NumPy array
+    return posterior_samples_array
 
-# Sample from the posterior p(θ|x)
-samples = loaded_posterior.sample((1000,), x=x_obs)
-print("Samples: ", samples)
-modified_data = torch.cat((samples[:, :1], samples[:, 2:]), dim=1)
-print("Samples, CDOM removed: ", modified_data)
-posterior_samples = modified_data.numpy()  # Convert to NumPy array
 
+posterior_samples = posterior_sampling(sample_id_list[sample_id_index], obs_df)
 
 """STEP 2. Read the ground-truth data."""
 
@@ -79,7 +79,7 @@ transformed_theta = pd.DataFrame(data=transformed_dictionary)
 # print("Ground truth dataframe: ", transformed_theta)
 
 # Define theta
-theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id]
+theta_obs = transformed_theta.loc[transformed_theta['unique_ID'] == sample_id_list[sample_id_index]]
 theta_obs = theta_obs.drop(columns="unique_ID")
 theta_obs = theta_obs.iloc[0].to_list()
 theta_obs_array = np.array(theta_obs)  # Convert to NumPy array
