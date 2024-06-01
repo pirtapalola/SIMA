@@ -7,7 +7,7 @@ import earthpy as et
 import earthpy.plot as ep
 import earthpy.spatial as es
 
-ortho = rasterio.open('C:/Users/pirtapalola/Documents/Data/Tetiaroa_fieldwork2022/Drone/rimatuF1.tif')
+ortho = rasterio.open('C:/Users/kell5379/Documents/Data/rimatuF1.tif')
 ortho_arr = ortho.read()
 fig, ax = plt.subplots(1, 2, figsize=(20, 20))
 
