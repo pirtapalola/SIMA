@@ -21,10 +21,10 @@ import torch
 """STEP 1. Sample from the posterior."""
 
 # Define parameter of interest (0 = phy, 1 = spm, 2 = wind, 3 = depth)
-param_index = 0
+param_index = 3
 
 # Define sample IDs
-sample_id_list = ['ONE05', 'RIM03']
+sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
@@ -106,14 +106,19 @@ for item in sample_id_list:
 """STEP 3. Define functions to assess inference performance."""
 
 
-# Measure how often the true parameter value falls within the credible intervals of the posterior distributions
-def coverage_probability(post_samples_list, true_values):
+# Measure how often the true parameter value (within 10% error margin)
+# falls within the credible intervals of the posterior distributions
+def coverage_probability(post_samples_list, true_values, error_margin=0.1):
     coverage_counts = 0
     for post_samples, true_value in zip(post_samples_list, true_values):
         theta_intervals = np.percentile(post_samples, [2.5, 97.5], axis=0)
         lower_bound = theta_intervals[0]
         upper_bound = theta_intervals[1]
-        if true_value >= lower_bound and true_value <= upper_bound:
+        true_value_lower = true_value * (1 - error_margin)
+        true_value_upper = true_value * (1 + error_margin)
+        if (true_value_lower >= lower_bound and true_value_lower <= upper_bound) or \
+           (true_value_upper >= lower_bound and true_value_upper <= upper_bound) or \
+           (true_value >= lower_bound and true_value <= upper_bound):
             coverage_counts += 1
     return coverage_counts / len(true_values)
 
@@ -124,9 +129,10 @@ def wasserstein(post_samples, true_value):
     return wasserstein_distance(post_samples, [true_value])
 
 
-# The average squared difference between the true parameter value and samples from the posterior distribution
-def pmse(post_samples, true_value):
-    return np.mean((post_samples - true_value) ** 2)
+# The average squared difference between the true parameter values and samples from the posterior distribution
+def pmse(post_samples_list, true_values):
+    return np.mean([np.mean((post_samples - true_value) ** 2)
+                    for post_samples, true_value in zip(post_samples_list, true_values)])
 
 
 # Evaluate the posterior distributions based on the log probability of the true parameter values
@@ -171,9 +177,9 @@ print("Post: ", post)
 
 coverage = coverage_probability(post, gt)
 
-#wasserstein_dist = wasserstein(first_elements, phy_gt)
-#pmse_value = pmse(first_elements, phy_gt)
+# wasserstein_dist = wasserstein(first_elements, phy_gt)
+# pmse_value = pmse(post, gt)
 
 print(f"Coverage Probability: {coverage}")
-#print(f"Wasserstein Distance: {wasserstein_dist}")
-#print(f"PMSE: {pmse_value}")
+# print(f"Wasserstein Distance: {wasserstein_dist}")
+# print(f"PMSE: {pmse_value}")
