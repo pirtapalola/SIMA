@@ -22,6 +22,7 @@ import torch
 
 # Define sample IDs
 sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
+sample_id_index = 1
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
@@ -103,31 +104,27 @@ for item in sample_id_list:
 """STEP 3. Define functions to assess inference performance."""
 
 
-# Measure how often the true parameter values fall within the credible intervals of the posterior distributions
-def coverage_probability(post_samples, true_values):
-    theta_intervals = np.percentile(post_samples, [2.5, 97.5], axis=0)
-    theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
-    lower_bound = theta_intervals_df.iloc[0]
-    upper_bound = theta_intervals_df.iloc[1]
-    return np.mean((true_values >= lower_bound) & (true_values <= upper_bound))
+# Measure how often the true parameter value falls within the credible intervals of the posterior distributions
+def coverage_probability(post_samples_list, true_values):
+    coverage_counts = 0
+    for post_samples, true_value in zip(post_samples_list, true_values):
+        theta_intervals = np.percentile(post_samples, [2.5, 97.5], axis=0)
+        lower_bound = theta_intervals[0]
+        upper_bound = theta_intervals[1]
+        if true_value >= lower_bound and true_value <= upper_bound:
+            coverage_counts += 1
+    return coverage_counts / len(true_values)
 
 
-# Evaluate the accuracy of probabilistic forecasts by considering the entire predictive distribution
-def crps(post_samples, true_values):
-    def crps_single(obs, forecast):
-        return np.mean((forecast - obs) ** 2) - 0.5 * np.mean((forecast[:, None] - forecast[None, :]) ** 2)
-    return np.mean([crps_single(true_values[i], post_samples[:, i]) for i in range(len(true_values))])
-
-
-# Measure the distance between the estimated posterior distributions and the true parameter values,
+# Measure the distance between the estimated posterior distributions and the true parameter value,
 # considering the entire shape of the distributions
-def wasserstein(post_samples, true_values):
-    return np.mean([wasserstein_distance(post_samples[:, i], [true_values[i]]) for i in range(len(true_values))])
+def wasserstein(post_samples, true_value):
+    return wasserstein_distance(post_samples, [true_value])
 
 
-# The average squared difference between the true parameter values and samples from the posterior distribution
-def pmse(post_samples, true_values):
-    return np.mean([(post_samples[:, i] - true_values[i]) ** 2 for i in range(len(true_values))])
+# The average squared difference between the true parameter value and samples from the posterior distribution
+def pmse(post_samples, true_value):
+    return np.mean((post_samples - true_value) ** 2)
 
 
 # Evaluate the posterior distributions based on the log probability of the true parameter values
@@ -142,15 +139,26 @@ def log_score(post_samples, true_values):
 
 """STEP 4. Apply the functions."""
 
-posterior_samples = posterior_list[0]
-gt_array = gt_list[0]
+# Access the data corresponding to one sampling site
+posterior_samples = posterior_list[sample_id_index]
+gt_array = gt_list[sample_id_index]
 
-coverage = coverage_probability(posterior_samples, gt_array)
-crps_value = crps(posterior_samples, gt_array)
-wasserstein_dist = wasserstein(posterior_samples, gt_array)
-pmse_value = pmse(posterior_samples, gt_array)
+# From the ground-truth array, access each parameter
+phy_gt = gt_array[0]
+spm_gt = gt_array[1]
+wind_gt = gt_array[2]
+depth_gt = gt_array[3]
+
+# Extracting elements
+phy_posterior = [row[0] for row in posterior_samples]
+spm_posterior = [row[1] for row in posterior_samples]
+wind_posterior = [row[2] for row in posterior_samples]
+depth_posterior = [row[3] for row in posterior_samples]
+
+coverage = coverage_probability(wind_posterior, wind_gt)
+#wasserstein_dist = wasserstein(first_elements, phy_gt)
+#pmse_value = pmse(first_elements, phy_gt)
 
 print(f"Coverage Probability: {coverage}")
-print(f"CRPS: {crps_value}")
-print(f"Wasserstein Distance: {wasserstein_dist}")
-print(f"PMSE: {pmse_value}")
+#print(f"Wasserstein Distance: {wasserstein_dist}")
+#print(f"PMSE: {pmse_value}")
