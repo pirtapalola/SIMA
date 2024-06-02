@@ -6,7 +6,7 @@ STEP 2. Read the ground-truth data.
 STEP 3. Define functions to assess inference performance.
 STEP 4. Apply the functions.
 
-Last updated on 1 June 2024 by Pirta Palola
+Last updated on 2 June 2024 by Pirta Palola
 
 """
 
@@ -23,8 +23,13 @@ import torch
 # Define parameter of interest (0 = phy, 1 = spm, 2 = wind, 3 = depth)
 param_index = 3
 
-# Define sample IDs
-sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
+# Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
+sample_id_list = []
+for i in range(1, 1001):
+    sample_id_list.append(str(i))
+
+print(len(sample_id_list))
+
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
@@ -32,9 +37,10 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'hp_field_1000SNR.csv'
-obs_df = pd.read_csv(observation_path + obs_file)
+observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                    'simulated_reflectance_1000SNR_evaluate_transposed.csv')
+# obs_file = 'hp_field_1000SNR.csv'
+obs_df = pd.read_csv(observation_path)  # + obs_file
 
 
 # Define a function to sample from the posterior
@@ -42,8 +48,8 @@ def posterior_sampling(sample_id, observation_dataframe):
     x_obs = observation_dataframe[sample_id].to_list()
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
     samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
-    modified_data = torch.cat((samples[:, :1], samples[:, 2:]), dim=1)
-    posterior_samples_array = modified_data.numpy()  # Convert to NumPy array
+    # modified_data = torch.cat((samples[:, :1], samples[:, 2:]), dim=1)
+    posterior_samples_array = samples.numpy()  # Convert to NumPy array
     return posterior_samples_array
 
 
@@ -58,14 +64,21 @@ for item in sample_id_list:
 """STEP 2. Read the ground-truth data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-param_file = 'parameters_TET22.csv'
-obs_parameters = pd.read_csv(observation_path + param_file)
+# observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
+# param_file = 'parameters_TET22.csv'
+# obs_parameters = pd.read_csv(observation_path + param_file)
+
+
+# Read the csv file containing the inputs of each of the EcoLight simulation runs
+obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                             'Ecolight_parameter_combinations_evaluate.csv')
 unique_ids = obs_parameters["unique_ID"]
+unique_ids = [str(n) for n in unique_ids]
 
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
-samples_phy = [i+constant for i in obs_parameters["chl"]]
+samples_phy = [i+constant for i in obs_parameters["phy"]]
+samples_cdom = [i+constant for i in obs_parameters["cdom"]]
 samples_nap = [i+constant for i in obs_parameters["spm"]]
 samples_wind = obs_parameters["wind"]
 samples_depth = obs_parameters["depth"]
@@ -73,6 +86,8 @@ samples_depth = obs_parameters["depth"]
 # Conduct the log-transformation
 samples_phy = np.log(samples_phy)
 samples_phy = [round(item, 3) for item in samples_phy]
+samples_cdom = np.log(samples_cdom)
+samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
 samples_nap = [round(item, 3) for item in samples_nap]
 samples_wind = np.log(samples_wind)
@@ -80,7 +95,7 @@ samples_wind = [round(item, 3) for item in samples_wind]
 
 # Save the transformed data in a dataframe
 transformed_dictionary = {"unique_ID": unique_ids,
-                          "phy": samples_phy, "spm": samples_nap,
+                          "phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
                           "wind": samples_wind, "depth": samples_depth}
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
@@ -89,7 +104,7 @@ transformed_theta = pd.DataFrame(data=transformed_dictionary)
 # Function to define ground-truth parameters
 def groundtruth(sample_id, theta_dataframe):
     theta_obs = theta_dataframe.loc[theta_dataframe['unique_ID'] == sample_id]
-    theta_obs = theta_obs.drop(columns="unique_ID")
+    theta_obs = theta_obs.drop(columns=["unique_ID"])
     theta_obs = theta_obs.iloc[0].to_list()
     theta_obs_array = np.array(theta_obs)  # Convert to NumPy array
     return theta_obs_array
@@ -106,9 +121,9 @@ for item in sample_id_list:
 """STEP 3. Define functions to assess inference performance."""
 
 
-# Measure how often the true parameter value (within 10% error margin)
+# Measure how often the true parameter value (within a % error margin)
 # falls within the credible intervals of the posterior distributions
-def coverage_probability(post_samples_list, true_values, error_margin=0.1):
+def coverage_probability(post_samples_list, true_values, error_margin=0.0):
     coverage_counts = 0
     for post_samples, true_value in zip(post_samples_list, true_values):
         theta_intervals = np.percentile(post_samples, [2.5, 97.5], axis=0)
@@ -170,9 +185,9 @@ def posterior_per_parameter(theta_index):
 
 
 gt = gt_per_parameter(param_index)
-print("GT: ", gt)
+# print("GT: ", gt)
 post = posterior_per_parameter(param_index)
-print("Post: ", post)
+# print("Post: ", post)
 
 
 coverage = coverage_probability(post, gt)
