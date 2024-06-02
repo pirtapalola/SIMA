@@ -20,8 +20,8 @@ import torch
 
 """STEP 1. Sample from the posterior."""
 
-# Define parameter of interest (0 = phy, 1 = spm, 2 = wind, 3 = depth)
-param_index = 3
+# Define parameter of interest (0 = phy, 1 = cdom, 2 = spm, 3 = wind, 4 = depth)
+param_index = 4
 
 # Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
 sample_id_list = []
