@@ -17,11 +17,15 @@ from scipy.stats import wasserstein_distance
 from scipy.stats import gaussian_kde
 import pickle
 import torch
+import math
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 """STEP 1. Sample from the posterior."""
 
 # Define parameter of interest (0 = phy, 1 = cdom, 2 = spm, 3 = wind, 4 = depth)
-param_index = 4
+param_index = 0
 
 # Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
 sample_id_list = []
@@ -32,13 +36,13 @@ print(len(sample_id_list))
 
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/"
-          "Loaded_posteriors/loaded_posterior29_micasense.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
+          "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
 observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                    'micasense_evaluate_100SNR_transposed.csv')
+                    'simulated_reflectance_1000SNR_noise_sbc_transposed.csv')
 # obs_file = 'hp_field_1000SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
@@ -71,7 +75,7 @@ for item in sample_id_list:
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                             'Ecolight_parameter_combinations_evaluate.csv')
+                             'Ecolight_parameter_combinations_sbc.csv')
 unique_ids = obs_parameters["unique_ID"]
 unique_ids = [str(n) for n in unique_ids]
 
@@ -160,6 +164,30 @@ def log_score(post_samples_list, true_values_list):
     return np.mean(log_probs)
 
 
+# Calculate log probability
+def evaluate_log_probability(sample_id, observation_dataframe):
+    x_obs = observation_dataframe[sample_id].to_list()
+    x_obs = torch.tensor(x_obs, dtype=torch.float32)
+    samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
+    log_probability = loaded_posterior.log_prob(samples, x=x_obs)
+    log_prob_np = log_probability.numpy()  # Convert to Numpy array
+    return log_prob_np
+
+
+# Calculate mean
+def calculate_mean(sample_id, observation_dataframe):
+    x_obs = observation_dataframe[sample_id].to_list()
+    x_obs = torch.tensor(x_obs, dtype=torch.float32)
+    samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
+    theta_means = torch.mean(samples, dim=0)
+    theta_exp = theta_means
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        theta_exp[i] = np.exp(theta_means[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        theta_exp[i] = theta_exp[i] - constant
+    return theta_exp
+
+
 """STEP 4. Apply the functions."""
 
 
@@ -184,19 +212,100 @@ def posterior_per_parameter(theta_index):
     return empty_l
 
 
+# Apply the mean calculation function
+mean_list = []
+for item in sample_id_list:
+    mean_i = calculate_mean(item, obs_df)
+    mean_list.append(mean_i)
+
+
+# From the dataset containing the mean values, access the values associated with each parameter
+def mean_per_parameter(theta_index):
+    empty_l = []
+    for i in range(len(sample_id_list)):
+        mean_values = mean_list[i]  # Loop through each sampling site
+        mean_values = mean_values.numpy()  # Convert to NumPy array
+        # Extract posterior samples corresponding to the specified theta parameter
+        mean_value = mean_values[theta_index]
+        empty_l.append(mean_value)
+    return empty_l
+
+
 gt = gt_per_parameter(param_index)
 # print("GT: ", gt)
 post = posterior_per_parameter(param_index)
 # print("Post: ", post)
+mean_estimate = mean_per_parameter(param_index)
 
+print("Length of GT data: ", len(gt))
+print("Length of mean data: ", len(mean_estimate))
 
+# Calculate RMSE
+y_actual = np.array(gt)
+print("Length of y_actual: ", len(y_actual))
+y_predicted = np.array(mean_estimate)
+print("Length of y_predicted: ", len(y_predicted))
+
+MSE = np.square(np.subtract(y_actual, y_predicted)).mean()
+RMSE = math.sqrt(MSE)
+
+# Apply the coverage probability evaluation function
 coverage = coverage_probability(post, gt)
-log_evaluate = log_score(post, gt)
 
-# wasserstein_dist = wasserstein(first_elements, phy_gt)
-# pmse_value = pmse(post, gt)
-
+# Print the results
 print(f"Coverage Probability: {coverage}")
-print(f"Log-score: {log_evaluate}")
-# print(f"Wasserstein Distance: {wasserstein_dist}")
-# print(f"PMSE: {pmse_value}")
+# print(f"R squared: {MSE}")
+# print(f"RMSE: {RMSE}")
+
+mae = mean_absolute_error(y_actual, y_predicted)
+mse = mean_squared_error(y_actual, y_predicted)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_actual, y_predicted)
+
+print(f"Mean Absolute Error (MAE): {mae}")
+print(f"Mean Squared Error (MSE): {mse}")
+print(f"Root Mean Squared Error (RMSE): {rmse}")
+print(f"R-squared (R²): {r2}")
+
+# Scatter Plot
+plt.figure(figsize=(10, 6))
+plt.scatter(y_actual, y_predicted, alpha=0.5)
+plt.plot([min(y_actual), max(y_actual)], [min(y_actual), max(y_actual)], 'r--')
+plt.xlabel('Observed')
+plt.ylabel('Predicted')
+plt.title('Observed vs Predicted')
+plt.show()
+
+# Line Plot
+plt.figure(figsize=(10, 6))
+plt.plot(y_actual, label='Observed')
+plt.plot(y_predicted, label='Predicted', alpha=0.7)
+plt.legend()
+plt.title('Observed and Predicted Values')
+plt.show()
+
+# Residual Plot
+residuals = y_actual - y_predicted
+plt.figure(figsize=(10, 6))
+plt.scatter(y_predicted, residuals, alpha=0.5)
+plt.axhline(0, color='r', linestyle='--')
+plt.xlabel('Predicted')
+plt.ylabel('Residuals')
+plt.title('Residuals vs Predicted')
+plt.show()
+
+# Histogram
+plt.figure(figsize=(10, 6))
+sns.histplot(y_actual, color='blue', kde=True, label='Observed', stat='density')
+sns.histplot(y_predicted, color='orange', kde=True, label='Predicted', stat='density')
+plt.legend()
+plt.title('Distribution of Observed and Predicted Values')
+plt.show()
+
+# Density Plot
+plt.figure(figsize=(10, 6))
+sns.kdeplot(y_actual, color='blue', label='Observed')
+sns.kdeplot(y_predicted, color='orange', label='Predicted')
+plt.legend()
+plt.title('Density Plot of Observed and Predicted Values')
+plt.show()
