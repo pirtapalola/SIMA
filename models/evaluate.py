@@ -32,13 +32,13 @@ print(len(sample_id_list))
 
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
-          "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/"
+          "Loaded_posteriors/loaded_posterior29_micasense.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
 observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                    'simulated_reflectance_1000SNR_evaluate_transposed.csv')
+                    'micasense_evaluate_100SNR_transposed.csv')
 # obs_file = 'hp_field_1000SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
@@ -152,11 +152,11 @@ def pmse(post_samples_list, true_values):
 
 # Evaluate the posterior distributions based on the log probability of the true parameter values
 # Higher log scores correspond to better performance
-def log_score(post_samples, true_values):
+def log_score(post_samples_list, true_values_list):
     log_probs = []
-    for i in range(len(true_values)):
-        kde = gaussian_kde(post_samples[:, i])
-        log_probs.append(kde.logpdf(true_values[i]))
+    for post_samples, true_value in zip(post_samples_list, true_values_list):
+        kde = gaussian_kde(post_samples)
+        log_probs.append(kde.logpdf(true_value))
     return np.mean(log_probs)
 
 
@@ -191,10 +191,12 @@ post = posterior_per_parameter(param_index)
 
 
 coverage = coverage_probability(post, gt)
+log_evaluate = log_score(post, gt)
 
 # wasserstein_dist = wasserstein(first_elements, phy_gt)
 # pmse_value = pmse(post, gt)
 
 print(f"Coverage Probability: {coverage}")
+print(f"Log-score: {log_evaluate}")
 # print(f"Wasserstein Distance: {wasserstein_dist}")
 # print(f"PMSE: {pmse_value}")
