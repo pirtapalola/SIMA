@@ -25,7 +25,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 """STEP 1. Sample from the posterior."""
 
 # Define parameter of interest (0 = phy, 1 = cdom, 2 = spm, 3 = wind, 4 = depth)
-param_index = 0
+param_index = 4
 
 # Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
 sample_id_list = []
