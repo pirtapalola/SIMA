@@ -145,10 +145,10 @@ def infer_from_observation(sample_id):
     results_df["97.5percent"] = interval2_exp
 
     # Save the dataframes
-    theta_df.to_csv(results_path + sample_id + '_posterior_samples.csv', index=False)
-    log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv', index=False)
-    results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
-    theta_intervals_df.to_csv(results_path + sample_id + '_theta_intervals.csv', index=False)
+    # theta_df.to_csv(results_path + sample_id + '_posterior_samples.csv', index=False)
+    # log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv', index=False)
+    # results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
+    # theta_intervals_df.to_csv(results_path + sample_id + '_theta_intervals.csv', index=False)
 
     # Create the figure
     _ = analysis.pairplot(
@@ -164,9 +164,10 @@ def infer_from_observation(sample_id):
         diag="hist"
         # samples_colors="green"
     )
-    plt.savefig(results_path + sample_id + '.png')
+    # plt.savefig(results_path + sample_id + '.png')
+    plt.show()
 
 
 # Apply the function to real observations
-for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
+for i in ["ONE05"]:
     infer_from_observation(i)
