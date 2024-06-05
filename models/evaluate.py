@@ -40,8 +40,8 @@ with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
-observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                    'simulated_reflectance_1000SNR_noise_sbc_transposed.csv')
+observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/'
+                    'simulated_reflectance_1000SNR_noise_sbc.csv')
 # obs_file = 'hp_field_1000SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
@@ -73,7 +73,7 @@ for item in sample_id_list:
 
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
                              'Ecolight_parameter_combinations_sbc.csv')
 unique_ids = obs_parameters["unique_ID"]
 unique_ids = [str(n) for n in unique_ids]

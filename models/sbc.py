@@ -23,7 +23,7 @@ from sbi.analysis.plot import sbc_rank_plot
 
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_100SNR_evaluate.csv')
+                                    'simulated_reflectance_1000SNR_evaluate.csv')
 
 #wavelengths = [443, 490, 531, 565, 610, 665, 700]
 #wavelengths = [str(item) for item in wavelengths]
@@ -88,7 +88,7 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/Loaded_posteriors/"
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
           "loaded_posterior29.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
@@ -113,10 +113,10 @@ f, ax = sbc_rank_plot(
     ranks=ranks,
     num_posterior_samples=num_posterior_samples,
     plot_type="hist",
-    parameter_labels=["Phytoplankton", "CDOM", "NAP", "Wind", "Depth"],
+    parameter_labels=["Phytoplankton", "CDOM", "Mineral particles", "Wind", "Depth"],
     num_bins=None,  # by passing None we use a heuristic for the number of bins.
 )
 
 f, ax = sbc_rank_plot(ranks=ranks, num_posterior_samples=num_posterior_samples,
-                      plot_type="cdf", parameter_labels=["Phytoplankton", "CDOM", "NAP", "Wind", "Depth"])
+                      plot_type="cdf", parameter_labels=["Phytoplankton", "CDOM", "Mineral particles", "Wind", "Depth"])
 plt.show()
