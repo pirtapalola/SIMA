@@ -34,7 +34,6 @@ for i in range(1, 1001):
 
 print(len(sample_id_list))
 
-
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
           "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
