@@ -43,10 +43,15 @@ constant = 1.0
 samples_phy = [i+constant for i in ecolight_input["phy"]]
 samples_cdom = [i+constant for i in ecolight_input["cdom"]]
 samples_nap = [i+constant for i in ecolight_input["spm"]]
+
+samples_phy = ecolight_input["phy"]
+samples_cdom = ecolight_input["cdom"]
+samples_nap = ecolight_input["spm"]
 samples_wind = ecolight_input["wind"]
 samples_depth = ecolight_input["depth"]
 
 # Conduct the log-transformation
+"""
 samples_phy = np.log(samples_phy)
 samples_phy = [round(item, 3) for item in samples_phy]
 samples_cdom = np.log(samples_cdom)
@@ -54,7 +59,7 @@ samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
 samples_nap = [round(item, 3) for item in samples_nap]
 samples_wind = np.log(samples_wind)
-samples_wind = [round(item, 3) for item in samples_wind]
+samples_wind = [round(item, 3) for item in samples_wind]"""
 
 # Save the transformed data in a dataframe
 transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap, "wind": samples_wind,
@@ -88,8 +93,8 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
-          "loaded_posterior29.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/not_transformed/1000SNR/Loaded_posteriors/"
+          "loaded_posterior8_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
