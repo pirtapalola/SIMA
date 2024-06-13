@@ -11,11 +11,11 @@ print("Shape of prior_samples: ", prior_samples.shape)  # Define the simulated s
 
 # Read the CSV file containing the simulated reflectance data
 field_reflectance = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/field_data2/field_surface_reflectance_1000SNR_noise.csv')
+    'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/hp_field_1000SNR.csv')
 field1 = np.array(field_reflectance["RIM04"])
 field2 = np.array(field_reflectance["RIM05"])
-field3 = np.array(field_reflectance["GID_2505"])
-field4 = np.array(field_reflectance["GID_2506"])
+# field3 = np.array(field_reflectance["GID_2505"])
+# field4 = np.array(field_reflectance["GID_2506"])
 print("Shape of field observation: ", field1.shape)  # Define the simulated spectra (shape: [61,])
 
 # Create a list of wavelengths
@@ -48,10 +48,10 @@ plt.figure(figsize=(10, 5))
 plot_percentiles(wavelengths, prior_samples, alpha_fill=0.3, label='Prior Predictive', color='lightblue')
 
 # Plot field observations
-plt.plot(wavelengths, field1, label='Tetiaroa field observations', color='dodgerblue')
+plt.plot(wavelengths, field1, label='Field observations', color='dodgerblue')
 plt.plot(wavelengths, field2, color='dodgerblue')
-plt.plot(wavelengths, field3, label='GLORIA field observations', color='darkblue')
-plt.plot(wavelengths, field4, color='darkblue')
+# plt.plot(wavelengths, field3, label='GLORIA field observations', color='darkblue')
+# plt.plot(wavelengths, field4, color='darkblue')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
