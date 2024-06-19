@@ -94,7 +94,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/not_transformed/1000SNR/Loaded_posteriors/"
-          "loaded_posterior11_hp.pkl", "rb") as handle:
+          "loaded_posterior16_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
