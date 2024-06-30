@@ -40,9 +40,9 @@ print(ecolight_input)
 # Define theta and x.
 # Add a constant to avoid issues with the log-transformation of small values
 constant = 1.0
-samples_phy = [i+constant for i in ecolight_input["phy"]]
-samples_cdom = [i+constant for i in ecolight_input["cdom"]]
-samples_nap = [i+constant for i in ecolight_input["spm"]]
+# samples_phy = [i+constant for i in ecolight_input["phy"]]
+# samples_cdom = [i+constant for i in ecolight_input["cdom"]]
+# samples_nap = [i+constant for i in ecolight_input["spm"]]
 
 samples_phy = ecolight_input["phy"]
 samples_cdom = ecolight_input["cdom"]
@@ -94,7 +94,7 @@ print("Shape of X: ", xs.shape)
 
 # Load the posterior
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/not_transformed/1000SNR/Loaded_posteriors/"
-          "loaded_posterior25_hp.pkl", "rb") as handle:
+          "loaded_posterior6_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
