@@ -28,7 +28,7 @@ STEP 1. Prepare the simulated data.
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'simulated_reflectance_1000SNR.csv')
+                                    'simulated_reflectance_50SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -36,10 +36,10 @@ simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Fina
 simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
 # Add a constant to avoid issues with the log-transformation of small values
-constant = 1.0
+"""constant = 1.0
 samples_phy = [i+constant for i in simulator_input["phy"]]
 samples_cdom = [i+constant for i in simulator_input["cdom"]]
-samples_nap = [i+constant for i in simulator_input["spm"]]
+samples_nap = [i+constant for i in simulator_input["spm"]]"""
 
 samples_phy = simulator_input["phy"]
 samples_cdom = simulator_input["cdom"]
@@ -98,7 +98,7 @@ embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="nsf", hidden_features=50, num_transforms=2)
+    model="mdn", hidden_features=60, num_components=4)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -132,6 +132,6 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/not_transformed/1000SNR/Loaded_posteriors/"
-          "loaded_posterior25_hp.pkl", "wb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/Loaded_posteriors/"
+          "loaded_posterior29_hp.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
