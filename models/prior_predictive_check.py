@@ -14,8 +14,8 @@ field_reflectance = pd.read_csv(
     'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/hp_field_1000SNR.csv')
 field1 = np.array(field_reflectance["RIM04"])
 field2 = np.array(field_reflectance["RIM05"])
-# field3 = np.array(field_reflectance["GID_2505"])
-# field4 = np.array(field_reflectance["GID_2506"])
+field3 = np.array(field_reflectance["RIM03"])
+field4 = np.array(field_reflectance["ONE05"])
 print("Shape of field observation: ", field1.shape)  # Define the simulated spectra (shape: [61,])
 
 # Create a list of wavelengths
@@ -33,8 +33,8 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     """
     y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
-    perc_5 = np.percentile(y, 5, axis=0)
-    perc_95 = np.percentile(y, 95, axis=0)
+    perc_5 = np.percentile(y, 0, axis=0)
+    perc_95 = np.percentile(y, 100, axis=0)
 
     (base_line,) = plt.plot(x, mean, **kwargs)
     kwargs["label"] = None
@@ -50,6 +50,8 @@ plot_percentiles(wavelengths, prior_samples, alpha_fill=0.3, label='Prior Predic
 # Plot field observations
 plt.plot(wavelengths, field1, label='Field observations', color='dodgerblue')
 plt.plot(wavelengths, field2, color='dodgerblue')
+plt.plot(wavelengths, field3, color='dodgerblue')
+plt.plot(wavelengths, field4, color='dodgerblue')
 # plt.plot(wavelengths, field3, label='GLORIA field observations', color='darkblue')
 # plt.plot(wavelengths, field4, color='darkblue')
 
@@ -59,8 +61,11 @@ plt.ylim([prior_samples.min() - 0.001, 0.05])
 # plt.axvline(x=wavelengths[0], linestyle='--', color='brown')
 
 # Labels and legend
-plt.xlabel('Wavelength (nm)')
-plt.ylabel('Reflectance')
-plt.legend()
+plt.rc('xtick', labelsize=18)
+plt.rc('ytick', labelsize=18)
+plt.xlabel('Wavelength (nm)', fontsize=18)
+plt.ylabel('Reflectance', fontsize=18)
+plt.legend(fontsize=20)
+
 
 plt.show()
