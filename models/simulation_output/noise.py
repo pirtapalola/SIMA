@@ -2,7 +2,7 @@
 
 Add Gaussian noise to the spectral data.
 
-Last updated on 28 May 2024 by Pirta Palola
+Last updated on 1 July 2024 by Pirta Palola
 
 """
 
@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
-path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/simulated_reflectance_no_noise_train.csv'
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/simulated_reflectance_no_noise_evaluate.csv'
 simulated_spectra = pd.read_csv(path)
 
 # wavelengths = simulated_spectra["wavelength"]
@@ -63,5 +63,6 @@ for i in range(len(simulated_spectra["400"])):
 # plt.show()
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/hp_field_50SNR.csv'
+output_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+               'simulated_reflectance_50SNR_evaluate.csv')
 simulated_spectra.to_csv(output_path, index=False)
