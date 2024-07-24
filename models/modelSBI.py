@@ -6,7 +6,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 24 May 2024 by Pirta Palola
+Last updated on 24 July 2024 by Pirta Palola
 
 """
 
@@ -28,7 +28,7 @@ STEP 1. Prepare the simulated data.
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'simulated_reflectance_50SNR.csv')
+                                    'simulated_reflectance_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -39,16 +39,16 @@ simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" 
 """constant = 1.0
 samples_phy = [i+constant for i in simulator_input["phy"]]
 samples_cdom = [i+constant for i in simulator_input["cdom"]]
-samples_nap = [i+constant for i in simulator_input["spm"]]"""
-
+samples_nap = [i+constant for i in simulator_input["spm"]]
+"""
 samples_phy = simulator_input["phy"]
 samples_cdom = simulator_input["cdom"]
 samples_nap = simulator_input["spm"]
 samples_wind = simulator_input["wind"]
 samples_depth = simulator_input["depth"]
-
-# Conduct the log-transformation
 """
+# Conduct the log-transformation
+
 samples_phy = np.log(samples_phy)
 samples_phy = [round(item, 3) for item in samples_phy]
 samples_cdom = np.log(samples_cdom)
@@ -93,12 +93,12 @@ STEP 2. Instantiate the inference object and pass the simulated data to the infe
 """
 
 # Define the embedding net
-# embedding_net = CNNEmbedding(input_shape=(61,))
-embedding_net = FCEmbedding(input_dim=61)
+embedding_net = CNNEmbedding(input_shape=(61,))
+# embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=60, num_components=4)
+    model="mdn", hidden_features=90, num_components=4, embedding_net=embedding_net)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -114,7 +114,7 @@ STEP 3. Train the neural density estimator and build the posterior.
 """
 
 # Train the neural density estimator
-density_estimator = inference.train(training_batch_size=400, stop_after_epochs=50, max_num_epochs=1500)
+density_estimator = inference.train(training_batch_size=400, stop_after_epochs=50, max_num_epochs=10000)
 
 # Plot the training and validation curves
 plt.figure(1, figsize=(4, 3), dpi=200)
@@ -132,6 +132,6 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/Loaded_posteriors/"
-          "loaded_posterior29_hp.pkl", "wb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/1000SNR/Loaded_posteriors/"
+          "loaded_posterior11_hp.pkl", "wb") as handle:
     pickle.dump(posterior, handle)

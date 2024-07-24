@@ -25,7 +25,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 """STEP 1. Sample from the posterior."""
 
 # Define parameter of interest (0 = phy, 1 = cdom, 2 = spm, 3 = wind, 4 = depth)
-param_index = 4
+param_index = 3
 
 # Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
 sample_id_list = []
@@ -35,13 +35,13 @@ for i in range(1, 1001):
 print(len(sample_id_list))
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
-          "Loaded_posteriors/loaded_posterior29.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
+          "Loaded_posteriors/loaded_posterior29_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
-observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                    'simulated_reflectance_1000SNR_noise_sbc.csv')
+observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                    'simulated_reflectance_50SNR_evaluate_transposed.csv')
 # obs_file = 'hp_field_1000SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
@@ -73,8 +73,8 @@ for item in sample_id_list:
 
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/'
-                             'Ecolight_parameter_combinations_sbc.csv')
+obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
+                             'Ecolight_parameter_combinations_evaluate.csv')
 unique_ids = obs_parameters["unique_ID"]
 unique_ids = [str(n) for n in unique_ids]
 
@@ -261,10 +261,10 @@ mse = mean_squared_error(y_actual, y_predicted)
 rmse = np.sqrt(mse)
 r2 = r2_score(y_actual, y_predicted)
 
-print(f"Mean Absolute Error (MAE): {mae}")
-print(f"Mean Squared Error (MSE): {mse}")
-print(f"Root Mean Squared Error (RMSE): {rmse}")
-print(f"R-squared (R²): {r2}")
+# print(f"Mean Absolute Error (MAE): {mae}")
+# print(f"Mean Squared Error (MSE): {mse}")
+# print(f"Root Mean Squared Error (RMSE): {rmse}")
+# print(f"R-squared (R²): {r2}")
 
 # Scatter Plot
 plt.figure(figsize=(10, 6))
@@ -273,7 +273,7 @@ plt.plot([min(y_actual), max(y_actual)], [min(y_actual), max(y_actual)], 'r--')
 plt.xlabel('Observed')
 plt.ylabel('Predicted')
 plt.title('Observed vs Predicted')
-plt.show()
+# plt.show()
 
 # Line Plot
 plt.figure(figsize=(10, 6))
@@ -281,7 +281,7 @@ plt.plot(y_actual, label='Observed')
 plt.plot(y_predicted, label='Predicted', alpha=0.7)
 plt.legend()
 plt.title('Observed and Predicted Values')
-plt.show()
+# plt.show()
 
 # Residual Plot
 residuals = y_actual - y_predicted
@@ -291,7 +291,7 @@ plt.axhline(0, color='r', linestyle='--')
 plt.xlabel('Predicted')
 plt.ylabel('Residuals')
 plt.title('Residuals vs Predicted')
-plt.show()
+# plt.show()
 
 # Histogram
 plt.figure(figsize=(10, 6))
@@ -299,7 +299,7 @@ sns.histplot(y_actual, color='blue', kde=True, label='Observed', stat='density')
 sns.histplot(y_predicted, color='orange', kde=True, label='Predicted', stat='density')
 plt.legend()
 plt.title('Distribution of Observed and Predicted Values')
-plt.show()
+# plt.show()
 
 # Density Plot
 plt.figure(figsize=(10, 6))
@@ -307,4 +307,4 @@ sns.kdeplot(y_actual, color='blue', label='Observed')
 sns.kdeplot(y_predicted, color='orange', label='Predicted')
 plt.legend()
 plt.title('Density Plot of Observed and Predicted Values')
-plt.show()
+# plt.show()

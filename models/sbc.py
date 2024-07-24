@@ -6,7 +6,7 @@ STEP 2. Define theta and x.
 STEP 3. Load the posterior.
 STEP 4. Run SBC.
 
-Last updated on 28 May 2024 by Pirta Palola
+Last updated on 24 July 2024 by Pirta Palola
 
 """
 
@@ -93,8 +93,8 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/not_transformed/1000SNR/Loaded_posteriors/"
-          "loaded_posterior6_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/1000SNR/Loaded_posteriors/"
+          "loaded_posterior11_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""
