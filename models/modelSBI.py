@@ -28,7 +28,7 @@ STEP 1. Prepare the simulated data.
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'simulated_reflectance_50SNR.csv')
+                                    'simulated_reflectance_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -45,7 +45,7 @@ samples_nap = [i+constant for i in simulator_input["spm"]]
 # samples_cdom = simulator_input["cdom"]
 # samples_nap = simulator_input["spm"]
 
-samples_wind = simulator_input["wind"]
+# samples_wind = simulator_input["wind"]
 samples_depth = simulator_input["depth"]
 
 # Conduct the log-transformation
@@ -56,12 +56,12 @@ samples_cdom = np.log(samples_cdom)
 samples_cdom = [round(item, 3) for item in samples_cdom]
 samples_nap = np.log(samples_nap)
 samples_nap = [round(item, 3) for item in samples_nap]
-samples_wind = np.log(samples_wind)
-samples_wind = [round(item, 3) for item in samples_wind]
+# samples_wind = np.log(samples_wind)
+# samples_wind = [round(item, 3) for item in samples_wind]
 
 # Save the transformed data in a dataframe
-transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap, "wind": samples_wind,
-                          "depth": samples_depth}
+transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
+                          "depth": samples_depth}  # "wind": samples_wind,
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 print("Untransformed theta: ", simulator_input)
 print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
@@ -99,7 +99,7 @@ embedding_net = CNNEmbedding(input_shape=(61,))
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=60, num_components=4)
+    model="mdn", hidden_features=90, num_components=6)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -133,6 +133,7 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Log_transformed/50SNR/Loaded_posteriors/"
-          "loaded_posterior29_hp.pkl", "wb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/Four_theta/"
+          "1000SNR/Loaded_posteriors/"
+          "loaded_posterior1_hp.pkl", "wb") as handle:
     pickle.dump(posterior, handle)

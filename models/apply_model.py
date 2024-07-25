@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/1000SNR/"
-          "Loaded_posteriors/loaded_posterior5_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/Four_theta/1000SNR/"
+          "Loaded_posteriors/loaded_posterior1_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -63,13 +63,13 @@ samples_wind = [round(item, 3) for item in samples_wind]"""
 samples_phy = obs_parameters["chl"]
 samples_cdom = obs_parameters["cdom"]
 samples_nap = obs_parameters["spm"]
-samples_wind = obs_parameters["wind"]
+# samples_wind = obs_parameters["wind"]
 samples_depth = obs_parameters["depth"]
 
 # Save the transformed data in a dataframe
 transformed_dictionary = {"unique_ID": unique_ids,
                           "phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
-                          "wind": samples_wind, "depth": samples_depth}
+                          "depth": samples_depth}  # "wind": samples_wind,
 
 transformed_theta = pd.DataFrame(data=transformed_dictionary)
 # print("Transformed theta: ", transformed_theta)
@@ -82,7 +82,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results/Not_transformed/HP_1000SNR/1' + model_spec)
+                'Results/Not_transformed/Four_theta/HP_1000SNR/1' + model_spec)
 
 
 def infer_from_observation(sample_id):
