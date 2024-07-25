@@ -5,7 +5,7 @@ STEP 1. Load the posterior and the simulated reflectance data.
 STEP 2. Load the observation data.
 STEP 3. Infer the parameters corresponding to the observation data.
 
-Last updated on 31 May 2024 by Pirta Palola
+Last updated on 25 July 2024 by Pirta Palola
 
 """
 
@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
-          "Loaded_posteriors/loaded_posterior29_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/1000SNR/"
+          "Loaded_posteriors/loaded_posterior5_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
@@ -30,7 +30,7 @@ model_spec = '_hp_1000SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'hp_field_50SNR.csv'
+obs_file = 'hp_field_1000SNR.csv'
 param_file = 'parameters_TET22.csv'
 
 obs_df = pd.read_csv(observation_path + obs_file)
@@ -82,7 +82,7 @@ print(sample_IDs)
 """STEP 3. Infer the parameters corresponding to the observation data."""
 
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results/hp_50SNR/model29' + model_spec)
+                'Results/Not_transformed/HP_1000SNR/1' + model_spec)
 
 
 def infer_from_observation(sample_id):
@@ -118,10 +118,11 @@ def infer_from_observation(sample_id):
     theta_means = torch.mean(posterior_samples, dim=0)
     theta_exp = theta_means
     print("Log mean values: ", theta_exp)
-    # for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
-      #  theta_exp[i] = np.exp(theta_means[i])
-    # for i in range(3):  # Remove the constant from the first 3 theta parameters
-      #  theta_exp[i] = theta_exp[i] - constant
+    """
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        theta_exp[i] = np.exp(theta_means[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        theta_exp[i] = theta_exp[i] - constant"""
     results_df["Mean"] = theta_exp  # Save the calculated values in a column
     print("Exp mean values: ", theta_exp)
 
@@ -132,19 +133,21 @@ def infer_from_observation(sample_id):
     interval1 = theta_intervals_df.iloc[0]
     interval1_exp = interval1
     print("Log interval1 values: ", interval1_exp)
-    # for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
-      #  interval1_exp[i] = np.exp(interval1[i])
-    # for i in range(3):  # Remove the constant from the first 3 theta parameters
-      #  interval1_exp[i] = interval1[i] - constant
+    """
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        interval1_exp[i] = np.exp(interval1[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        interval1_exp[i] = interval1[i] - constant"""
     print("Exp interval1 values: ", interval1_exp)
 
     interval2 = theta_intervals_df.iloc[1]
     interval2_exp = interval2
     print("Log interval2 values: ", interval2_exp)
-    # for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
-     #   interval2_exp[i] = np.exp(interval2[i])
-    # for i in range(3):  # Remove the constant from the first 3 theta parameters
-     #   interval2_exp[i] = interval2[i] - constant
+    """
+    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
+        interval2_exp[i] = np.exp(interval2[i])
+    for i in range(3):  # Remove the constant from the first 3 theta parameters
+        interval2_exp[i] = interval2[i] - constant"""
     print("Exp interval2 values: ", interval2_exp)
 
     results_df["2.5percent"] = interval1_exp
@@ -160,7 +163,7 @@ def infer_from_observation(sample_id):
     _ = analysis.pairplot(
         samples=posterior_samples,
         points=theta_obs,
-        limits=[[0, 1], [0, 0.5], [0, 5], [0, 5], [0, 5]],
+        limits=[[0, 1], [0, 0.5], [0, 10], [0, 5], [0, 5]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind speed", "Depth"],
