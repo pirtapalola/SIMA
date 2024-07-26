@@ -6,7 +6,7 @@ STEP 2. Define theta and x.
 STEP 3. Load the posterior.
 STEP 4. Run SBC.
 
-Last updated on 24 July 2024 by Pirta Palola
+Last updated on 26 July 2024 by Pirta Palola
 
 """
 
@@ -25,10 +25,6 @@ from sbi.analysis.plot import sbc_rank_plot
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
                                     'simulated_reflectance_1000SNR_evaluate.csv')
 
-#wavelengths = [443, 490, 531, 565, 610, 665, 700]
-#wavelengths = [str(item) for item in wavelengths]
-#simulated_reflectance = simulated_reflectance[wavelengths]
-
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
                              'Ecolight_parameter_combinations_evaluate.csv')
@@ -37,55 +33,47 @@ print(ecolight_input)
 
 """STEP 2. Define theta and x."""
 
-# Define theta and x.
-# Add a constant to avoid issues with the log-transformation of small values
-constant = 1.0
-# samples_phy = [i+constant for i in ecolight_input["phy"]]
-# samples_cdom = [i+constant for i in ecolight_input["cdom"]]
-# samples_nap = [i+constant for i in ecolight_input["spm"]]
-
+# Define theta.
 samples_phy = ecolight_input["phy"]
 samples_cdom = ecolight_input["cdom"]
 samples_nap = ecolight_input["spm"]
 samples_wind = ecolight_input["wind"]
 samples_depth = ecolight_input["depth"]
 
-# Conduct the log-transformation
-"""
-samples_phy = np.log(samples_phy)
-samples_phy = [round(item, 3) for item in samples_phy]
-samples_cdom = np.log(samples_cdom)
-samples_cdom = [round(item, 3) for item in samples_cdom]
-samples_nap = np.log(samples_nap)
-samples_nap = [round(item, 3) for item in samples_nap]
-samples_wind = np.log(samples_wind)
-samples_wind = [round(item, 3) for item in samples_wind]"""
+# Save the data in a dataframe
+theta_dictionary = {"phy": samples_phy,
+                    "cdom": samples_cdom,
+                    "spm": samples_nap,
+                    "wind": samples_wind,
+                    "depth": samples_depth}  #
 
-# Save the transformed data in a dataframe
-transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap, "wind": samples_wind,
-                          "depth": samples_depth}
+theta_dataframe = pd.DataFrame(data=theta_dictionary)
+print("Theta: ", theta_dataframe)
 
-transformed_theta = pd.DataFrame(data=transformed_dictionary)
-print("Transformed theta: ", transformed_theta)
-
-# Define thetas as a tensor
+# Create a list containing theta
 param_list = []
-for param in range(len(transformed_theta["phy"])):
-    param_tensor = transformed_theta.iloc[param]
+for param in range(len(theta_dataframe["phy"])):
+    param_tensor = theta_dataframe.iloc[param]
     param_list.append(param_tensor)
 
+# Convert the list into a tensor
 thetas = torch.tensor(param_list)
+
+# Check that the number of parameter sets and the shape are correct
 print("Thetas: ", thetas)
 print("Number of parameter sets: ", len(thetas))
 print("Shape of thetas: ", thetas.shape)
 
-# Define xs as a tensor
+# Create a list containing x
 refl_list = []
-for refl in range(len(transformed_theta["phy"])):
+for refl in range(len(theta_dataframe["phy"])):
     refl_value = simulated_reflectance.iloc[refl]
     refl_list.append(refl_value)
 
+# Convert the list into a tensor
 xs = torch.tensor(refl_list)
+
+# Check that the number of parameter sets and the shape are correct
 print("X: ", xs)
 print("Number of reflectance sets: ", len(xs))
 print("Shape of X: ", xs.shape)
@@ -93,8 +81,8 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/1000SNR/Loaded_posteriors/"
-          "loaded_posterior11_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
+          "loaded_posterior4_hp.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 3. Run SBC."""

@@ -6,7 +6,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 25 July 2024 by Pirta Palola
+Last updated on 27 July 2024 by Pirta Palola
 
 """
 
@@ -35,40 +35,22 @@ simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Fina
                               'Ecolight_parameter_combinations_train_no_noise.csv')
 simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
-# Add a constant to avoid issues with the log-transformation of small values
-constant = 1.0
-samples_phy = [i+constant for i in simulator_input["phy"]]
-samples_cdom = [i+constant for i in simulator_input["cdom"]]
-samples_nap = [i+constant for i in simulator_input["spm"]]
-
-# samples_phy = simulator_input["phy"]
-# samples_cdom = simulator_input["cdom"]
-# samples_nap = simulator_input["spm"]
-
-# samples_wind = simulator_input["wind"]
+samples_phy = simulator_input["phy"]
+samples_cdom = simulator_input["cdom"]
+samples_nap = simulator_input["spm"]
+samples_wind = simulator_input["wind"]
 samples_depth = simulator_input["depth"]
 
-# Conduct the log-transformation
-
-samples_phy = np.log(samples_phy)
-samples_phy = [round(item, 3) for item in samples_phy]
-samples_cdom = np.log(samples_cdom)
-samples_cdom = [round(item, 3) for item in samples_cdom]
-samples_nap = np.log(samples_nap)
-samples_nap = [round(item, 3) for item in samples_nap]
-# samples_wind = np.log(samples_wind)
-# samples_wind = [round(item, 3) for item in samples_wind]
-
 # Save the transformed data in a dataframe
-transformed_dictionary = {"phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
-                          "depth": samples_depth}  # "wind": samples_wind,
-transformed_theta = pd.DataFrame(data=transformed_dictionary)
-print("Untransformed theta: ", simulator_input)
-print("Transformed theta: ", transformed_theta)  # Check that the dataframe contains the correct information.
+theta_dictionary = {"phy": samples_phy,
+                    "cdom": samples_cdom,
+                    "spm": samples_nap,
+                    "wind": samples_wind,
+                    "depth": samples_depth}
+theta_dataframe = pd.DataFrame(data=theta_dictionary)
+print("Theta: ", theta_dataframe)  # Check that the dataframe contains the correct information.
 
-
-# Define theta and x.
-theta_dataframe = transformed_theta  # Theta contains the five input variables.
+# Define x.
 x_dataframe = simulated_reflectance  # X contains the reflectance spectra.
 
 # Convert the pandas DataFrames to numpy arrays
@@ -99,7 +81,7 @@ embedding_net = CNNEmbedding(input_shape=(61,))
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=90, num_components=6)
+    model="mdn", hidden_features=90, num_components=4)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -133,7 +115,7 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/Not_transformed/Four_theta/"
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/"
           "1000SNR/Loaded_posteriors/"
-          "loaded_posterior1_hp.pkl", "wb") as handle:
+          "loaded_posterior4_hp.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
