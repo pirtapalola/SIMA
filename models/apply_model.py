@@ -1,11 +1,11 @@
 """
 
-Apply the posterior estimated in "modelSBI"
-STEP 1. Load the posterior and the simulated reflectance data.
+Conduct inference.
+STEP 1. Load the posterior.
 STEP 2. Load the observation data.
-STEP 3. Infer the parameters corresponding to the observation data.
+STEP 3. Infer the theta parameters.
 
-Last updated on 26 July 2024 by Pirta Palola
+Last updated on 29 July 2024 by Pirta Palola
 
 """
 
@@ -20,55 +20,54 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
-          "Loaded_posteriors/loaded_posterior1_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/10SNR/"
+          "Loaded_posteriors/loaded_posterior1_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
-model_spec = '_hp_1000SNR_'
+# Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
+model_spec = '_hyper_10SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'hp_field_1000SNR.csv'
-param_file = 'parameters_TET22.csv'
+obs_file = 'hyper_field_10SNR.csv'  # This file contains the measured reflectance spectra
+param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
+# Read the file containing the reflectance spectra
 obs_df = pd.read_csv(observation_path + obs_file)
-# obs_df = obs_df.drop(columns=["unique_ID"])
 
-# Read the file containing the corresponding parameters
+# Read the file containing the theta parameters
 obs_parameters = pd.read_csv(observation_path + param_file)
-# print(obs_parameters)
 unique_ids = obs_parameters["unique_ID"]
-# print(unique_ids)
 
-# Define
 samples_phy = obs_parameters["chl"]
 samples_cdom = obs_parameters["cdom"]
 samples_nap = obs_parameters["spm"]
 samples_wind = obs_parameters["wind"]
 samples_depth = obs_parameters["depth"]
 
-# Save the data into a dataframe
+# Save the theta values into a dataframe
 theta_dictionary = {"unique_ID": unique_ids,
                     "phy": samples_phy,
                     "cdom": samples_cdom,
                     "spm": samples_nap,
                     "wind": samples_wind,
-                    "depth": samples_depth}  #
+                    "depth": samples_depth}
 
 theta_dataframe = pd.DataFrame(data=theta_dictionary)
 
 # Create a list of sample IDs
 sample_IDs = obs_df.columns.tolist()
-# sample_IDs = list(obs_parameters["unique_ID"])
 print(sample_IDs)
 
-"""STEP 3. Infer the parameters corresponding to the observation data."""
+"""STEP 3. Infer the theta parameters."""
 
 # Define the path to the folder in which to save the results
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results/HP_1000SNR/1' + model_spec)
+                'Results/Hyper_10SNR/1' + model_spec)
+
+# Define a function to conduct inference
 
 
 def infer_from_observation(sample_id):
@@ -138,6 +137,6 @@ def infer_from_observation(sample_id):
     plt.savefig(results_path + sample_id + '.png')  # Save the figure as a png file
 
 
-# Apply the function to real observations
-for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
+# Apply the function to field observations
+for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:  # , "GID_2505", "GID_2506"
     infer_from_observation(i)
