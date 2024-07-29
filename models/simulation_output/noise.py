@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the simulated reflectance data
-path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/simulated_reflectance_no_noise_evaluate.csv'
+path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/field_surface_reflectance_no_noise_transposed.csv'
 simulated_spectra = pd.read_csv(path)
 
 # wavelengths = simulated_spectra["wavelength"]
@@ -47,7 +47,7 @@ for i in range(len(simulated_spectra["400"])):
     # snr_w = snr_df[str(i)]
     # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
-        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(50)
+        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(10)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
@@ -63,6 +63,6 @@ for i in range(len(simulated_spectra["400"])):
 # plt.show()
 
 # Save the results into a csv file
-output_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-               'simulated_reflectance_50SNR_evaluate.csv')
+output_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
+               'hyper_field_10SNR.csv')
 simulated_spectra.to_csv(output_path, index=False)

@@ -1,7 +1,7 @@
 """
 
 Select spectral bands.
-Last updated on 24 July 2024 by Pirta Palola
+Last updated on 29 July 2024 by Pirta Palola
 
 """
 
@@ -9,8 +9,8 @@ Last updated on 24 July 2024 by Pirta Palola
 import pandas as pd
 
 # Read the simulated reflectance data
-path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-        'simulated_reflectance_50SNR.csv')
+path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
+        'hyper_field_10SNR_transposed.csv')
 simulated_hyperspectral = pd.read_csv(path)
 # simulated_hyperspectral = simulated_hyperspectral.drop(columns=["unique_ID"])  # Remove the "unique_ID" column.
 
@@ -90,5 +90,5 @@ micasense_df["b7"] = micasense_data[b7].mean(axis=1)
 print("MicaSense\n", S2_df)
 
 # Save the results into a csv file
-output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/Downsampled/micasense_simulated_50SNR.csv'
+output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/multi_field_10SNR.csv'
 micasense_df.to_csv(output_path, index=False)
