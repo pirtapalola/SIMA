@@ -20,18 +20,18 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/"
-          "Loaded_posteriors/loaded_posterior1_hyper.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
+          "Loaded_posteriors/loaded_posterior6_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
-model_spec = '_hyper_100SNR_'
+model_spec = '_hyper_1000SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'hyper_field_100SNR.csv'  # This file contains the measured reflectance spectra
+obs_file = 'hyper_field_1000SNR.csv'  # This file contains the measured reflectance spectra
 param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
 # Read the file containing the reflectance spectra
@@ -65,7 +65,7 @@ print(sample_IDs)
 
 # Define the path to the folder in which to save the results
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results/Hyper_100SNR/1' + model_spec)
+                'Results6/Hyper_1000SNR/1' + model_spec)
 
 # Define a function to conduct inference
 
@@ -100,15 +100,24 @@ def infer_from_observation(sample_id):
 
     # Mean estimates for each parameter
     theta_means = torch.mean(posterior_samples, dim=0)
-    print("Mean values: ", theta_means)
     results_df["Mean"] = theta_means  # Save the calculated values in a column
+    for i in range(len(theta_means)):
+        if theta_means[i] < 0:
+            theta_means[i] = 0
+    print("Mean values: ", theta_means)
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
     theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
     theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
     interval1 = theta_intervals_df.iloc[0]
+    for i in range(len(interval1)):
+        if interval1[i] < 0:
+            interval1[i] = 0
     # print("Interval 1 values: ", interval1)
     interval2 = theta_intervals_df.iloc[1]
+    for i in range(len(interval2)):
+        if interval2[i] < 0:
+            interval2[i] = 0
     # print("Interval 2 values: ", interval2)
     results_df["2.5percent"] = interval1  # Save the calculated values in a column
     results_df["97.5percent"] = interval2  # Save the calculated values in a column
