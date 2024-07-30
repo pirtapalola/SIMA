@@ -6,7 +6,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 29 July 2024 by Pirta Palola
+Last updated on 30 July 2024 by Pirta Palola
 
 """
 
@@ -28,7 +28,7 @@ STEP 1. Prepare the simulated data.
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'multi_simulated_10SNR.csv')
+                                    'simulated_reflectance_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -79,12 +79,12 @@ STEP 2. Instantiate the inference object and pass the simulated data to the infe
 """
 
 # Define the embedding net (optional)
-# embedding_net = CNNEmbedding(input_shape=(61,))
-embedding_net = FCEmbedding(input_dim=61)
+# embedding_net = CNNEmbedding(input_shape=(7,))
+# embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=90, num_components=6)
+    model="mdn", hidden_features=95, num_components=6)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
@@ -119,6 +119,6 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/"
-          "10SNR/Loaded_posteriors/"
-          "loaded_posterior1_multi.pkl", "wb") as handle:
+          "1000SNR/Loaded_posteriors/"
+          "loaded_posterior14_hyper.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
