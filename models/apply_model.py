@@ -138,14 +138,16 @@ def infer_from_observation(sample_id):
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind", "Depth"],
-        offdiag="scatter",
+        offdiag="kde",
+        kde_offdiag={"bins": 50},
         scatter_offdiag=dict(marker=".", s=5),
-        points_offdiag=dict(marker="+", markersize=20),
+        points_offdiag=dict(marker="+", markersize=3),
         diag="hist"
     )
+
     plt.savefig(results_path + sample_id + '.png')  # Save the figure as a png file
 
 
 # Apply the function to field observations
-for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:  # , "GID_2505", "GID_2506"
+for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
     infer_from_observation(i)
