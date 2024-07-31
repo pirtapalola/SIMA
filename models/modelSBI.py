@@ -6,7 +6,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 30 July 2024 by Pirta Palola
+Last updated on 31 July 2024 by Pirta Palola
 
 """
 
@@ -14,11 +14,15 @@ Last updated on 30 July 2024 by Pirta Palola
 import pandas as pd
 import torch
 from sbi.inference import SNPE
+from torch import tensor
 from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 import pickle
 from sbi import utils
 import matplotlib.pyplot as plt
 import numpy as np
+from models.tools import MultipleIndependent
+from torch.distributions import Uniform
+
 
 """
 
@@ -28,7 +32,7 @@ STEP 1. Prepare the simulated data.
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'simulated_reflectance_500SNR.csv')
+                                    'multi_simulated_1000SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
@@ -78,8 +82,27 @@ STEP 2. Instantiate the inference object and pass the simulated data to the infe
 
 """
 
+# Define individual prior distributions
+prior_dist_phy = Uniform(tensor([0.]), tensor([7.]))
+prior_dist_cdom = Uniform(tensor([0.]), tensor([2.5]))
+prior_dist_spm = Uniform(tensor([0.]), tensor([30.]))
+prior_dist_wind = Uniform(tensor([0.]), tensor([50.]))
+prior_dist_depth = Uniform(tensor([0.]), tensor([20.]))
+
+# Create a list of prior distributions
+prior_distributions = [
+    prior_dist_phy,
+    prior_dist_cdom,
+    prior_dist_spm,
+    prior_dist_wind,
+    prior_dist_depth
+]
+
+# Create the combined distribution using MultipleIndependent
+prior = MultipleIndependent(prior_distributions)
+
 # Define the embedding net (optional)
-# embedding_net = CNNEmbedding(input_shape=(7,))
+# embedding_net = CNNEmbedding(input_shape=(61,))
 # embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
@@ -88,7 +111,7 @@ neural_posterior = utils.posterior_nn(
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
-inference = SNPE(prior=None, density_estimator=neural_posterior)
+inference = SNPE(prior=prior, density_estimator=neural_posterior)
 
 # Append the combined data to the inference object
 inference.append_simulations(theta_tensor, x_tensor)
@@ -119,6 +142,6 @@ posterior = inference.build_posterior(density_estimator)
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
 with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/"
-          "500SNR/Loaded_posteriors/"
-          "loaded_posterior1_hyper.pkl", "wb") as handle:
+          "1000SNR/Loaded_posteriors_constrained/"
+          "loaded_posterior1_multi.pkl", "wb") as handle:
     pickle.dump(posterior, handle)

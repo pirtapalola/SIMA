@@ -4,6 +4,8 @@ Produce a scatterplot to visualize the results of the inference.
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
+Last updated on 31 July 2024 by Pirta Palola
+
 """
 
 # Import libraries
@@ -15,7 +17,7 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_df = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results6/'
+results_df = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1/'
                          'Wind_results_hyper1000SNR.csv')
 true_values = results_df["True_value"]
 means = results_df["Mean"]

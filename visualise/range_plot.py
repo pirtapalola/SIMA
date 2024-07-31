@@ -1,3 +1,14 @@
+"""
+
+Produce a range plot to visualize the results of the inference.
+STEP 1. Prepare the data.
+STEP 2. Make the plot.
+
+Last updated on 31 July 2024 by Pirta Palola
+
+"""
+
+
 # Import libraries
 import pandas as pd
 import matplotlib.pyplot as plt
