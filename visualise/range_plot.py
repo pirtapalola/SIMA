@@ -18,7 +18,7 @@ import numpy as np
 
 # Read the csv file containing the data into a pandas dataframe
 results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
-results_SNR = "50SNR/"
+results_SNR = "1000SNR/"
 results_param = "Min"
 results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 
@@ -62,6 +62,3 @@ plt.legend()
 
 # Show the plot
 plt.show()
-
-# Save the plot
-plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file
