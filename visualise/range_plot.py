@@ -17,8 +17,8 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Multi/"
-results_SNR = "Multi_500SNR/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
+results_SNR = "50SNR/"
 results_param = "Min"
 results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 
@@ -61,5 +61,28 @@ plt.ylabel('Mineral particle concentration (g/$\mathregular{m^3}$)')
 plt.legend()
 
 # Save the plot
-plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file
-plt.show()  # Show the plot
+# plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file
+# plt.show()  # Show the plot
+
+
+def calculate_distance(lower_bound1, upper_bound1, lower_bound2, upper_bound2):
+    # Check if the ranges overlap
+    if max(lower_bound1, lower_bound2) <= min(upper_bound1, upper_bound2):
+        return 0  # The ranges overlap
+
+    # Calculate the distance if they do not overlap
+    if upper_bound1 < lower_bound2:
+        distance = lower_bound2 - upper_bound1
+    else:  # upper_bound2 < lower_bound1
+        distance = lower_bound1 - upper_bound2
+
+    return distance
+
+
+# Loop through all the datapoints
+distance_list = []
+for lower, upper, lower_spm, upper_spm in lower_bounds, upper_bounds, spm_lower, spm_upper:
+    dist = calculate_distance(lower, upper, lower_spm, upper_spm)
+    distance_list.append(dist)
+distances_df = pd.DataFrame(distance_list, columns=[results_param])  # Save into a dataframe
+distances_df.to_csv(results_path + results_SNR + results_param + '_CI_distance.csv', index=False)  # Save as a csv file
