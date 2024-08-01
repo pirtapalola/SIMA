@@ -17,8 +17,8 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
-results_SNR = "1000SNR/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Multi/"
+results_SNR = "Multi_500SNR/"
 results_param = "Min"
 results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 
@@ -60,5 +60,6 @@ plt.xlabel('Sampling sites')
 plt.ylabel('Mineral particle concentration (g/$\mathregular{m^3}$)')
 plt.legend()
 
-# Show the plot
-plt.show()
+# Save the plot
+plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file
+plt.show()  # Show the plot
