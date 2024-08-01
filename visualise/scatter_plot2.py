@@ -3,7 +3,7 @@ import seaborn as sns
 import pandas as pd
 
 # Read the csv file containing the data into a pandas dataframe
-data_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
+data_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Multi/"
 data = pd.read_csv(data_path + "CI_widths_summary.csv")
 
 snr_level_list = []
@@ -33,6 +33,6 @@ for snr_level in data['SNR'].unique():
     sns.scatterplot(subset, x="Parameter", y='CI_value', color=colors[snr_level], label=snr_level)"""
 
 plt.ylabel('Frequency')
-plt.legend(title='SNR')
+plt.legend(title='SNR', loc='upper left')
 plt.savefig(data_path + 'CI_widths.tiff')  # Save the figure as a tiff file
 plt.show()

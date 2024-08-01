@@ -19,9 +19,9 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
-results_SNR = "1000SNR/"
-results_param = "Depth"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Multi/"
+results_SNR = "Multi_50SNR/"
+results_param = "Phy"
 results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 true_values = results_df["True_value"]
 means = results_df["Mean"]
@@ -69,7 +69,7 @@ plt.show()  # Show the plot
 
 widths = upper_bounds - lower_bounds
 CI_df = pd.DataFrame(widths, columns=[results_param + "_CI_Width"])  # Save into a dataframe
-# CI_df.to_csv(results_path + results_SNR + results_param + '_CI_Width.csv', index=False)  # Save as a csv file
+CI_df.to_csv(results_path + results_SNR + results_param + '_CI_Width.csv', index=False)  # Save as a csv file
 
 """STEP 4. Calculate distance from the 95% confidence interval."""
 
@@ -85,4 +85,4 @@ for i in x:
 
 print(distances)
 distances_df = pd.DataFrame(distances, columns=[results_param])  # Save into a dataframe
-distances_df.to_csv(results_path + results_SNR + results_param + '_CI_distance.csv', index=False)  # Save as a csv file
+# distances_df.to_csv(results_path + results_SNR + results_param + '_CI_distance.csv', index=False)  # Save as a csv file
