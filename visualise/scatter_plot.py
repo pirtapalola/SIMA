@@ -4,7 +4,7 @@ Produce a scatterplot to visualize the results of the inference.
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
-Last updated on 31 July 2024 by Pirta Palola
+Last updated on 1 August 2024 by Pirta Palola
 
 """
 
@@ -17,8 +17,10 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_df = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1/'
-                         'Wind_results_hyper1000SNR.csv')
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
+results_SNR = "1000SNR/"
+results_param = "Phy"
+results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 true_values = results_df["True_value"]
 means = results_df["Mean"]
 lower_bounds = results_df["Lower_bound"]
@@ -44,7 +46,7 @@ plt.errorbar(x, means, yerr=[lower_errors, upper_errors],
 plt.scatter(x, true_values, color='red', label='True values')
 
 # Define the ticks and labels of the x-axis
-y_ticks = np.arange(0, 25, 5)
+y_ticks = np.arange(0, 8, 1)
 x_ticks = np.arange(0, 4, 1)
 x_labels = [f'Site {x}' for x in x_ticks]
 plt.xticks(x_ticks, labels=x_labels)
@@ -52,10 +54,10 @@ plt.yticks(y_ticks)
 
 # Add labels and title
 plt.xlabel('Sampling sites')
-# plt.ylabel('Phytoplankton concentration (mg/$\mathregular{m^3}$)')
-plt.ylabel('Wind speed (m/s)')
+plt.ylabel('Phytoplankton concentration (mg/$\mathregular{m^3}$)')
+# lt.ylabel('Wind speed (m/s)')
 # plt.ylabel('Depth (m)')
 plt.legend()
 
-# Show the plot
-plt.show()
+# Save the plot
+plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file

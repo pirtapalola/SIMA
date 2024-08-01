@@ -4,7 +4,7 @@ Produce a range plot to visualize the results of the inference.
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
-Last updated on 31 July 2024 by Pirta Palola
+Last updated on 1 August 2024 by Pirta Palola
 
 """
 
@@ -17,8 +17,10 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_df = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results6/'
-                         'Min_results_hyper1000SNR.csv')
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
+results_SNR = "50SNR/"
+results_param = "Min"
+results_df = pd.read_csv(results_path + results_SNR + results_param + ".csv")
 
 means = results_df["Mean"]
 lower_bounds = results_df["Lower_bound"]
@@ -60,3 +62,6 @@ plt.legend()
 
 # Show the plot
 plt.show()
+
+# Save the plot
+plt.savefig(results_path + results_SNR + results_param + '.tiff')  # Save the figure as a tiff file
