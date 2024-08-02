@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import numpy as np
 
 # Read the csv file containing the data into a pandas dataframe
-data_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Multi/"
+data_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/Summary_Hyper/"
 data = pd.read_csv(data_path + "CI_widths_summary.csv")
 
 snr_level_list = []
@@ -27,12 +28,12 @@ sns.scatterplot(
     legend='full'
 )
 
-"""
-for snr_level in data['SNR'].unique():
-    subset = data[data['SNR'] == snr_level]
-    sns.scatterplot(subset, x="Parameter", y='CI_value', color=colors[snr_level], label=snr_level)"""
+# Define the ticks and labels of the y-axis
+y_ticks = np.arange(0, 30, 5)
+plt.yticks(y_ticks)
 
-plt.ylabel('Frequency')
+plt.ylabel('Width of the 95% confidence interval')
+# plt.legend().remove()
 plt.legend(title='SNR', loc='upper left')
-plt.savefig(data_path + 'CI_widths.tiff')  # Save the figure as a tiff file
+plt.savefig(data_path + 'CI_widths_hyper.tiff')  # Save the figure as a tiff file
 plt.show()
