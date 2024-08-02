@@ -5,7 +5,7 @@ STEP 1. Load the posterior.
 STEP 2. Load the observation data.
 STEP 3. Infer the theta parameters.
 
-Last updated on 31 July 2024 by Pirta Palola
+Last updated on 2 August 2024 by Pirta Palola
 
 """
 
@@ -20,18 +20,18 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
-          "Loaded_posteriors_constrained/loaded_posterior6_hyper.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/"
+          "Loaded_posteriors_constrained/loaded_posterior1_multi.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
-model_spec = '_hyper_50SNR_'
+model_spec = '_multi_100SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'hyper_field_50SNR.csv'  # This file contains the measured reflectance spectra
+obs_file = 'drone_data.csv'  # This file contains the measured reflectance spectra
 param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
 # Read the file containing the reflectance spectra
@@ -65,7 +65,7 @@ print(sample_IDs)
 
 # Define the path to the folder in which to save the results
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results6_constrained/Hyper_50SNR/1' + model_spec)
+                'Results1_constrained/Drone/' + model_spec)
 
 
 # Define a function to conduct inference
@@ -127,15 +127,16 @@ def infer_from_observation(sample_id):
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind", "Depth"],
         offdiag="scatter",
-        kde_offdiag={"bins": 50},
+        kde_offdiag={"bins": 30},
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20),
         diag="hist"
     )
 
-    # plt.savefig(results_path + sample_id + '.png')  # Save the figure as a png file
+    plt.savefig(results_path + sample_id + '.tiff')  # Save the figure as a tiff file
+    plt.show()
 
 
 # Apply the function to field observations
-for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
+for i in ["RIM05", "RIM06"]:
     infer_from_observation(i)
