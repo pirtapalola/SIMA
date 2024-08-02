@@ -20,18 +20,18 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/"
-          "Loaded_posteriors_constrained/loaded_posterior1_multi.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
+          "Loaded_posteriors_constrained/loaded_posterior6_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
-model_spec = '_multi_1000SNR_'
+model_spec = '_hyper_50SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'multi_field_1000SNR.csv'  # This file contains the measured reflectance spectra
+obs_file = 'hyper_field_50SNR.csv'  # This file contains the measured reflectance spectra
 param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
 # Read the file containing the reflectance spectra
@@ -65,7 +65,7 @@ print(sample_IDs)
 
 # Define the path to the folder in which to save the results
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results1_constrained/Multi_1000SNR/1' + model_spec)
+                'Results6_constrained/Hyper_50SNR/1' + model_spec)
 
 # Define a function to conduct inference
 
