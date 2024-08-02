@@ -1,7 +1,7 @@
 """
 Conduct inference on simulated data.
 
-Last updated on 3 May 2024 by Pirta Palola
+Last updated on 2 August 2024 by Pirta Palola
 """
 
 # Import libraries
@@ -12,30 +12,23 @@ import matplotlib.pyplot as plt
 import pickle
 import numpy as np
 
-"""STEP 1."""
+"""STEP 1. Read the simulated dataset."""
 
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_50SNR_evaluate.csv')
-print(simulated_reflectance)
+                                    'simulated_reflectance_100SNR_evaluate.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
                              'Ecolight_parameter_combinations_evaluate.csv')
-ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
-print(ecolight_input)
+ecolight_input = ecolight_input.drop(columns=["water", "unique_ID"])  # Remove the "water" and "unique_ID" columns.
 
 # Define theta and x.
 spectrum_id = 0
 theta_example = ecolight_input.iloc[spectrum_id]  # Theta contains the five input variables
-
 print(theta_example)
-constant = 1.0  # Add a constant to avoid issues with the log-transformation of small values
-theta_example[:3] += constant  # Only add the constant to the first 3 theta parameters
-for x in range(4):  # Apply the log-transformation to the first 4 theta parameters
-    theta_example[x] = np.log(theta_example[x])
-
 x_array = simulated_reflectance.iloc[spectrum_id]  # X contains the simulated spectra
+print(x_array)
 
 # Convert to tensors
 theta_tensor = torch.tensor(theta_example, dtype=torch.float32)
@@ -47,11 +40,11 @@ print("Shape of the x tensor: ", x_tensor.shape)
 """STEP 2. Conduct inference on simulated data."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
-          "Loaded_posteriors/loaded_posterior29_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
+          "Loaded_posteriors/loaded_posterior1_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/50SNR/"
+results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/100SNR/"
 
 
 def infer_from_simulated_spectra(x_sim, x_sim_parameters):
@@ -60,20 +53,15 @@ def infer_from_simulated_spectra(x_sim, x_sim_parameters):
 
     # Mean estimates for each parameter
     theta_means = torch.mean(posterior_samples, dim=0)
-    theta_exp = theta_means
-    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
-        theta_exp[i] = np.exp(theta_means[i])
-    for i in range(3):  # Remove the constant from the first 3 theta parameters
-        theta_exp[i] = theta_exp[i] - constant
     theta_means_df = pd.DataFrame()  # Create a dataframe
-    theta_means_df["Mean"] = theta_exp  # Save the calculated values
+    theta_means_df["Mean"] = theta_means  # Save the calculated values
     # theta_means_df.to_csv(results_path + str(spectrum_id) + '_theta_means.csv', index=False)
 
     # Plot a figure
     _ = pairplot(
         samples=posterior_samples,
         points=x_sim_parameters,
-        limits=[[0, 0.2], [0, 0.4], [0, 0.4], [0, 4], [0, 20]],
+        limits=[[0, 0.2], [0, 1], [0, 0.4], [0, 20], [0, 15]],
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankton (mg/$\mathregular{m^3}$)",
