@@ -4,9 +4,8 @@ Produce a scatterplot to visualize the results of the inference.
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 STEP 3. Calculate the width of the 95% confidence interval.
-STEP 4. Calculate distance from the 95% confidence interval.
 
-Last updated on 1 August 2024 by Pirta Palola
+Last updated on 2 August 2024 by Pirta Palola
 
 """
 
@@ -70,19 +69,3 @@ plt.show()  # Show the plot
 widths = upper_bounds - lower_bounds
 CI_df = pd.DataFrame(widths, columns=[results_param + "_CI_Width"])  # Save into a dataframe
 CI_df.to_csv(results_path + results_SNR + results_param + '_CI_Width.csv', index=False)  # Save as a csv file
-
-"""STEP 4. Calculate distance from the 95% confidence interval."""
-
-distances = []
-for i in x:
-    if true_values[i] < lower_bounds[i]:
-        distance = lower_bounds[i] - true_values[i]
-    elif true_values[i] > upper_bounds[i]:
-        distance = true_values[i] - upper_bounds[i]
-    else:
-        distance = 0  # If the estimate falls within the 95% CI, the distance is zero
-    distances.append(distance)
-
-print(distances)
-distances_df = pd.DataFrame(distances, columns=[results_param])  # Save into a dataframe
-# distances_df.to_csv(results_path + results_SNR + results_param + '_CI_distance.csv', index=False)  # Save as a csv file
