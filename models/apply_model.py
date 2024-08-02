@@ -67,9 +67,8 @@ print(sample_IDs)
 results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
                 'Results6_constrained/Hyper_50SNR/1' + model_spec)
 
+
 # Define a function to conduct inference
-
-
 def infer_from_observation(sample_id):
 
     # Create an empty dataframe
@@ -101,24 +100,13 @@ def infer_from_observation(sample_id):
     # Mean estimates for each parameter
     theta_means = torch.mean(posterior_samples, dim=0)
     results_df["Mean"] = theta_means  # Save the calculated values in a column
-    for i in range(len(theta_means)):
-        if theta_means[i] < 0:
-            theta_means[i] = 0
     print("Mean values: ", theta_means)
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
     theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
     theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
     interval1 = theta_intervals_df.iloc[0]
-    for i in range(len(interval1)):
-        if interval1[i] < 0:
-            interval1[i] = 0
-    # print("Interval 1 values: ", interval1)
     interval2 = theta_intervals_df.iloc[1]
-    for i in range(len(interval2)):
-        if interval2[i] < 0:
-            interval2[i] = 0
-    # print("Interval 2 values: ", interval2)
     results_df["2.5percent"] = interval1  # Save the calculated values in a column
     results_df["97.5percent"] = interval2  # Save the calculated values in a column
 
@@ -141,11 +129,11 @@ def infer_from_observation(sample_id):
         offdiag="scatter",
         kde_offdiag={"bins": 50},
         scatter_offdiag=dict(marker=".", s=5),
-        points_offdiag=dict(marker="+", markersize=3),
+        points_offdiag=dict(marker="+", markersize=20),
         diag="hist"
     )
 
-    plt.savefig(results_path + sample_id + '.png')  # Save the figure as a png file
+    # plt.savefig(results_path + sample_id + '.png')  # Save the figure as a png file
 
 
 # Apply the function to field observations
