@@ -6,7 +6,7 @@ STEP 2. Define theta and x.
 STEP 3. Load the posterior.
 STEP 4. Run SBC.
 
-Last updated on 31 July 2024 by Pirta Palola
+Last updated on 2 August 2024 by Pirta Palola
 
 """
 
@@ -23,7 +23,7 @@ from sbi.analysis.plot import sbc_rank_plot
 
 # Read the csv file containing the simulated reflectance data
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_1000SNR_evaluate.csv')
+                                    'simulated_reflectance_100SNR_evaluate.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
@@ -81,7 +81,7 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors_constrained/"
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/Loaded_posteriors_constrained/"
           "loaded_posterior1_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
