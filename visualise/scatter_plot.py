@@ -68,4 +68,4 @@ plt.show()  # Show the plot
 
 widths = upper_bounds - lower_bounds
 CI_df = pd.DataFrame(widths, columns=[results_param + "_CI_Width"])  # Save into a dataframe
-CI_df.to_csv(results_path + results_SNR + results_param + '_CI_Width.csv', index=False)  # Save as a csv file
+# CI_df.to_csv(results_path + results_SNR + results_param + '_CI_Width.csv', index=False)  # Save as a csv file
