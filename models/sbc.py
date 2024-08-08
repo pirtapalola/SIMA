@@ -110,6 +110,11 @@ f, ax = sbc_rank_plot(
     num_bins=None,  # by passing None we use a heuristic for the number of bins.
 )
 
-f, ax = sbc_rank_plot(ranks=ranks, num_posterior_samples=num_posterior_samples,
-                      plot_type="cdf", parameter_labels=["Phytoplankton", "CDOM", "Mineral particles", "Wind", "Depth"])
+f, ax = sbc_rank_plot(ranks=ranks,
+                      num_posterior_samples=num_posterior_samples,
+                      plot_type="cdf",
+                      parameter_labels=["Phytoplankton", "CDOM", "Mineral particles", "Wind", "Depth"],
+                      colors=["green", "#ffb703", "#fb8500", "#00b4d8", "dodgerblue"])
+plt.xlabel("Posterior rank")
+plt.ylabel("Empirical cumulative distribution function")
 plt.show()
