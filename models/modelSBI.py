@@ -6,7 +6,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 2 August 2024 by Pirta Palola
+Last updated on 8 August 2024 by Pirta Palola
 
 """
 
@@ -15,14 +15,13 @@ import pandas as pd
 import torch
 from sbi.inference import SNPE
 from torch import tensor
-from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 import pickle
 from sbi import utils
 import matplotlib.pyplot as plt
 import numpy as np
 from models.tools import MultipleIndependent
 from torch.distributions import Uniform
-
+# from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 
 """
 
@@ -102,12 +101,12 @@ prior_distributions = [
 prior = MultipleIndependent(prior_distributions)
 
 # Define the embedding net (optional)
-embedding_net = CNNEmbedding(input_shape=(61,))
+# embedding_net = CNNEmbedding(input_shape=(61,))
 # embedding_net = FCEmbedding(input_dim=61)
 
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
-    model="mdn", hidden_features=90, num_components=6, embedding_net=embedding_net)
+    model="mdn", hidden_features=90, num_components=6)
 # num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
