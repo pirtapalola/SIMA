@@ -40,7 +40,7 @@ distributed==2023.3.2
 docopt==0.6.2
 earthengine-api==0.1.347
 earthpy==0.9.4
-ee-extra==0.0.15
+ee_extra==0.0.15
 eemont==0.3.6
 entrypoints==0.4
 eoreader==0.19.3
@@ -107,6 +107,7 @@ nflows==0.14
 numcodecs==0.11.0
 numpy==1.24.2
 oauthlib==3.2.2
+opencv-python==4.10.0.84
 openpyxl==3.1.2
 opt-einsum==3.3.0
 packaging==23.0
