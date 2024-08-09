@@ -18,12 +18,12 @@ import matplotlib.pyplot as plt
 
 # Read the CSV files containing the simulated reflectance data
 simulated_reflectance_ppc = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/simulated_reflectance_no_noise.csv')
+    'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv')
 simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
                                     'simulated_reflectance_1000SNR_evaluate.csv')
 
 # Pick one spectrum as an observation
-observed = simulated_reflectance.iloc[23]
+observed = simulated_reflectance.iloc[0]
 
 # Define your observed spectrum x_o (shape: [61])
 x_o = np.array(observed)
@@ -49,8 +49,8 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     """
     y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
-    perc_5 = np.percentile(y, 1, axis=0)
-    perc_95 = np.percentile(y, 99, axis=0)
+    perc_5 = np.percentile(y, 5, axis=0)
+    perc_95 = np.percentile(y, 95, axis=0)
 
     (base_line,) = plt.plot(x, mean, **kwargs)
     kwargs["label"] = None
@@ -64,15 +64,21 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
 mse_posterior = np.mean((np.mean(x_pp, axis=0) - x_o) ** 2)
 print("MSE of Posterior Predictive: ", mse_posterior)
 
-# Plotting
-plt.figure(figsize=(10, 5))
+# Create a figure
+plt.figure(figsize=(10, 8))
 
-# Plot Posterior Predictive
-plot_percentiles(wavelengths, x_pp, alpha_fill=0.3, label=f'Posterior Predictive (MSE<0.001)',
+# Set font size
+font = {'size': 12}
+
+# using rc function
+plt.rc('font', **font)
+
+# Plot the posterior predictive
+plot_percentiles(wavelengths, x_pp, alpha_fill=0.3, label=f'Posterior predictive',
                  color='lightgreen')
 
-# Plot Ground Truth (GT)
-plt.plot(wavelengths, x_o, label='Ground Truth (GT)', color='dodgerblue')
+# Plot the ground-truth spectrum
+plt.plot(wavelengths, x_o, label='Ground-truth', color='dodgerblue')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
@@ -82,7 +88,7 @@ plt.ylim([x_pp.min() - 0.0001, x_pp.max() + 0.0001])
 # Labels and legend
 plt.xlabel('Wavelength (nm)')
 plt.ylabel('Reflectance')
-plt.legend()
+plt.legend(loc='upper left')
 
 # Show the plot
 plt.show()

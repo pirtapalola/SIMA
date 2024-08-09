@@ -110,7 +110,14 @@ f, ax = sbc_rank_plot(
     num_bins=None,  # by passing None we use a heuristic for the number of bins.
 )
 
+# Set font size
+font = {'size': 12}
+
+# using rc function
+plt.rc('font', **font)
+
 f, ax = sbc_rank_plot(ranks=ranks,
+                      figsize=(10, 8),
                       num_posterior_samples=num_posterior_samples,
                       plot_type="cdf",
                       parameter_labels=["Phytoplankton", "CDOM", "Mineral particles", "Wind", "Depth"],
