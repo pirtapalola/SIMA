@@ -6,15 +6,13 @@ STEP 2. Read the ground-truth data.
 STEP 3. Define functions to assess inference performance.
 STEP 4. Apply the functions.
 
-Last updated on 2 June 2024 by Pirta Palola
+Last updated on 9 August 2024 by Pirta Palola
 
 """
 
 # Import libraries
 import pandas as pd
 import numpy as np
-from scipy.stats import wasserstein_distance
-from scipy.stats import gaussian_kde
 import pickle
 import torch
 import math
@@ -25,7 +23,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 """STEP 1. Sample from the posterior."""
 
 # Define parameter of interest (0 = phy, 1 = cdom, 2 = spm, 3 = wind, 4 = depth)
-param_index = 3
+param_index = 0
 
 # Define sample IDs 'ONE05', 'RIM03', 'RIM04', 'RIM05'
 sample_id_list = []
@@ -35,13 +33,13 @@ for i in range(1, 1001):
 print(len(sample_id_list))
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/50SNR/"
-          "Loaded_posteriors/loaded_posterior29_hp.pkl", "rb") as handle:
+with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
+          "Loaded_posteriors_constrained/loaded_posterior1_multi.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
 observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                    'simulated_reflectance_50SNR_evaluate_transposed.csv')
+                    'micasense_evaluate_500SNR_transposed.csv')
 # obs_file = 'hp_field_1000SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
@@ -78,30 +76,22 @@ obs_parameters = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final
 unique_ids = obs_parameters["unique_ID"]
 unique_ids = [str(n) for n in unique_ids]
 
-# Add a constant to avoid issues with the log-transformation of small values
-constant = 1.0
-samples_phy = [i+constant for i in obs_parameters["phy"]]
-samples_cdom = [i+constant for i in obs_parameters["cdom"]]
-samples_nap = [i+constant for i in obs_parameters["spm"]]
+samples_phy = obs_parameters["phy"]
+samples_cdom = obs_parameters["cdom"]
+samples_nap = obs_parameters["spm"]
 samples_wind = obs_parameters["wind"]
 samples_depth = obs_parameters["depth"]
 
-# Conduct the log-transformation
-samples_phy = np.log(samples_phy)
-samples_phy = [round(item, 3) for item in samples_phy]
-samples_cdom = np.log(samples_cdom)
-samples_cdom = [round(item, 3) for item in samples_cdom]
-samples_nap = np.log(samples_nap)
-samples_nap = [round(item, 3) for item in samples_nap]
-samples_wind = np.log(samples_wind)
-samples_wind = [round(item, 3) for item in samples_wind]
+# Save the data in a dataframe
+theta_dictionary = {"unique_ID": unique_ids,
+                    "phy": samples_phy,
+                    "cdom": samples_cdom,
+                    "spm": samples_nap,
+                    "wind": samples_wind,
+                    "depth": samples_depth}
 
-# Save the transformed data in a dataframe
-transformed_dictionary = {"unique_ID": unique_ids,
-                          "phy": samples_phy, "cdom": samples_cdom, "spm": samples_nap,
-                          "wind": samples_wind, "depth": samples_depth}
-
-transformed_theta = pd.DataFrame(data=transformed_dictionary)
+theta_df = pd.DataFrame(data=theta_dictionary)
+print("Theta: ", theta_df)  # Check that the dataframe contains the correct information.
 
 
 # Function to define ground-truth parameters
@@ -118,7 +108,7 @@ gt_list = []
 
 # Add the posterior samples of each field site as elements into the list
 for item in sample_id_list:
-    gt_i = groundtruth(item, transformed_theta)
+    gt_i = groundtruth(item, theta_df)
     gt_list.append(gt_i)
 
 """STEP 3. Define functions to assess inference performance."""
@@ -134,43 +124,11 @@ def coverage_probability(post_samples_list, true_values, error_margin=0.0):
         upper_bound = theta_intervals[1]
         true_value_lower = true_value * (1 - error_margin)
         true_value_upper = true_value * (1 + error_margin)
-        if (true_value_lower >= lower_bound and true_value_lower <= upper_bound) or \
-           (true_value_upper >= lower_bound and true_value_upper <= upper_bound) or \
-           (true_value >= lower_bound and true_value <= upper_bound):
+        if (lower_bound <= true_value_lower <= upper_bound) or \
+           (lower_bound <= true_value_upper <= upper_bound) or \
+           (lower_bound <= true_value <= upper_bound):
             coverage_counts += 1
     return coverage_counts / len(true_values)
-
-
-# Measure the distance between the estimated posterior distributions and the true parameter value,
-# considering the entire shape of the distributions
-def wasserstein(post_samples, true_value):
-    return wasserstein_distance(post_samples, [true_value])
-
-
-# The average squared difference between the true parameter values and samples from the posterior distribution
-def pmse(post_samples_list, true_values):
-    return np.mean([np.mean((post_samples - true_value) ** 2)
-                    for post_samples, true_value in zip(post_samples_list, true_values)])
-
-
-# Evaluate the posterior distributions based on the log probability of the true parameter values
-# Higher log scores correspond to better performance
-def log_score(post_samples_list, true_values_list):
-    log_probs = []
-    for post_samples, true_value in zip(post_samples_list, true_values_list):
-        kde = gaussian_kde(post_samples)
-        log_probs.append(kde.logpdf(true_value))
-    return np.mean(log_probs)
-
-
-# Calculate log probability
-def evaluate_log_probability(sample_id, observation_dataframe):
-    x_obs = observation_dataframe[sample_id].to_list()
-    x_obs = torch.tensor(x_obs, dtype=torch.float32)
-    samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
-    log_probability = loaded_posterior.log_prob(samples, x=x_obs)
-    log_prob_np = log_probability.numpy()  # Convert to Numpy array
-    return log_prob_np
 
 
 # Calculate mean
@@ -179,12 +137,7 @@ def calculate_mean(sample_id, observation_dataframe):
     x_obs = torch.tensor(x_obs, dtype=torch.float32)
     samples = loaded_posterior.sample((1000,), x=x_obs)  # Sample from the posterior p(θ|x)
     theta_means = torch.mean(samples, dim=0)
-    theta_exp = theta_means
-    for i in range(4):  # Apply an exponential transformation to the first 4 theta parameters
-        theta_exp[i] = np.exp(theta_means[i])
-    for i in range(3):  # Remove the constant from the first 3 theta parameters
-        theta_exp[i] = theta_exp[i] - constant
-    return theta_exp
+    return theta_means
 
 
 """STEP 4. Apply the functions."""
@@ -254,7 +207,7 @@ coverage = coverage_probability(post, gt)
 # Print the results
 print(f"Coverage Probability: {coverage}")
 # print(f"R squared: {MSE}")
-# print(f"RMSE: {RMSE}")
+print(f"RMSE: {RMSE}")
 
 mae = mean_absolute_error(y_actual, y_predicted)
 mse = mean_squared_error(y_actual, y_predicted)
@@ -263,7 +216,7 @@ r2 = r2_score(y_actual, y_predicted)
 
 # print(f"Mean Absolute Error (MAE): {mae}")
 # print(f"Mean Squared Error (MSE): {mse}")
-# print(f"Root Mean Squared Error (RMSE): {rmse}")
+print(f"Root Mean Squared Error (RMSE): {rmse}")
 # print(f"R-squared (R²): {r2}")
 
 # Scatter Plot
