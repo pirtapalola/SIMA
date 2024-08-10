@@ -25,10 +25,10 @@ plt.figure(figsize=(5, 15))
 # marker_styles = {'Hyperspectral': 'o', 'Multispectral': 's'}
 
 # Create a boxplot
-sns.barplot(data=data1, x='Parameter', y='CI_width', hue='SNR', errorbar=None)
+# sns.barplot(data=data1, x='Parameter', y='CI_width', hue='SNR', errorbar=None)
 
 # Create a boxplot
-# sns.barplot(data=data, x='Parameter', y='CI_width', hue='Resolution', errorbar=None)
+sns.barplot(data=data, x='Parameter', y='CI_width', hue='Resolution', errorbar=None)
 
 # Define the ticks and labels of the y-axis
 y_ticks = np.arange(0, 20, 5)
