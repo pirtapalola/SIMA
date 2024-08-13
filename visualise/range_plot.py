@@ -33,7 +33,8 @@ hyper_lower_bounds = hyper_results_df["Lower_bound"]
 hyper_upper_bounds = hyper_results_df["Upper_bound"]
 
 # Define the number of points
-x = range(len(multi_means))
+x = [i for i in range(len(multi_means))]
+
 
 # Calculate the lower and upper error values
 multi_lower_errors = np.array([multi_means[i] - multi_lower_bounds[i] for i in x])
@@ -56,18 +57,22 @@ plt.figure(figsize=(8, 6))
 font = {'size': 12}
 plt.rc('font', **font)
 
+adjusted_x1 = [i - offset for i in x]
+adjusted_x2 = [i + offset for i in x]
+adjusted_x3 = [-0.2, 1, 2, 3.2]
+
 # Plot the results of the multispectral application with error bars
-plt.errorbar(x - offset, multi_means, yerr=[multi_lower_errors, multi_upper_errors],
+plt.errorbar(adjusted_x1, multi_means, yerr=[multi_lower_errors, multi_upper_errors],
              fmt='o', capsize=5, label='Multispectral (mean and 95% confidence interval)',
              color='dodgerblue', alpha=0.8)
 
-# Plot the true value range
-plt.fill_between(x, spm_lower, spm_upper, color='red', alpha=0.3)
-
 # Plot the results of the hyperspectral application with error bars
-plt.errorbar(x + offset, hyper_means, yerr=[hyper_lower_errors, hyper_upper_errors],
+plt.errorbar(adjusted_x2, hyper_means, yerr=[hyper_lower_errors, hyper_upper_errors],
              fmt='o', capsize=5, label='Hyperspectral (mean and 95% confidence interval)',
              color='#184e77')
+
+# Plot the true value range
+plt.fill_between(adjusted_x3, spm_lower, spm_upper, color='red', alpha=0.3)
 
 # Define the ticks and labels of the x-axis
 y_ticks = np.arange(0, 35, 5)
