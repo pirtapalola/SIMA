@@ -1,11 +1,13 @@
 """
 
-Extract reflectance from the EL output files.
+SIMULATION OUTPUT II: Extracting reflectance from the EcoLight output files.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Read the data from the csv file.
 STEP 2. Select which lines to extract from the txt files.
 STEP 3. Save the extracted data into a csv file.
 
-Last updated on 30 May 2024 by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
@@ -15,7 +17,7 @@ from multiprocessing import Pool
 
 """STEP 1. Read the data from the csv file."""
 
-csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/file_paths_output_processing.csv'
+csv_file_path = "data/x_data/file_paths_output_processing.csv"
 file_paths_df = pd.read_csv(csv_file_path)
 file_path_list = file_paths_df["file_paths"]
 
@@ -45,7 +47,7 @@ def process_file(file_path):
 
 
 def main():
-    output_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/simulated_reflectance_no_noise.csv'
+    output_path = 'data/x_data/simulated_reflectance_no_noise_train.csv'
     # Number of processes to use (adjust as needed)
     num_processes = 4
     # Create a Pool of processes
@@ -61,26 +63,3 @@ def main():
 # (not imported as a module into another script).
 if __name__ == '__main__':  # Check if the script is being run directly
     main()  # If so, call the main() function to start executing the script
-
-"""
-# Save the results in a pickled file
-def main():
-    output_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Jan2024_lognormal_priors/' \
-                  'simulated_reflectance.pkl'
-
-    # Number of processes to use (adjust as needed)
-    num_processes = 6
-
-    # Create a Pool of processes
-    with Pool(num_processes) as pool:
-        data_frames = pool.map(process_file, file_paths)
-
-    # Save the combined DataFrames to a pickle file
-    with open(output_path, 'wb') as data_file:
-        pickle.dump(data_frames, data_file)
-
-
-# This condition checks if the script is being run directly as the main program
-if __name__ == '__main__':
-"""    """main()
-"""
