@@ -12,3 +12,14 @@
 - *read_dat_files.py:* Read the radiance/irradiance data exported from the MSDA_EX software and save into a csv file.
 - *trios_interpolation.py:* Apply cubic spline interpolation to the hyperspectral reflectance data calculated from TriOS RAMSES radiometric measurements.
 - *water_surface_correction.py:* Calculate just-above water reflectance from just-below water reflectance.
+
+**Tools available in models/priors:**
+- *dist_plotted.py:* Visualise the prior distributions.
+- *inference.py:* Sample the prior distributions to create parameterisations for the simulator.
+- *summary_statistics.py:* Calculate summary statistics from samples drawn from the prior distributions.
+
+**Tools available in models/simulation_output:**
+- *noise.py:* Add Gaussian noise to the spectral data.
+- *output_get_values.py:* Create a csv file storing the EcoLight output in a correct format.
+- *output_processing_2.py:* Extract reflectance from the csv files containing the EcoLight output.
+- *select_bands.py:* Select specific spectral bands.
