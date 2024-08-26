@@ -23,3 +23,9 @@
 - *output_get_values.py:* Create a csv file storing the EcoLight output in a correct format.
 - *output_processing_2.py:* Extract reflectance from the csv files containing the EcoLight output.
 - *select_bands.py:* Select specific spectral bands.
+
+**Tools available in models/simulation_setup:**
+- *check_setup.py:* Check the EcoLight set-up files by identifying differences between two files line-by-line.
+- *filter_setup_files.py:* Filter through EcoLight set-up files given a condition.
+- *runlistHL.py:* Create the runlist.txt file for the Ecolight simulations.
+- *setup_bottom.py:* Change the bottom reflectance file name in the EcoLight setup files.
