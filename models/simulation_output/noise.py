@@ -1,4 +1,5 @@
 """
+
 SIMULATION OUTPUT III: Adding Gaussian noise to the spectral data.
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 

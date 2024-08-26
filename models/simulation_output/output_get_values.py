@@ -1,5 +1,8 @@
 """
 
+SIMULATION OUTPUT I: Reading the EcoLight output files.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 Create a csv file storing the EL output in a correct format.
 STEP 1. Read the parameter combinations from a csv file.
 STEP 2. Store each row in the csv file as a tuple in a list.
@@ -8,7 +11,7 @@ STEP 4. Add the file IDs as a column in the dataframe.
 STEP 5. Use the list of file IDs to create a list of filepaths
         so that each file can be accessed in the order defined by the list of file IDs.
 
-Last updated on 30 May by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
@@ -20,7 +23,7 @@ import glob
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/Ecolight_parameter_combinations_ppc.csv'
+csv_file_path = "data/simulation_setup/Ecolight_parameter_combinations.csv"
 combinations = pd.read_csv(csv_file_path)
 print(combinations)
 
@@ -74,7 +77,7 @@ print(combinations_df)
 so that each file can be accessed in the order defined by the list of file IDs."""
 
 # Specify path to the folder containing the output files
-folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/simulated_data/simulated_data'
+folder_path = 'data/simulated_data'
 file_ids = combinations_df["filename"]
 
 # Create an empty list to store the filepaths
@@ -94,4 +97,4 @@ print("Print paths: ", file_paths)
 # Save the file_paths into a csv file.
 df = pd.DataFrame(file_paths)
 print(len(file_paths))
-df.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/file_paths_output_processing.csv')
+df.to_csv('data/x_data/file_paths_output_processing.csv')
