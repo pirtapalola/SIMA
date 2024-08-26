@@ -1,10 +1,12 @@
 """
+PRIORS II: Visualise the prior distributions.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Visualise the prior distributions:
  -Plot the 30,000 samples drawn from each prior distribution to a histogram.
  -Add the corresponding PDF as a curve.
 
-Last updated on 5 June 2024 by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
@@ -34,10 +36,10 @@ pdf_values3 = prior3.pdf(torch.tensor(x_values3))
 pdf_values4 = prior4.log_prob(torch.tensor(x_values4)).exp().numpy()
 
 # Import the samples drawn from each prior
-prior_samples = pd.read_csv("C:/Users/kell5379/Documents/Chapter2_May2024/Final/priors_summary.csv")
+prior_samples = pd.read_csv("data/simulation_setup/priors_summary.csv")
 samples_phy = prior_samples["Phytoplankton"].to_numpy()
 samples_cdom = prior_samples["CDOM"].to_numpy()
-samples_nap = prior_samples["NAP"].to_numpy()
+samples_nap = prior_samples["Min"].to_numpy()
 samples_wind = prior_samples["Wind"].to_numpy()
 samples_depth = prior_samples["Depth"].to_numpy()
 

@@ -2,7 +2,7 @@
 
 Merge data from multiple files into a single csv file.
 
-Last updated on 25 January 2024 by Pirta Palola
+Last updated on 26 August 2024 by Pirta Palola
 
 """
 
@@ -11,8 +11,7 @@ import os
 import pandas as pd
 
 # Define the folder
-os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-         r'Jan2024_lognormal_priors/priors')
+os.chdir(r'data/priors')
 
 # Create an empty list
 the_list = []
@@ -39,5 +38,4 @@ def readdataframe(list_paths):
 the_dataframe = readdataframe(the_list)
 
 # Save the dataframe as a csv file
-the_dataframe.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                     'Jan2024_lognormal_priors/priors/summary_priors.csv')
+the_dataframe.to_csv("data/simulation_setup/priors_summary.csv")
