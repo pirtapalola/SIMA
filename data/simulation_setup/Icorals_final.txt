@@ -1,0 +1,60 @@
+0, 400, 700, 0.02, 488, 0.00026, 1, 5.3
+creating a LUT for different benthic, water column , ect, Pirta P
+coralbrown_00_26_171_40_535_1492
+-1,0,0,1,0,1
+2,1,0,2,3
+4,4
+0.0, 2.6, 1.71, 4.0, 
+0, 1, 440, 0.1, 0.014
+0, 0, 440, 0.1, 0.014
+0, 4, 440, 1, 0.014
+0, 0, 0, 0.05, 0
+..\data\H2OabDefaults_SEAwater.txt
+..\data\defaults\apstarchl.txt
+dummyastar.txt
+..\data\defaults\astarmin_calcareoussand.txt
+0, -999, -999, -999, -999, -999
+1, 550, 0.30, 1, 0.53, -999
+-1, -999, 0, -999, -999, -999
+0, -999, -999, -999, -999, -999
+bstarDummy.txt
+dummybstar.txt
+dummybstar.txt
+..\data\defaults\bstarmin_calcareoussand.txt
+0, 0, 550, 0.01, 0
+3, 0, 550, 0.01, 0
+-1, 0, 550, 0.01, 0
+3, 0.01, 550, 0.02, 1
+pureh2o.dpf
+avgpart.dpf
+isotrop.dpf
+avgpart.dpf
+ 61 
+397.5, 402.5, 407.5, 412.5, 417.5, 422.5, 427.5, 432.5, 437.5, 442.5, 
+447.5, 452.5, 457.5, 462.5, 467.5, 472.5, 477.5, 482.5, 487.5, 492.5, 
+497.5, 502.5, 507.5, 512.5, 517.5, 522.5, 527.5, 532.5, 537.5, 542.5, 
+547.5, 552.5, 557.5, 562.5, 567.5, 572.5, 577.5, 582.5, 587.5, 592.5, 
+597.5, 602.5, 607.5, 612.5, 617.5, 622.5, 627.5, 632.5, 637.5, 642.5, 
+647.5, 652.5, 657.5, 662.5, 667.5, 672.5, 677.5, 682.5, 687.5, 692.5, 
+697.5, 702.5, 
+0,0,0,1,2
+2, 3, 30, 0, 0
+-1, 0, 0, 29.92, 1, 80, 2.5, 15, 6.7, 300
+5.35, 1.34, 20, 35
+2, 0
+0, 2, 0, 14.92, 
+..\data\H2OabDefaults_SEAwater.txt
+1
+dummyac9.txt
+dummyFilteredAc9.txt
+dummyHscat.txt
+dummyComp.txt
+AE_midUVabs.txt
+coral_brown.txt
+dummydata.txt
+dummyComp.txt
+AE_midUVabs.txt
+..\data\User\microplastics\MPzdata.txt
+DummyIrrad.txt
+..\data\MyBiolumData.txt
+DummyRad.txt
