@@ -2,6 +2,17 @@
 
 ![Continuous Integration build in GitHub Actions](https://github.com/pirtapalola/seascapeRS/workflows/CI/badge.svg?branch=main)
 
+
+
+This GitHub repository accompanies the following manuscript
+
+Please consider citing the associated research article and data repository:
+- Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., and Wedding, L. (*In Review*). Simulation-based inference advances water
+  quality mapping in shallow coral reef environments.
+- Open Science Framework data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
+
+Funding statement: This work was supported by the Bertarelli Foundation as part of the Bertarelli Programme in Marine Science and the Osk. Huttunen Foundation.
+
 **Tools available in models:**
 - *apply_model.py:* Conduct inference on field data.
 - *check_0.py:* Conduct inference on simulated data.
