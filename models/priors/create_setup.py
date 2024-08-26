@@ -1,14 +1,14 @@
 """
-PRIORS I: Write the new Ecolight set-up files.
+PRIORS I: Write the new EcoLight set-up files.
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Generate the prior distributions of the theta parameters.
 Sample the prior distributions to create parameterisations for the simulator.
 
-STEP 1. Access the Ecolight setup file.
+STEP 1. Access the EcoLight setup file.
 STEP 2. Create the priors.
-STEP 3. Store the simulation parameterizations in a dictionary.
-STEP 4. Write the new Ecolight set-up files.
+STEP 3. Store the simulation parameterisations in a dictionary.
+STEP 4. Write the new EcoLight set-up files.
 
 Last updated on 26 August 2024
 
@@ -119,8 +119,7 @@ for x in range(0, len(prior_chl)):
 # Save the combinations in a csv file
 df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
 # print(df)
-df_combinations.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                       'Simulated_evaluation_dataset/Ecolight_parameter_combinations_evaluation.csv')
+df_combinations.to_csv('data/simulation_setup/Ecolight_parameter_combinations.csv')
 
 '''
 # Check that the sampled prior distributions look realistic
@@ -143,7 +142,7 @@ for n in parameters:
     plt.show()
 '''
 
-"""STEP 3. Store the simulation parameterizations in a dictionary."""
+"""STEP 3. Store the simulation parameterisations in a dictionary."""
 
 
 # Create a new class
@@ -228,7 +227,7 @@ for x in combinations:
     combinations_wind.append(x[-2])
     combinations_depth.append(x[-1])
 
-"""STEP 4. Write the new Ecolight set-up files."""
+"""STEP 4. Write the new EcoLight set-up files."""
 
 
 def new_input_files(combination_iop, combination_w, combination_d, hydrolight_file, id_string):
@@ -248,9 +247,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/' \
-           'setup/Icorals' \
-           + id_string + '_coralbrown' + '.txt'
+    path = 'data/setup_files/Icorals' + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
@@ -267,11 +264,8 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
-          'setup/Icorals'
-          + string_id[1] + '_coralbrown' + '.txt', 'r')
-f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/'
-          'Icorals_final.txt', 'r')
+f1 = open('data/setup_files/Icorals' + string_id[1] + '_coralbrown' + '.txt', 'r')
+f2 = open('data/simulation_setup/Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
