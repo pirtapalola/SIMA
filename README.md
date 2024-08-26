@@ -10,8 +10,9 @@
 - *modelSBI.py:* Train the neural density estimator and build the posterior.
 - *posterior_predictive_check.py:* Posterior predictive check (part 1): sample from the posterior.
 - *posterior_predictive_check2.py:* Posterior predictive check (part 2): plot the posterior predictive.
-
-
+- *prior_predictive_check.py:* Plot the prior predictive.
+- *sbc.py:* Conduct simulation-based calibration.
+- *tools.py:* Tools to create a custom prior distribution.
 
 **Tools available in models/benthic:**
 - *read_mat_file.py*: Read a mat file and save the data into a csv file.
