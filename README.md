@@ -2,6 +2,13 @@
 
 ![Continuous Integration build in GitHub Actions](https://github.com/pirtapalola/seascapeRS/workflows/CI/badge.svg?branch=main)
 
+**Tools available in models:**
+- *apply_model.py:* Conduct inference on field data.
+- *check_0.py:* Conduct inference on simulated data.
+- *check_missing_files.py:* Check the simulation output and find missing files.
+- *evaluate.py:*  Assess the performance of the inference scheme by calculating coverage probability.
+
+
 **Tools available in models/benthic:**
 - *read_mat_file.py*: Read a mat file and save the data into a csv file.
 - *mean_global_values.py:* Calculate the average reflectance of a single benthic cover type from a large dataset of field measurements.
