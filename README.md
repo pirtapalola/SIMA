@@ -7,6 +7,10 @@
 - *check_0.py:* Conduct inference on simulated data.
 - *check_missing_files.py:* Check the simulation output and find missing files.
 - *evaluate.py:*  Assess the performance of the inference scheme by calculating coverage probability.
+- *modelSBI.py:* Train the neural density estimator and build the posterior.
+- *posterior_predictive_check.py:* Posterior predictive check (part 1): sample from the posterior.
+- *posterior_predictive_check2.py:* Posterior predictive check (part 2): plot the posterior predictive.
+
 
 
 **Tools available in models/benthic:**
