@@ -4,7 +4,10 @@
 
 
 
-This GitHub repository accompanies the following manuscript
+This GitHub repository provides tools for the application of simulation-based inference to marine remote sensing.
+
+This research leverages sbi, a PyTorch package for simulation-based inference.
+Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). Zenodo. https://doi.org/10.5281/zenodo.3993098
 
 Please consider citing the associated research article and data repository:
 - Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., and Wedding, L. (*In Review*). Simulation-based inference advances water
