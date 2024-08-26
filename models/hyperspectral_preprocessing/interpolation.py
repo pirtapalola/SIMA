@@ -9,7 +9,7 @@ STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
 STEP 3. Save the interpolated data in csv files.
 
-Last updated on 15 May 2024
+Last updated on 26 August 2024
 
 """
 

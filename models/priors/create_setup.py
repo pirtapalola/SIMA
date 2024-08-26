@@ -1,4 +1,6 @@
 """
+PRIORS I: Write the new Ecolight set-up files.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Generate the prior distributions of the theta parameters.
 Sample the prior distributions to create parameterisations for the simulator.
@@ -8,8 +10,7 @@ STEP 2. Create the priors.
 STEP 3. Store the simulation parameterizations in a dictionary.
 STEP 4. Write the new Ecolight set-up files.
 
-
-Last updated on 29 April 2024 by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
@@ -22,12 +23,11 @@ from models.tools import TruncatedLogNormal
 """STEP 1. Access the Ecolight setup file."""
 
 # Define the path
-PATH = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/Simulated_evaluation_dataset/priors/'
+PATH = 'data/simulation_setup/'
 
 # Open the file. Each line is saved as a string in a list.
 
-with open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-          'Simulated_evaluation_dataset/Icorals_final.txt') as f:
+with open('data/simulation_setup/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
 """STEP 2. Create the priors."""
