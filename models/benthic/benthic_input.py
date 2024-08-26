@@ -1,12 +1,14 @@
 """
+BENTHIC REFLECTANCE
+This code is part of the "Simulation-based inference for marine remote sensing" toolbox.
 
-Input bottom reflectance data into Hydrolight by replacing the default data file.
+Input bottom reflectance data into Ecolight by replacing the default data file.
 
 STEP 1. Upload the data.
 STEP 2. Insert the bottom reflectance data into the default data file.
 STEP 3. Save the new bottom reflectance input data file as a txt file.
 
-Last updated on 05 December 2023 by Pirta Palola
+Last updated on 05 December 2023
 
 """
 

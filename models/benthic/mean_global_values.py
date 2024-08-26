@@ -1,8 +1,10 @@
 """
+BENTHIC REFLECTANCE
+This code is part of the "Simulation-based inference for marine remote sensing" toolbox.
 
 Calculate the mean value of each benthic cover type from the global reflectance dataset.
 
-Last updated on 18 January 2024 by Pirta Palola
+Last updated on 18 January 2024
 
 """
 

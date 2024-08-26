@@ -1,9 +1,10 @@
 """
+BENTHIC REFLECTANCE
+This code is part of the "Simulation-based inference for marine remote sensing" toolbox.
 
-Read the mat file provided by Eric Hochberg and save the data into a csv file.
-The file contains the global benthic reflectance dataset.
+Read a mat file and save the data into a csv file.
 
-Last updated on 3 January 2024 by Pirta Palola
+Last updated on 3 January 2024
 
 """
 
@@ -13,8 +14,7 @@ import pandas as pd
 import numpy as np
 
 # Load the matlab file in python using scipy.
-global_data = loadmat('C:/Users/pirtapalola/Documents/DPhil/'
-                      'Chapter2/Hochberg/Hochberg_spectral_library_395-705_nm_2021-07-09.mat')
+global_data = loadmat('Hochberg_spectral_library_395-705_nm_2021-07-09.mat')
 
 # Print the keys of the matlab file.
 print(global_data.keys())
@@ -55,4 +55,4 @@ print(global_dataframe)
 
 # Save the data into a csv file.
 
-global_dataframe.to_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/global_benthic_reflectance_hochberg.csv')
+global_dataframe.to_csv('global_benthic_reflectance_hochberg.csv')
