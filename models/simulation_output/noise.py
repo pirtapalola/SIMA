@@ -1,18 +1,23 @@
 """
+SIMULATION OUTPUT III: Adding Gaussian noise to the spectral data.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
-Add Gaussian noise to the spectral data.
+STEP 1. Read the simulated reflectance data.
+STEP 2. Add Gaussian noise.
+STEP 3. Save the results into a csv file.
 
-Last updated on 30 July 2024 by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
 # Import libraries
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
-# Read the simulated reflectance data
-path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/simulated_reflectance_no_noise_evaluate.csv'
+"""STEP 1. Read the simulated reflectance data."""
+
+path = "data/simulated_data/simulated_reflectance_no_noise_train.csv"
 simulated_spectra = pd.read_csv(path)
 
 # wavelengths = simulated_spectra["wavelength"]
@@ -22,7 +27,7 @@ simulated_spectra = pd.read_csv(path)
 # wavelengths = [443, 490, 531, 565, 610, 665, 700]
 wavelengths = []
 for wavelength in range(400, 705, 5):
-  wavelengths.append(wavelength)
+    wavelengths.append(wavelength)
 print("Wavelengths: ", wavelengths)
 print("Number of wavelengths: ", len(wavelengths))
 print("Number of reflectance spectra: ", len(simulated_spectra["400"]))
@@ -38,8 +43,7 @@ simulated_spectra_original = pd.read_csv(path)
 # no_noise = simulated_spectra_original.iloc[10]
 # print(no_noise)
 
-# snr_df = pd.read_csv('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/'
-                     #'Jan2024_lognormal_priors/SNR_CHIME/SNR_w.csv')
+"""STEP 2. Add Gaussian noise."""
 
 # Add Gaussian noise
 for i in range(len(simulated_spectra["400"])):
@@ -47,7 +51,7 @@ for i in range(len(simulated_spectra["400"])):
     # snr_w = snr_df[str(i)]
     # spectrum = simulated_spectra[i]
     for wavelength in range(len(wavelengths)):
-        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(1)
+        std_dev = np.sqrt(np.mean(spectrum ** 2)) / np.sqrt(100)
         noise = np.random.normal(0, std_dev, 1)  # Generate noise for each wavelength
         spectrum[wavelength] += noise  # Add noise to the current wavelength
 
@@ -62,7 +66,7 @@ for i in range(len(simulated_spectra["400"])):
 # plt.legend()
 # plt.show()
 
-# Save the results into a csv file
-output_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-               'simulated_reflectance_1SNR_evaluate.csv')
+"""STEP 3. Save the results into a csv file."""
+
+output_path = "data/simulated_data/simulated_reflectance_100SNR.csv"
 simulated_spectra.to_csv(output_path, index=False)
