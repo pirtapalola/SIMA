@@ -41,3 +41,8 @@
 - *filter_setup_files.py:* Filter through EcoLight set-up files given a condition.
 - *runlistHL.py:* Create the runlist.txt file for the Ecolight simulations.
 - *setup_bottom.py:* Change the bottom reflectance file name in the EcoLight setup files.
+
+**Tools available in models/visualise:**
+- *range_plot.py:* Produce a range plot to visualise the results of the inference.
+- *scatter.py:* Create a 3D plot to visualise the parameter space.
+- *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
