@@ -20,8 +20,9 @@
 
 **Tools available in models/priors:**
 - *dist_plotted.py:* Visualise the prior distributions.
-- *inference.py:* Sample the prior distributions to create parameterisations for the simulator.
+- *create_setup.py:* Sample the prior distributions to create parameterisations for the simulator.
 - *summary_statistics.py:* Calculate summary statistics from samples drawn from the prior distributions.
+- *wind.py:* Estimate the prior distribution for wind speed.
 
 **Tools available in models/simulation_output:**
 - *noise.py:* Add Gaussian noise to the spectral data.
