@@ -1,4 +1,6 @@
 """
+PRE-PROCESSING HYPERSPECTRAL DATA I: Interpolation
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 This code applies cubic spline interpolation to the hyperspectral reflectance data
 calculated from TriOS RAMSES radiometric measurements.
@@ -7,7 +9,7 @@ STEP 1. Access the reflectance data.
 STEP 2. Apply the cubic spline method to the data.
 STEP 3. Save the interpolated data in csv files.
 
-Last updated on 15 May 2024 by Pirta Palola
+Last updated on 15 May 2024
 
 """
 
@@ -19,11 +21,10 @@ import numpy as np
 """STEP 1. Access the reflectance data."""
 
 # Read the csv files containing the data
-path = 'C:/Users/kell5379/Documents/Chapter2_May2024/GLORIA_filtered/'
-reflectance_data = pd.read_csv(path + "filtered_reflectance_transposed.csv")
+reflectance_data = pd.read_csv("data/field_data/unprocessed_reflectance_tetiaroa_2022.csv")
 
 # Wavelengths measured by the TriOS RAMSES radiometers
-trios_wavelength = reflectance_data['wavelength'].to_numpy()
+trios_wavelength = reflectance_data["wavelength"].to_numpy()
 
 # Sample IDs
 sample_IDs = list(reflectance_data.columns)
@@ -76,7 +77,10 @@ print("Number of measurements: ", len(interpolation_results_list))
 """STEP 3. Save the interpolated data in a csv file."""
 
 # Create a DataFrame
+wavelength_range = np.arange(400, 705, 5)
 interpolated_reflectance_df = pd.DataFrame(interpolation_results_list)
-interpolated_reflectance_df = interpolated_reflectance_df.transpose()
-print(interpolated_reflectance_df)
-interpolated_reflectance_df.to_csv(path + "GLORIA_filtered_5nm.csv")
+interpolated_reflectance = interpolated_reflectance_df.transpose()
+interpolated_reflectance.columns = sample_IDs
+interpolated_reflectance.insert(loc=0, column="wavelength", value=wavelength_range)
+print(interpolated_reflectance)
+interpolated_reflectance.to_csv("data/field_data/interpolated_reflectance_tetiaroa_2022.csv", index=False)

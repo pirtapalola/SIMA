@@ -1,10 +1,12 @@
 """
+PRE-PROCESSING HYPERSPECTRAL DATA II: Water surface correction
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Calculate just-above water reflectance from just-below water reflectance.
 STEP 1. Read the data.
 STEP 2. Calculate just-above water reflectance.
 
-Last updated on 1 May 2024 by Pirta Palola
+Last updated on 1 May 2024
 
 """
 
@@ -14,12 +16,10 @@ import pandas as pd
 """STEP 1. Read the data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/pirtapalola/Documents/DPhil/' \
-                   'Chapter2/Methods/Methods_Ecolight/In_water_calibration_2023/' \
-                   'just_below_surface_reflectance_5nm_moorea_2023.csv'
+observation_path = 'data/field_data/interpolated_reflectance_tetiaroa_2022.csv'
 obs_df = pd.read_csv(observation_path)
 obs_df = obs_df.drop(columns=["wavelength"])
-
+print(obs_df)
 # Create a list of sample IDs
 sample_IDs = list(obs_df.columns)
 print(sample_IDs)
@@ -48,5 +48,4 @@ for i in sample_IDs:
 Rrs_df = pd.DataFrame(Rrs_list)
 Rrs_df = Rrs_df.transpose()
 print(Rrs_df)
-Rrs_df.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/"
-              "In_water_calibration_2023/just_above_surface_reflectance_5nm_moorea_2023.csv", index=False)
+Rrs_df.to_csv("data/field_data/processed_reflectance_tetiaroa_2022.csv", index=False)
