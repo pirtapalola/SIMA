@@ -1,12 +1,12 @@
 """
-
-Simulation-based inference
+MODELS: Training the neural density estimator and building the posterior
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 8 August 2024 by Pirta Palola
+Last updated on 26 August 2024
 
 """
 
@@ -21,7 +21,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from models.tools import MultipleIndependent
 from torch.distributions import Uniform
-# from sbi.neural_nets.embedding_nets import CNNEmbedding, FCEmbedding
 
 """
 
@@ -34,8 +33,7 @@ simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May202
                                     'simulated_reflectance_50SNR.csv')
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-simulator_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/No_noise/'
-                              'Ecolight_parameter_combinations_train_no_noise.csv')
+simulator_input = pd.read_csv("data/simulation_setup/Ecolight_parameter_combinations.csv")
 simulator_input = simulator_input.drop(columns=["water"])  # Remove the "water" column.
 
 samples_phy = simulator_input["phy"]
@@ -100,14 +98,9 @@ prior_distributions = [
 # Create the combined distribution using MultipleIndependent
 prior = MultipleIndependent(prior_distributions)
 
-# Define the embedding net (optional)
-# embedding_net = CNNEmbedding(input_shape=(61,))
-# embedding_net = FCEmbedding(input_dim=61)
-
 # Instantiate the neural density estimator
 neural_posterior = utils.posterior_nn(
     model="mdn", hidden_features=90, num_components=6)
-# num_transforms=3, z_score_theta="independent", embedding_net=embedding_net,
 
 # Instantiate the SNPE inference method
 inference = SNPE(prior=prior, density_estimator=neural_posterior)
@@ -140,7 +133,5 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/"
-          "50SNR/Loaded_posteriors_constrained/"
-          "loaded_posterior6_hyper.pkl", "wb") as handle:
+with open("data/loaded_posteriors/loaded_posterior6_hyper.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
