@@ -11,6 +11,10 @@ This GitHub repository provides tools for the application of simulation-based in
   quality mapping in shallow coral reef environments.
 - *Open Science Framework* data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
 
+
+
+# Description of tools available in this repository
+
 **Tools available in models:**
 - *apply_model.py:* Conduct inference on field data.
 - *check_0.py:* Conduct inference on simulated data.
@@ -50,9 +54,20 @@ This GitHub repository provides tools for the application of simulation-based in
 - *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
 
 
+
+# Acknowledgements and funding statement
+
+
 **This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
 - Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
 - Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
 
+
+**Acknowledgements:**
+
+Warm thanks to Frank, Hinano, and Temakehu Murphy, Lusiano Kolokilagi, Vairupe Huioutu Pater, Tuterai Apuarii, Courtney Stuart, Kaya Malhi, Dr Benoît Stoll, Dr Claudia Giardino, Dr Monica Pinardi, Dr Stuart Painter, Lily Zhao, Louise-Océane Delion, Dr Marina Schneider, and Tetiaroa Society for their help and support during the field campaign. The authors would also like to thank Professor Nick Graham, Dr Casey Benkwitt, Dr Jayna DeVore, Dr Hannah Epstein, Dr Thomas Jackson, Dr Aser Mata, Dr Robbie Ramsay, Jennifer Appoo, and Gurjeet S. Singh for their advice during the early stages of this research project.
+
+
 **Funding statement:**
+
 This work was supported by the Bertarelli Foundation as part of the Bertarelli Programme in Marine Science and the Osk. Huttunen Foundation.
