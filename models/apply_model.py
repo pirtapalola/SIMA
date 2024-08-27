@@ -1,6 +1,6 @@
 """
 
-MODELS: Applying the inference scheme to field data.
+MODELS: Applying the inference scheme to field data
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Conduct inference.

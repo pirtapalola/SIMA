@@ -1,21 +1,32 @@
+"""
+
+
+PLOTTING I: Creating a 3D plot to visualise the parameter space.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
+STEP 1. Read the parameter combinations from a csv file.
+STEP 2. Create a 3D plot.
+
+Last updated on 27 August 2024
+
+"""
+
 # Import libraries
 import matplotlib.pyplot as plt
 import pandas as pd
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/' \
-                'Jan2024_lognormal_priors/Ecolight_parameter_combinations.csv'
+csv_file_path = "data/simulation_setup/Ecolight_parameter_combinations.csv"
 combinations = pd.read_csv(csv_file_path)
 
-
-# The data is a 100 x 5 matrix (100 simulation runs and 5 parameters)
 # Choose columns
 x = combinations["cdom"]
 y = combinations["spm"]
 z = combinations["phy"]
 
-# Create a 3D plot
+"""STEP 2. Create a 3D plot."""
+
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
@@ -32,11 +43,11 @@ print(highlight_x, highlight_y, highlight_z)
 # ax.scatter(highlight_x, highlight_y, highlight_z, c='red', marker='X', s=100, label='Highlighted Samples')
 
 # Add colorbar for reference
-cbar = fig.colorbar(scatter, ax=ax, label='SPM', pad=0.2)
+cbar = fig.colorbar(scatter, ax=ax, label='Min', pad=0.2)
 
 # Adjust label positions
 ax.set_xlabel('CDOM', labelpad=10)
-ax.set_ylabel('NAP', labelpad=10)
+ax.set_ylabel('Min', labelpad=10)
 ax.set_zlabel('Phytoplankton', labelpad=10)
 
 # Show the plot

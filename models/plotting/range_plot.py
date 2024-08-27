@@ -1,10 +1,12 @@
 """
 
-Produce a range plot to visualize the results of the inference.
+PLOTTING II: Producing a range plot to visualise the results of the inference
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
-Last updated on 10 August 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -17,9 +19,9 @@ import numpy as np
 """STEP 1. Prepare the data."""
 
 # Read the csv file containing the data into a pandas dataframe
-results_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/"
-multi_results_SNR = "Summary_Multi/Multi_100SNR/"
-hyper_results_SNR = "Summary_Hyper/100SNR/"
+results_path = "data/results/"
+multi_results_SNR = "summary_multi/100SNR/"
+hyper_results_SNR = "summary_hyper/100SNR/"
 results_param = "Min"
 multi_results_df = pd.read_csv(results_path + multi_results_SNR + results_param + ".csv")
 hyper_results_df = pd.read_csv(results_path + hyper_results_SNR + results_param + ".csv")
