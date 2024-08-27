@@ -1,5 +1,6 @@
 """
-PRIORS II: Visualise the prior distributions.
+
+PRIORS III: Visualise the prior distributions.
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Visualise the prior distributions:

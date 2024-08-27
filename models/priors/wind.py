@@ -1,8 +1,11 @@
 """
 
+PRIORS I: Estimating the prior distribution for wind speed.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 Estimate the wind speed prior distribution using Copernicus data.
 
-Last updated on 19 December 2023 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -11,11 +14,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm, gamma, lognorm
-import seaborn as sns
+# import seaborn as sns
 import scipy
 import torch
-from tools import fit_lognormal_torch
-from statsmodels.distributions.empirical_distribution import ECDF
+# from models.tools import fit_lognormal_torch
+# from statsmodels.distributions.empirical_distribution import ECDF
 
 # Set parameters
 data_request = {
@@ -41,12 +44,10 @@ wind_tahiti_2017_2022 = copernicus_marine.read_dataframe(
 
 # Print and save csv
 print(wind_tahiti_2017_2022)
-wind_tahiti_2017_2022.to_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/"
-                             "Methods/Methods_Ecolight/wind/wind_tahiti_2017_2022.csv")
+wind_tahiti_2017_2022.to_csv("data/simulation_setup/wind_copernicus.csv")
 """
 
-wind_df = pd.read_csv("C:/Users/pirtapalola/Documents/DPhil/Chapter2/"
-                      "Methods/Methods_Ecolight/wind/wind_tahiti_2017_2022.csv")
+wind_df = pd.read_csv("data/simulation_setup/wind_copernicus.csv")
 
 # Drop rows with NaN values.
 wind_df = wind_df.dropna(subset=['wind_speed'])
@@ -57,9 +58,8 @@ print(minimum, maximum)
 # Create a list of dates for which there is data.
 dates = wind_df['time'].unique()
 
+
 # Write a function that calculates the average wind speed at each date.
-
-
 def average_wind(list_dates, dataframe_to_split):
     datalist = []
     datelist = []
@@ -125,15 +125,6 @@ mu, sigma = fit_lognormal_moments(wind_tensor)
 # Create PyTorch log-normal distribution with the fitted parameters
 torch_lognormal_dist = torch.distributions.LogNormal(mu, sigma)
 
-# Plot the probability density function (PDF) of the fitted log-normal distribution
-# Convert the values to tensors before passing them to icdf
-#x = torch.linspace(torch_lognormal_dist.icdf(torch.tensor(0.001)).item(),
-           #        torch_lognormal_dist.icdf(torch.tensor(0.999)).item(), 100)
-#p = torch_lognormal_dist.log_prob(x).exp().numpy()
-# p = torch_lognormal_dist.log_prob(torch.tensor(x)).exp().numpy()
-# p = np.exp(-(np.log(x) - mu)**2 / (2 * sigma**2)) / (x * sigma * np.sqrt(2 * np.pi))
-#plt.plot(x, p, 'k', linewidth=2, label='Fitted Log-normal')
-
 # Assuming you already have the fitted parameters for each distribution
 params_norm = norm.fit(wind)
 params_lognorm = lognorm.fit(wind)
@@ -151,46 +142,5 @@ print('Gamma Distribution: KS Statistic = {:.4f}, p-value = {:.4f}'.format(ks_st
 print('Parameters of the lognormal distribution: ', 'mu = ', mu, ', sigma = ', sigma)
 print('Number of data points: ', len(wind))
 
-
-
 # Show the plot
 plt.show()
-
-"""
-# Plot the data in a histogram.
-sns.set_style('white')
-sns.set_context("paper", font_scale=2)
-sns.displot(data=average_wind_speed, x="wind_speed", kind="hist", bins=100, aspect=1.5)
-
-
-# Fit gamma, lognormal, and normal distributions to the data.
-fitted = Fitter(wind, distributions=['gamma', 'lognorm', "norm"])
-fitted.fit()
-fitted.summary()
-
-best_lognorm_params = fitted.get_best()['lognorm']
-
-# Get the best fit.
-best_fit = fitted.get_best(method='sumsquare_error')
-
-# Calculate the min, max, mean and standard deviation of the data.
-mean_wind_speed = wind.mean()
-std_wind_speed = wind.std()
-min_wind = wind_df['wind_speed'].min()
-max_wind = wind_df['wind_speed'].max()
-print('Minimum wind speed', min_wind, 'Maximum wind speed', max_wind, 'Mean wind speed: ', mean_wind_speed, 'Standard deviation', std_wind_speed, 'Best fit: ', best_fit)
-scale = 15.666340917893361
-shape = 0.13295081858033553
-mu = np.log(scale)
-sigma = shape
-print(mu, sigma)
-
-# Extract mu and sigma from the lognormal parameters.
-mu_fit = np.log(best_lognorm_params['scale'])
-sigma_fit = best_lognorm_params['s']
-
-print('Best fit lognormal parameters: mu = {:.4f}, sigma = {:.4f}'.format(mu_fit, sigma_fit))
-
-
-# Show the plot.
-plt.show()"""
