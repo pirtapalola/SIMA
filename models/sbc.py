@@ -1,12 +1,14 @@
 """
 
-Simulation-based calibration
+MODELS: Simulation-based calibration
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Read the simulated dataset.
 STEP 2. Define theta and x.
 STEP 3. Load the posterior.
 STEP 4. Run SBC.
 
-Last updated on 2 August 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -22,12 +24,10 @@ from sbi.analysis.plot import sbc_rank_plot
 """STEP 1. Read the simulated dataset."""
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_100SNR_evaluate.csv')
+simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR_evaluate.csv")
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
-ecolight_input = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                             'Ecolight_parameter_combinations_evaluate.csv')
+ecolight_input = pd.read_csv("data/simulation_setup/Ecolight_parameter_combinations_evaluate.csv")
 ecolight_input = ecolight_input.drop(columns=["water"])  # Remove the "water" column.
 print(ecolight_input)
 
@@ -81,11 +81,10 @@ print("Shape of X: ", xs.shape)
 """STEP 3. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/100SNR/Loaded_posteriors_constrained/"
-          "loaded_posterior1_hyper.pkl", "rb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
-"""STEP 3. Run SBC."""
+"""STEP 4. Run SBC."""
 
 # For each inference, draw 1000 posterior samples.
 num_posterior_samples = 1000

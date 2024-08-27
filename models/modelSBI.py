@@ -1,4 +1,5 @@
 """
+
 MODELS: Training the neural density estimator and building the posterior
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
@@ -6,7 +7,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 26 August 2024
+Last updated on 27 August 2024
 
 """
 
@@ -29,8 +30,7 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_x/'
-                                    'simulated_reflectance_50SNR.csv')
+simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR.csv")
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv("data/simulation_setup/Ecolight_parameter_combinations.csv")
@@ -133,5 +133,5 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("data/loaded_posteriors/loaded_posterior6_hyper.pkl", "wb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
