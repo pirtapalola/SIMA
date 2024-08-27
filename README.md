@@ -12,8 +12,14 @@ This GitHub repository provides tools for the application of simulation-based in
 - *Open Science Framework* data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
 
 
+**This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
+- Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
+- Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
+
+
 
 # Description of tools available in this repository
+
 
 **Tools available in models:**
 - *apply_model.py:* Conduct inference on field data.
@@ -27,13 +33,18 @@ This GitHub repository provides tools for the application of simulation-based in
 - *sbc.py:* Conduct simulation-based calibration.
 - *tools.py:* Tools to create a custom prior distribution.
 
-**Tools available in models/hyperspectral_preprocessing:**
+**Tools available in models/hyperspectral_preprocessing/:**
 - *interpolation.py:* Apply cubic spline interpolation to the hyperspectral reflectance data calculated from TriOS RAMSES radiometric measurements.
 - *water_surface_correction.py:* Calculate just-above water reflectance from just-below water reflectance.
 
+**Tools available in models/plotting:**
+- *3D_plot.py:* Create a 3D plot to visualise the parameter space.
+- *range_plot.py:* Produce a range plot to visualise the results of the inference.
+- *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
+
 **Tools available in models/priors:**
-- *dist_plotted.py:* Visualise the prior distributions.
 - *create_setup.py:* Sample the prior distributions to create parameterisations for the simulator.
+- *dist_plotted.py:* Visualise the prior distributions.
 - *wind.py:* Estimate the prior distribution for wind speed.
 
 **Tools available in models/simulation_output:**
@@ -45,22 +56,12 @@ This GitHub repository provides tools for the application of simulation-based in
 **Tools available in models/simulation_setup:**
 - *check_setup.py:* Check the EcoLight set-up files by identifying differences between two files line-by-line.
 - *filter_setup_files.py:* Filter through EcoLight set-up files given a condition.
-- *runlistHL.py:* Create the runlist.txt file for the Ecolight simulations.
+- *runlistEL.py:* Create the runlist.txt file for the EcoLight simulations.
 - *setup_bottom.py:* Change the bottom reflectance file name in the EcoLight setup files.
-
-**Tools available in models/visualise:**
-- *range_plot.py:* Produce a range plot to visualise the results of the inference.
-- *scatter.py:* Create a 3D plot to visualise the parameter space.
-- *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
 
 
 
 # Acknowledgements and funding statement
-
-
-**This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
-- Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
-- Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
 
 
 **Acknowledgements:**
