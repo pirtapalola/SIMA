@@ -6,7 +6,7 @@ Calculate just-above water reflectance from just-below water reflectance.
 STEP 1. Read the data.
 STEP 2. Calculate just-above water reflectance.
 
-Last updated on 1 May 2024
+Last updated on 27 August 2024
 
 """
 
