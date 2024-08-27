@@ -1,5 +1,5 @@
 """
-PRIORS I: Write the new EcoLight set-up files.
+PRIORS II: Write the new EcoLight set-up files.
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Generate the prior distributions of the theta parameters.
