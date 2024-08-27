@@ -12,10 +12,11 @@ This GitHub repository provides tools for the application of simulation-based in
 - *Open Science Framework* data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
 
 
-
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
 - Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
 - Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
