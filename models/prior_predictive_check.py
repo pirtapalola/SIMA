@@ -1,17 +1,24 @@
+"""
+
+MODELS: Plotting the prior predictive
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
+Last updated on 27 August 2024
+
+"""
+
 # Import libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/simulated_reflectance_1000SNR_noise_prior_predictive.csv')
+simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR_prior_predictive.csv")
 prior_samples = np.array(simulated_reflectance)
 print("Shape of prior_samples: ", prior_samples.shape)  # Define the simulated spectra (shape: [5000, 61])
 
 # Read the CSV file containing the simulated reflectance data
-field_reflectance = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/hp_field_1000SNR.csv')
+field_reflectance = pd.read_csv("data/field_data/hyper_field_100SNR.csv")
 field1 = np.array(field_reflectance["RIM04"])
 field2 = np.array(field_reflectance["RIM05"])
 field3 = np.array(field_reflectance["RIM03"])
@@ -25,12 +32,6 @@ print("Shape of wavelengths: ", wavelengths.shape)
 
 # Plot Prior Predictive
 def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
-    """Plots the mean and 5th to 95th percentile band of y.
-
-    Args:
-        x (array): Shape (l,)
-        y (array): Shape (n, l)
-    """
     y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
     perc_5 = np.percentile(y, 0, axis=0)
@@ -52,13 +53,10 @@ plt.plot(wavelengths, field1, label='Field observations', color='dodgerblue')
 plt.plot(wavelengths, field2, color='dodgerblue')
 plt.plot(wavelengths, field3, color='dodgerblue')
 plt.plot(wavelengths, field4, color='dodgerblue')
-# plt.plot(wavelengths, field3, label='GLORIA field observations', color='darkblue')
-# plt.plot(wavelengths, field4, color='darkblue')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
 plt.ylim([prior_samples.min() - 0.001, 0.05])
-# plt.axvline(x=wavelengths[0], linestyle='--', color='brown')
 
 # Labels and legend
 plt.rc('xtick', labelsize=18)
@@ -66,6 +64,4 @@ plt.rc('ytick', labelsize=18)
 plt.xlabel('Wavelength (nm)', fontsize=18)
 plt.ylabel('Reflectance', fontsize=18)
 plt.legend(fontsize=20)
-
-
 plt.show()

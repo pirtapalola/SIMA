@@ -1,6 +1,7 @@
 """
 
-Tools for data pre-processing and analysis
+MODELS: Tools for data pre-processing and analysis
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 TOOL NO.1 Calculate the minimum and maximum values in the simulated dataset.
 TOOL NO.2 Wrap a sequence of PyTorch distributions into a joint PyTorch distribution.
@@ -9,7 +10,7 @@ TOOL NO.4 A function to fit a log-normal distribution to data.
 TOOL NO.5 Check that the strings in a list have the same number of splits.
 TOOL NO.6 Conduct min-max normalisation.
 
-Last modified on 23 January 2024 by Pirta Palola
+Last modified on 27 August 2024
 
 """
 
