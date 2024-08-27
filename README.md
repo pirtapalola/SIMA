@@ -11,12 +11,6 @@ This GitHub repository provides tools for the application of simulation-based in
   quality mapping in shallow coral reef environments.
 - *Open Science Framework* data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
 
-This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020).
-
-Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
-
-Funding statement: This work was supported by the Bertarelli Foundation as part of the Bertarelli Programme in Marine Science and the Osk. Huttunen Foundation.
-
 **Tools available in models:**
 - *apply_model.py:* Conduct inference on field data.
 - *check_0.py:* Conduct inference on simulated data.
@@ -54,3 +48,11 @@ Funding statement: This work was supported by the Bertarelli Foundation as part 
 - *range_plot.py:* Produce a range plot to visualise the results of the inference.
 - *scatter.py:* Create a 3D plot to visualise the parameter space.
 - *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
+
+
+**This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
+- Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
+- Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
+
+**Funding statement:**
+This work was supported by the Bertarelli Foundation as part of the Bertarelli Programme in Marine Science and the Osk. Huttunen Foundation.
