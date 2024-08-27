@@ -1,6 +1,6 @@
 """
 
-PLOTTING II: Producing a range plot to visualise the results of the inference
+PLOTTING III: Producing a range plot to visualise the results of the inference
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 STEP 1. Prepare the data.
