@@ -1,6 +1,6 @@
 """
 
-SIMULATION SET-UP I: Checking set-up files
+SIMULATION SET-UP IV: Checking set-up files
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
 Check the EcoLight set-up files by identifying differences between two files line-by-line.

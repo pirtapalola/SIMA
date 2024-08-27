@@ -1,23 +1,30 @@
 """
 
-Change the bottom reflectance file name in the Hydrolight setup files.
+SIMULATION SET-UP II: Changing the bottom reflectance file name in the EcoLight setup files.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
+STEP 1. Create a list of all the EcoLight files to be modified.
+STEP 2. Write the new EcoLight set-up files.
+STEP 3. Check that the correct changes were made.
+
+Last updated on 27 August 2024
 
 """
 
 # Import libraries.
 import os
 
-"""STEP 1. Create a list of all the Hydrolight files to be modified."""
+"""STEP 1. Create a list of all the EcoLight files to be modified."""
 
-os.chdir(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup')
+os.chdir(r'data/setup_files')
 the_list = []
 
-for root, dirs, files in os.walk(r'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup'):
+for root, dirs, files in os.walk(r'data/setup_files'):
     for file in files:
         if file.endswith('.txt'):
             the_list.append(file)
 
-"""STEP 2. Write the new Ecolight set-up files."""
+"""STEP 2. Write the new EcoLight set-up files."""
 
 
 def change_and_save_bottom_file(list_files, original_file_path, bottom_name, bottom_file):
@@ -31,7 +38,7 @@ def change_and_save_bottom_file(list_files, original_file_path, bottom_name, bot
             original_file_content[2] = new_id + '\n'  # Rename the output file
             original_file_content[61] = bottom_file + '\n'  # Specify the name of the benthic reflectance file
 
-            directory_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/setup_sand/Icorals'
+            directory_path = 'data/setup_files/setup_modified/Icorals'
 
             # Create the directory if it doesn't exist
             os.makedirs(directory_path, exist_ok=True)
@@ -45,15 +52,15 @@ def change_and_save_bottom_file(list_files, original_file_path, bottom_name, bot
     return original_file_content
 
 
-original_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/'
+original_path = 'data/setup_files/'
 # change_and_save_bottom_file(the_list, original_path, 'sand', 'sand.txt')
 
 """STEP 3. Check that the correct changes were made."""
 
 # Check that only lines 2 and 61 were changed
 # reading files
-f1 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals_00_00_021_461_672_1006_coralbrown.txt', 'r')
-f2 = open('C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/Methods_Ecolight/setup/Icorals_00_00_021_461_672_1006_sand.txt', 'r')
+f1 = open('data/setup_files/Icorals_00_00_021_461_672_1006_coralbrown.txt', 'r')
+f2 = open('data/setup_files/Icorals_00_00_021_461_672_1006_sand.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()

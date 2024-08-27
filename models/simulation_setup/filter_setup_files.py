@@ -1,5 +1,8 @@
 """
 
+SIMULATION SET-UP III: Filtering set-up files
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 Filter the set-up files to retrieve those that have NAP > 10 g/m3.
 STEP 1. Read the parameter combinations from a csv file.
 STEP 2. Store each row in the csv file as a tuple in a list.
@@ -7,6 +10,8 @@ STEP 3. Filter the list so that only the tuples that meet the condition NAP >= 1
 STEP 4. Create the file IDs associated with the selected tuples.
 STEP 5. Use the list of file IDs to create a list of filepaths.
 STEP 6. Modify the selected files.
+
+Last updated on 27 August 2024
 
 """
 
@@ -17,7 +22,7 @@ import glob
 
 """STEP 1. Read the parameter combinations from a csv file."""
 
-csv_file_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/Ecolight_parameter_combinations_ppc.csv'
+csv_file_path = "data/simulation_setup/Ecolight_parameter_combinations.csv"
 combinations = pd.read_csv(csv_file_path)
 
 """STEP 2. Store each row in the csv file as a tuple in a list."""
@@ -66,7 +71,7 @@ for i in filtered_list:
 """STEP 5. Use the list of file IDs to create a list of filepaths."""
 
 # Specify path to the folder containing the set-up files
-folder_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/setup'
+folder_path = "data/setup_files/"
 file_ids = string_id
 
 # Create an empty list to store the filepaths
