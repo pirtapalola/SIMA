@@ -7,9 +7,9 @@
 This GitHub repository provides code for the application of simulation-based inference to marine remote sensing.
 
 **Please consider citing the associated research article and data repository:**
-- Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., and Wedding, L. (*In Review*). Simulation-based inference advances water
+- Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., & Wedding, L. (*In Review*). Simulation-based inference advances water
   quality mapping in shallow coral reef environments.
-- *Open Science Framework* data repository: SBI_marine_remote_sensing (https://osf.io/pcdgv)
+- *Open Science Framework* data repository: Palola, P. (2024). SBI_marine_remote_sensing. doi.org/10.17605/OSF.IO/PCDGV
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
