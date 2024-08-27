@@ -1,4 +1,4 @@
-# seascapeRS
+# SIMA (Simulation-based Inference for Marine Analysis)
 
 ![Continuous Integration build in GitHub Actions](https://github.com/pirtapalola/seascapeRS/workflows/CI/badge.svg?branch=main)
 
