@@ -1,10 +1,12 @@
 """
 
-Visualize inference results with a scatter plot.
+PLOTTING II: Producing a scatter plot to visualise the results of the inference
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
-Last updated on 10 August 2024
+Last updated on 27 August 2024
 
 """
 
@@ -16,9 +18,9 @@ import matplotlib.pyplot as plt
 """STEP 1. Prepare the data."""
 
 # Specify folder paths
-base_path = "C:/Users/kell5379/Documents/Chapter2_May2024/Final/Results1_constrained/"
-multi_results_SNR = "Summary_Multi/Multi_100SNR/"
-hyper_results_SNR = "Summary_Hyper/100SNR/"
+base_path = "data/results/"
+multi_results_SNR = "summary_multi/100SNR/"
+hyper_results_SNR = "summary_hyper/100SNR/"
 
 # Specify which parameter to access
 results_param = "Depth"
