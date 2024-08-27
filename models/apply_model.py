@@ -1,11 +1,14 @@
 """
 
+MODELS: Applying the inference scheme to field data.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 Conduct inference.
 STEP 1. Load the posterior.
 STEP 2. Load the observation data.
 STEP 3. Infer the theta parameters.
 
-Last updated on 2 August 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -20,18 +23,17 @@ import matplotlib.pyplot as plt
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
-          "Loaded_posteriors_constrained/loaded_posterior1_multi.pkl", "rb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
-model_spec = '_multi_500SNR_'
+model_spec = 'hyper_100SNR_'
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-obs_file = 'multi_field_500SNR.csv'  # This file contains the measured reflectance spectra
+observation_path = 'data/field_data/'
+obs_file = 'hyper_field_100SNR.csv'  # This file contains the measured reflectance spectra
 param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
 # Read the file containing the reflectance spectra
@@ -64,8 +66,7 @@ print(sample_IDs)
 """STEP 3. Infer the theta parameters."""
 
 # Define the path to the folder in which to save the results
-results_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-                'Results1_constrained/Multi_500SNR/' + model_spec)
+results_path = ('data/results/' + model_spec)
 
 
 # Define a function to conduct inference
