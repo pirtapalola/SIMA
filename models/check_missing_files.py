@@ -1,13 +1,15 @@
 """
 
-Check the simulation output and find missing files.
+MODELS: Checking the simulation output and identifying missing files.
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Specify paths.
 STEP 2. Create a list of file IDs corresponding to the parameter combinations.
 STEP 3. Check for matching files.
 STEP 4. Create a new runlist.txt file for the missing simulations.
 STEP 5. Copy the missing set-up files into a new folder.
 
-Last updated on 3 May 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -20,16 +22,11 @@ import shutil
 
 """STEP 1. Specify paths."""
 
-csv_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                'Methods_Ecolight/Simulated_evaluation_dataset/Ecolight_parameter_combinations_evaluation.csv'
-data_folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-              'Methods_Ecolight/Simulated_evaluation_dataset/simulated_dataset/simulated_dataset/'
-file_runlist_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                    'Methods_Ecolight/Simulated_evaluation_dataset/runlist_all.txt'
-output_file_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                   'Methods_Ecolight/Simulated_evaluation_dataset/runlist.txt'
-all_setup_folder_path = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                   'Methods_Ecolight/Simulated_evaluation_dataset/setup/'
+csv_file_path = 'data/simulation_setup/Ecolight_parameter_combinations.csv'
+data_folder_path = 'data/simulated_dataset/'
+file_runlist_path = 'data/simulation_setup/runlist_all.txt'
+output_file_path = 'data/simulation_setup/runlist.txt'
+all_setup_folder_path = 'data/setup_files/'
 
 """STEP 2. Create a list of file IDs corresponding to the parameter combinations."""
 
@@ -137,8 +134,7 @@ def copy_selected_files(source_folder, destination_folder, selected_files):
         shutil.copy2(source_path, destination_path)
 
 
-new_folder = 'C:/Users/pirtapalola/Documents/DPhil/Chapter2/Methods/' \
-                     'Methods_Ecolight/Simulated_evaluation_dataset/missing_files2/'
+new_folder = 'data/missing_files/'
 
 # Copy selected files from source to destination folder
 copy_selected_files(all_setup_folder_path, new_folder, non_match_values_runlist)

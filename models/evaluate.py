@@ -1,12 +1,13 @@
 """
+MODELS: Assessing the performance of the inference scheme
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
-Assess the performance of the inference scheme.
 STEP 1. Sample from the posterior.
 STEP 2. Read the ground-truth data.
 STEP 3. Define functions to assess inference performance.
 STEP 4. Apply the functions.
 
-Last updated on 9 August 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -33,14 +34,12 @@ sample_id_list = ['ONE05', 'RIM03', 'RIM04', 'RIM05']
 print(len(sample_id_list))
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/500SNR/"
-          "Loaded_posteriors_constrained/loaded_posterior1_multi.pkl", "rb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 # Read the csv file containing the observation data
-observation_path = ('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
-                    'multi_field_500SNR.csv')
-# obs_file = 'hp_field_1000SNR.csv'
+observation_path = 'data/field_data/hyper_field_100SNR.csv'
+# obs_file = 'hp_field_100SNR.csv'
 obs_df = pd.read_csv(observation_path)  # + obs_file
 
 
@@ -65,7 +64,7 @@ for item in sample_id_list:
 """STEP 2. Read the ground-truth data."""
 
 # Read the csv file containing the observation data
-observation_path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/Field_data/'
+observation_path = 'data/field_data/'
 param_file = 'parameters_TET22.csv'
 obs_parameters = pd.read_csv(observation_path + param_file)
 

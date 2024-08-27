@@ -1,10 +1,12 @@
 """
 
-Posterior predictive check.
+MODELS: Posterior predictive check (part 2): plotting the posterior predictive
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
+
 STEP 1. Read the data.
 STEP 2. Plot the posterior predictive.
 
-Last updated on 30 May 2024 by Pirta Palola
+Last updated on 27 August 2024
 
 """
 
@@ -17,10 +19,8 @@ import matplotlib.pyplot as plt
 """STEP 1. Read the data."""
 
 # Read the CSV files containing the simulated reflectance data
-simulated_reflectance_ppc = pd.read_csv(
-    'C:/Users/kell5379/Documents/Chapter2_May2024/PPC/simulated_reflectance_no_noise.csv')
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_1000SNR_evaluate.csv')
+simulated_reflectance_ppc = pd.read_csv('data/x_data/simulated_reflectance_no_noise_ppc.csv')
+simulated_reflectance = pd.read_csv('data/x_data/simulated_reflectance_evaluate.csv')
 
 # Pick one spectrum as an observation
 observed = simulated_reflectance.iloc[0]
@@ -59,10 +59,6 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     kwargs["edgecolor"] = None
     plt.fill_between(x, perc_5, perc_95, **kwargs)
 
-
-# Mean Squared Error Calculation
-mse_posterior = np.mean((np.mean(x_pp, axis=0) - x_o) ** 2)
-print("MSE of Posterior Predictive: ", mse_posterior)
 
 # Create a figure
 plt.figure(figsize=(10, 8))

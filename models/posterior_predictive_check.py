@@ -1,10 +1,14 @@
 """
 
-Posterior predictive check
-STEP 1. Draw samples from the posterior.
-STEP 2. Save the samples into a csv file.
+MODELS: Posterior predictive check (part 1): sampling from the posterior
+This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
-Last updated on 28 May 2024 by Pirta Palola
+STEP 1. Load the posterior and the data.
+STEP 2. Draw samples from the posterior.
+STEP 3. Store the simulation parameterisations in a dictionary.
+STEP 4. Write the new EcoLight set-up files.
+
+Last updated on 27 August 2024
 
 """
 
@@ -17,18 +21,16 @@ from sbi.analysis import pairplot
 """STEP 1. Load the posterior and the data."""
 
 # Load the posterior
-with open("C:/Users/kell5379/Documents/Chapter2_May2024/Final/Trained_nn/1000SNR/Loaded_posteriors/"
-          "loaded_posterior29.pkl", "rb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 
 # Open the file. Each line is saved as a string in a list.
-with open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Icorals_final.txt') as f:
+with open('data/simulation_setup/Icorals_final.txt') as f:
     concentrations = [line for line in f.readlines()]
 
 # Read the csv file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Evaluation_data/'
-                                    'simulated_reflectance_1000SNR_evaluate.csv')
+simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR_evaluate.csv")
 
 # Pick one spectrum as an observation
 x_o = simulated_reflectance.iloc[23]
@@ -66,9 +68,9 @@ df.columns = combinations_columns
 print(df)
 
 # Save the posterior samples into a csv file
-df.to_csv("C:/Users/kell5379/Documents/Chapter2_May2024/Final/posterior_samples.csv", index=False)
+df.to_csv("data/simulation_setup/posterior_samples.csv", index=False)
 
-"""STEP 3. Store the simulation parameterizations in a dictionary."""
+"""STEP 3. Store the simulation parameterisations in a dictionary."""
 
 prior_chl1 = df["phy"]
 prior_cdom1 = df["cdom"]
@@ -85,7 +87,7 @@ for x in range(0, len(df["phy"])):
 # Save the combinations in a csv file
 df_combinations = pd.DataFrame(combinations, columns=['water', 'phy', 'cdom', 'spm', 'wind', 'depth'])
 # print(df)
-df_combinations.to_csv('C:/Users/kell5379/Documents/Chapter2_May2024/Final/Ecolight_parameter_combinations_ppc.csv')
+df_combinations.to_csv('data/simulation_setup/Ecolight_parameter_combinations_ppc.csv')
 
 
 # Create a new class
@@ -170,7 +172,7 @@ for x in combinations:
     combinations_wind.append(x[-2])
     combinations_depth.append(x[-1])
 
-"""STEP 4. Write the new Ecolight set-up files."""
+"""STEP 4. Write the new EcoLight set-up files."""
 
 
 def new_input_files(combination_iop, combination_w, combination_d, hydrolight_file, id_string):
@@ -190,9 +192,7 @@ def new_input_files(combination_iop, combination_w, combination_d, hydrolight_fi
     hydrolight_file[56] = r'..\data\User\microplastics\MPzdata.txt' + '\n'
 
     # open file in write mode
-    path = 'C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/' \
-           'setup/Icorals' \
-           + id_string + '_coralbrown' + '.txt'
+    path = 'setup_files_ppc/Icorals' + id_string + '_coralbrown' + '.txt'
     with open(path, 'w') as fp:
         for item in hydrolight_file:
             fp.write(item)
@@ -209,11 +209,8 @@ for i in combination_ID:
 # Check that only the 6th, 51st, and 53rd lines were changed
 
 # reading files
-f1 = open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/PPC/'
-          'setup/Icorals'
-          + string_id[1] + '_coralbrown' + '.txt', 'r')
-f2 = open('C:/Users/kell5379/Documents/Chapter2_May2024/Final/'
-          'Icorals_final.txt', 'r')
+f1 = open('setup_files_ppc/Icorals' + string_id[1] + '_coralbrown' + '.txt', 'r')
+f2 = open('data/simulation_setup/Icorals_final.txt', 'r')
 
 f1_data = f1.readlines()
 f2_data = f2.readlines()
