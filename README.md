@@ -4,7 +4,7 @@
 
 
 
-This GitHub repository provides tools for the application of simulation-based inference to marine remote sensing.
+This GitHub repository provides code for the application of simulation-based inference to marine remote sensing.
 
 **Please consider citing the associated research article and data repository:**
 - Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., and Wedding, L. (*In Review*). Simulation-based inference advances water
@@ -21,7 +21,7 @@ This GitHub repository provides tools for the application of simulation-based in
 
 
 
-# Description of tools available in this repository
+# Description of code available in this repository
 
 
 **Tools available in models/:**
