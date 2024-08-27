@@ -20,10 +20,11 @@ This GitHub repository provides tools for the application of simulation-based in
 
 
 
+
 # Description of tools available in this repository
 
 
-**Tools available in models:**
+**Tools available in models/:**
 - *apply_model.py:* Conduct inference on field data.
 - *check_0.py:* Conduct inference on simulated data.
 - *check_missing_files.py:* Check the simulation output and find missing files.
@@ -39,27 +40,28 @@ This GitHub repository provides tools for the application of simulation-based in
 - *interpolation.py:* Apply cubic spline interpolation to the hyperspectral reflectance data calculated from TriOS RAMSES radiometric measurements.
 - *water_surface_correction.py:* Calculate just-above water reflectance from just-below water reflectance.
 
-**Tools available in models/plotting:**
+**Tools available in models/plotting/:**
 - *3D_plot.py:* Create a 3D plot to visualise the parameter space.
 - *range_plot.py:* Produce a range plot to visualise the results of the inference.
 - *scatter_plot.py:* Produce a scatter plot to visualise the results of the inference.
 
-**Tools available in models/priors:**
+**Tools available in models/priors/:**
 - *create_setup.py:* Sample the prior distributions to create parameterisations for the simulator.
 - *dist_plotted.py:* Visualise the prior distributions.
 - *wind.py:* Estimate the prior distribution for wind speed.
 
-**Tools available in models/simulation_output:**
+**Tools available in models/simulation_output/:**
 - *noise.py:* Add Gaussian noise to the spectral data.
 - *output_get_values.py:* Create a csv file storing the EcoLight output in a correct format.
 - *output_processing_2.py:* Extract reflectance from the csv files containing the EcoLight output.
 - *select_bands.py:* Select specific spectral bands.
 
-**Tools available in models/simulation_setup:**
+**Tools available in models/simulation_setup/:**
 - *check_setup.py:* Check the EcoLight set-up files by identifying differences between two files line-by-line.
 - *filter_setup_files.py:* Filter through EcoLight set-up files given a condition.
 - *runlistEL.py:* Create the runlist.txt file for the EcoLight simulations.
 - *setup_bottom.py:* Change the bottom reflectance file name in the EcoLight setup files.
+
 
 
 
