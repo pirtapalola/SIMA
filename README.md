@@ -37,7 +37,7 @@ This GitHub repository provides code for the application of simulation-based inf
 - *tools.py:* Tools to create a custom prior distribution.
 
 **Tools available in models/hyperspectral_preprocessing/:**
-- *interpolation.py:* Apply cubic spline interpolation to the hyperspectral reflectance data calculated from TriOS RAMSES radiometric measurements.
+- *interpolation.py:* Apply cubic spline interpolation to the hyperspectral reflectance spectra.
 - *water_surface_correction.py:* Calculate just-above water reflectance from just-below water reflectance.
 
 **Tools available in models/plotting/:**
