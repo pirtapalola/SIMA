@@ -13,7 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read the CSV file containing the simulated reflectance data
-simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR_prior_predictive.csv")
+simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR_prior_predictive_noise_added.csv")
 prior_samples = np.array(simulated_reflectance)
 print("Shape of prior_samples: ", prior_samples.shape)  # Define the simulated spectra (shape: [5000, 61])
 
@@ -34,8 +34,8 @@ print("Shape of wavelengths: ", wavelengths.shape)
 def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
     y = np.asarray(y)  # Ensure y is a numpy array
     mean = np.mean(y, axis=0)
-    perc_5 = np.percentile(y, 0, axis=0)
-    perc_95 = np.percentile(y, 100, axis=0)
+    perc_5 = np.percentile(y, 5, axis=0)
+    perc_95 = np.percentile(y, 95, axis=0)
 
     (base_line,) = plt.plot(x, mean, **kwargs)
     kwargs["label"] = None
@@ -46,8 +46,12 @@ def plot_percentiles(x, y, alpha_fill=0.3, **kwargs):
 
 
 plt.figure(figsize=(10, 5))
-plot_percentiles(wavelengths, prior_samples, alpha_fill=0.3, label='Prior Predictive', color='lightblue')
+# plot_percentiles(wavelengths, prior_samples, alpha_fill=0.3, label='Prior Predictive', color='lightblue')
 
+for spectrum in prior_samples:
+    plt.plot(wavelengths, spectrum, color='lightblue', alpha=0.1)  # Light blue with transparency
+
+plt.plot(wavelengths, prior_samples[0], label='Prior predictive', color='lightblue', alpha=0.5)
 # Plot field observations
 plt.plot(wavelengths, field1, label='Field observations', color='dodgerblue')
 plt.plot(wavelengths, field2, color='dodgerblue')
@@ -56,12 +60,12 @@ plt.plot(wavelengths, field4, color='dodgerblue')
 
 # Setting up the plot appearance
 plt.xlim([wavelengths.min(), wavelengths.max()])
-plt.ylim([prior_samples.min() - 0.001, 0.05])
+plt.ylim([0.00, 0.06])
 
 # Labels and legend
-plt.rc('xtick', labelsize=18)
-plt.rc('ytick', labelsize=18)
+plt.rc('xtick', labelsize=30)
+plt.rc('ytick', labelsize=30)
 plt.xlabel('Wavelength (nm)', fontsize=18)
 plt.ylabel('Reflectance', fontsize=18)
-plt.legend(fontsize=20)
+plt.legend(fontsize=18, loc='upper right')
 plt.show()
