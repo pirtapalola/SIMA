@@ -6,7 +6,7 @@ This code is part of the project "Simulation-based inference for marine remote s
 STEP 1. Prepare the data.
 STEP 2. Make the plot.
 
-Last updated on 27 August 2024
+Last updated on 3 February 2025
 
 """
 
@@ -74,7 +74,7 @@ plt.errorbar(adjusted_x2, hyper_means, yerr=[hyper_lower_errors, hyper_upper_err
              color='#184e77')
 
 # Plot the true value range
-plt.fill_between(adjusted_x3, spm_lower, spm_upper, color='red', alpha=0.3)
+# plt.fill_between(adjusted_x3, spm_lower, spm_upper, color='red', alpha=0.3)
 
 # Define the ticks and labels of the x-axis
 y_ticks = np.arange(0, 35, 5)
