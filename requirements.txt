@@ -34,12 +34,15 @@ pytz==2024.1
 sbi==0.22.0
 scikit-learn==1.5.1
 scipy==1.14.1
+seaborn==0.13.2
 six==1.16.0
-sympy==1.13.2
+sympy==1.13.1
 tensorboard==2.17.1
 tensorboard-data-server==0.7.2
 threadpoolctl==3.5.0
-torch==2.4.0
+torch==2.6.0+cpu
+torchaudio==2.6.0+cpu
+torchvision==0.21.0+cpu
 tqdm==4.66.5
 typing_extensions==4.12.2
 tzdata==2024.1
