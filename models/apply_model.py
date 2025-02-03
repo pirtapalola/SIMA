@@ -20,21 +20,35 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
+import psutil
+import time
+import os
+
+# Get process info
+process = psutil.Process(os.getpid())
+
+# Get number of logical CPU cores
+num_cores = psutil.cpu_count(logical=True)
+ram_gb = psutil.virtual_memory().total / (1024 ** 3)  # Total RAM in GB
+
+# Record start time and initial CPU usage
+start_time = time.time()
+cpu_start = process.cpu_times().user  # User-mode CPU time
 
 """STEP 1. Load the posterior."""
 
 # Load the posterior
-with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "rb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_multi.pkl", "rb") as handle:
     loaded_posterior = pickle.load(handle)
 
 """STEP 2. Load the observation data."""
 
 # Define whether the data is hyperspectral (hyper) or multispectral (multi) and what the signal-to-noise ratio (SNR) is
-model_spec = 'hyper_100SNR_'
+model_spec = 'multi_100SNR_'
 
 # Read the csv file containing the observation data
 observation_path = 'data/field_data/'
-obs_file = 'hyper_field_100SNR.csv'  # This file contains the measured reflectance spectra
+obs_file = 'multi_field_100SNR.csv'  # This file contains the measured reflectance spectra
 param_file = 'parameters_TET22.csv'  # This file contains the measured theta parameters
 
 # Read the file containing the reflectance spectra
@@ -105,7 +119,7 @@ def infer_from_observation(sample_id):
     print("Mean values: ", theta_means)
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
-    theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
+    theta_intervals = np.percentile(theta_samples, [50, 80], axis=0)
     theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
     interval1 = theta_intervals_df.iloc[0]
     interval2 = theta_intervals_df.iloc[1]
@@ -118,7 +132,7 @@ def infer_from_observation(sample_id):
     # This contains the log-probability of the posterior samples
     log_prob_df.to_csv(results_path + sample_id + '_log_probability.csv', index=False)
     # This contains the mean and credible intervals for each parameter
-    results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
+    results_df.to_csv(results_path + sample_id + '_results2.csv', index=False)
 
     # Create a figure
     sns.set_style("whitegrid")
@@ -129,18 +143,40 @@ def infer_from_observation(sample_id):
         points_colors=["red", "red", "red", "red", "red"],
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind", "Depth"],
-        offdiag="scatter",
-        # contour_offdiag={"levels": [0.01, 0.5, 0.99]
-        kde_offdiag={"bins": 30},
+        offdiag="hist",
+        cmap="viridis",
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20),
         diag="hist"
     )
 
-    plt.savefig(results_path + sample_id + '.tiff')  # Save the figure as a tiff file
-    plt.show()
+    # plt.savefig(results_path + sample_id + '.tiff')  # Save the figure as a tiff file
+    # plt.show()
 
 
 # Apply the function to field observations
-for i in ["ONE05", "RIM03", "RIM04", "RIM05"]:
+for i in ["ONE05"]:
     infer_from_observation(i)
+
+# Record end time and final CPU usage
+end_time = time.time()
+cpu_end = process.cpu_times().user  # User-mode CPU time
+
+# Calculate execution time and CPU usage
+execution_time = end_time - start_time
+cpu_usage = cpu_end - cpu_start  # Total CPU time used by script
+
+# Compute CPU Utilization per core
+cpu_utilization = (cpu_usage / execution_time) * 100 if execution_time > 0 else 0
+cpu_utilization_per_core = cpu_utilization / num_cores if num_cores > 0 else 0
+
+# Calculate relative performance
+relative_performance = execution_time * (num_cores * ram_gb)
+
+# Report results
+print(f"Execution Time: {execution_time:.6f} seconds")
+print(f"CPU Time Used: {cpu_usage:.6f} seconds")
+print(f"Overall CPU Utilization: {(cpu_usage / execution_time) * 100:.2f}%")
+print(f"Relative Performance: {relative_performance:.6f} (Execution Time × (Cores × RAM in GB))")
+print(f"Per-Core CPU Utilization: {cpu_utilization_per_core:.2f}% (across {num_cores} cores)")
+print(ram_gb)
