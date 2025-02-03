@@ -121,7 +121,7 @@ def infer_from_observation(sample_id):
     results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
 
     # Create a figure
-    sns.set_style("darkgrid")
+    sns.set_style("whitegrid")
     _ = analysis.pairplot(
         samples=posterior_samples,  # The posterior samples
         points=theta_obs,  # The observed theta
@@ -130,6 +130,7 @@ def infer_from_observation(sample_id):
         figsize=(8, 8),
         labels=["Phytoplankon", "CDOM", "Mineral particles", "Wind", "Depth"],
         offdiag="scatter",
+        # contour_offdiag={"levels": [0.01, 0.5, 0.99]
         kde_offdiag={"bins": 30},
         scatter_offdiag=dict(marker=".", s=5),
         points_offdiag=dict(marker="+", markersize=20),
