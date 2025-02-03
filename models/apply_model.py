@@ -8,7 +8,7 @@ STEP 1. Load the posterior.
 STEP 2. Load the observation data.
 STEP 3. Infer the theta parameters.
 
-Last updated on 27 August 2024
+Last updated on 3 February 2025
 
 """
 
@@ -19,6 +19,7 @@ from sbi import analysis as analysis
 import numpy as np
 import pickle
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 """STEP 1. Load the posterior."""
 
@@ -66,7 +67,7 @@ print(sample_IDs)
 """STEP 3. Infer the theta parameters."""
 
 # Define the path to the folder in which to save the results
-results_path = ('data/results/' + model_spec)
+results_path = ('data/results2/' + model_spec)
 
 
 # Define a function to conduct inference
@@ -120,6 +121,7 @@ def infer_from_observation(sample_id):
     results_df.to_csv(results_path + sample_id + '_results.csv', index=False)
 
     # Create a figure
+    sns.set_style("darkgrid")
     _ = analysis.pairplot(
         samples=posterior_samples,  # The posterior samples
         points=theta_obs,  # The observed theta
