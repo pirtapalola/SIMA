@@ -25,6 +25,7 @@ packaging==24.1
 pandas==2.2.2
 pillow==10.4.0
 protobuf==5.27.3
+psutil==6.1.1
 pyknos==0.16.0
 pyparsing==3.1.4
 pyro-api==0.1.2
