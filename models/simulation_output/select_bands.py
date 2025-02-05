@@ -3,7 +3,7 @@
 SIMULATION OUTPUT IV: Select spectral bands.
 This code is part of the project "Simulation-based inference for marine remote sensing" by Palola et al.
 
-Last updated on 26 August 2024
+Last updated on 5 February 2025
 
 """
 
@@ -11,7 +11,7 @@ Last updated on 26 August 2024
 import pandas as pd
 
 # Read the simulated reflectance data
-path = "data/x_data/simulated_reflectance_100SNR.csv"
+path = "data/x_data/simulated_reflectance_500SNR_evaluate.csv"
 simulated_hyperspectral = pd.read_csv(path)
 # simulated_hyperspectral = simulated_hyperspectral.drop(columns=["unique_ID"])  # Remove the "unique_ID" column.
 
@@ -46,5 +46,5 @@ micasense_df["b6"] = micasense_data[b6].mean(axis=1)
 micasense_df["b7"] = micasense_data[b7].mean(axis=1)
 
 # Save the results into a csv file
-output_path = 'data/x_data/multi_simulated_100SNR.csv'
+output_path = 'data/x_data/multi_500SNR_evaluate.csv'
 micasense_df.to_csv(output_path, index=False)

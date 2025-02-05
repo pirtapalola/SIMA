@@ -7,7 +7,7 @@ STEP 1. Read the simulated reflectance data.
 STEP 2. Add Gaussian noise.
 STEP 3. Save the results into a csv file.
 
-Last updated on 27 August 2024
+Last updated on 5 February 2025
 
 """
 
@@ -18,7 +18,7 @@ import pandas as pd
 
 """STEP 1. Read the simulated reflectance data."""
 
-path = "data/simulated_data/simulated_reflectance_no_noise_train.csv"
+path = "data/x_data/simulated_reflectance_no_noise_evaluate.csv"
 simulated_spectra = pd.read_csv(path)
 
 # wavelengths = simulated_spectra["wavelength"]
@@ -69,5 +69,5 @@ for i in range(len(simulated_spectra["400"])):
 
 """STEP 3. Save the results into a csv file."""
 
-output_path = "data/x_data/simulated_reflectance_100SNR.csv"
+output_path = "data/x_data/simulated_reflectance_100SNR_evaluate.csv"
 simulated_spectra.to_csv(output_path, index=False)
