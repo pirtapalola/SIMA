@@ -7,7 +7,7 @@ STEP 1. Prepare the simulated data.
 STEP 2. Instantiate the inference object and pass the simulated data to the inference object.
 STEP 3. Train the neural density estimator and build the posterior.
 
-Last updated on 27 August 2024
+Last updated on 5 February 2025
 
 """
 
@@ -22,6 +22,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 from models.tools import MultipleIndependent
 from torch.distributions import Uniform
+import psutil
+import time
+import os
+
+# Get process info
+process = psutil.Process(os.getpid())
+
+# Get number of logical CPU cores
+num_cores = psutil.cpu_count(logical=True)
+
+# Record start time and initial CPU usage
+start_time = time.time()
+cpu_start = process.cpu_times().user  # User-mode CPU time
 
 """
 
@@ -30,7 +43,7 @@ STEP 1. Prepare the simulated data.
 """
 
 # Read the csv file containing the simulated reflectance data into a pandas dataframe
-simulated_reflectance = pd.read_csv("data/x_data/simulated_reflectance_100SNR.csv")
+simulated_reflectance = pd.read_csv("data/x_data/multi_simulated_100SNR.csv")
 
 # Read the csv file containing the inputs of each of the EcoLight simulation runs
 simulator_input = pd.read_csv("data/simulation_setup/Ecolight_parameter_combinations.csv")
@@ -133,5 +146,23 @@ posterior = inference.build_posterior(density_estimator)
 
 # Save the posterior in binary write mode ("wb")
 # The "with" statement ensures that the file is closed
-with open("data/loaded_posteriors/loaded_posterior_100SNR_hyper.pkl", "wb") as handle:
+with open("data/loaded_posteriors/loaded_posterior_100SNR_multi_test_measure_time.pkl", "wb") as handle:
     pickle.dump(posterior, handle)
+
+# Record end time and final CPU usage
+end_time = time.time()
+cpu_end = process.cpu_times().user  # User-mode CPU time
+
+# Calculate execution time and CPU usage
+execution_time = end_time - start_time
+cpu_usage = cpu_end - cpu_start  # Total CPU time used by script
+
+# Compute CPU Utilization per core
+cpu_utilization = (cpu_usage / execution_time) * 100 if execution_time > 0 else 0
+cpu_utilization_per_core = cpu_utilization / num_cores if num_cores > 0 else 0
+
+# Report results
+print(f"Execution Time: {execution_time:.6f} seconds")
+print(f"CPU Time Used: {cpu_usage:.6f} seconds")
+print(f"Overall CPU Utilization: {(cpu_usage / execution_time) * 100:.2f}%")
+print(f"Per-Core CPU Utilization: {cpu_utilization_per_core:.2f}% (across {num_cores} cores)")

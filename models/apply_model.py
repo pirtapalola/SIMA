@@ -119,7 +119,7 @@ def infer_from_observation(sample_id):
     print("Mean values: ", theta_means)
 
     # Credible intervals (e.g., 95% interval) for each parameter using NumPy
-    theta_intervals = np.percentile(theta_samples, [50, 80], axis=0)
+    theta_intervals = np.percentile(theta_samples, [2.5, 97.5], axis=0)
     theta_intervals_df = pd.DataFrame(theta_intervals)  # Convert to a dataframe
     interval1 = theta_intervals_df.iloc[0]
     interval2 = theta_intervals_df.iloc[1]
