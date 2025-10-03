@@ -7,15 +7,14 @@
 This GitHub repository provides code for the application of simulation-based inference to marine remote sensing.
 
 **Please consider citing the associated research article and data repository:**
-- Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., & Wedding, L. (*In Review*). Simulation-based inference advances water
-  quality mapping in shallow coral reef environments.
+- Palola, P., Theenathayalan, V., Schröder, C., Martinez-Vicente, V., Collin, A., Wright, R., Ward, M., Thomson, E., Lopez-Garcia, P., Hochberg, E., Malhi, Y., & Wedding, L. (2025). Simulation-based inference advances water quality mapping in shallow coral reef environments. *Royal Society Open Science*, *12*(5), 241471. https://doi.org/10.1098/rsos.241471
 - Palola, P. (2024). SBI_marine_remote_sensing. *Open Science Framework*. https://doi.org/10.17605/OSF.IO/PCDGV
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **This research leverages sbi, a PyTorch package for simulation-based inference, developed by Tejero-Cantero et al. (2020):**
 - Tejero-Cantero, Á., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P. J., Greenberg, D. S., & Macke, J. H. (2020). sbi: A toolkit for simulation-based inference (v0.12.1). *Zenodo*. https://doi.org/10.5281/zenodo.3993098
-- Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. Journal of Open Source Software, 5(52), 2505. https://doi.org/10.21105/joss.02505
+- Tejero-Cantero, A., Boelts, J., Deistler, M., Lueckmann, J.-M., Durkan, C., Gonçalves, P., Greenberg, D., & Macke, J. (2020). sbi: A toolkit for simulation-based inference. *Journal of Open Source Software*, *5*(52), 2505. https://doi.org/10.21105/joss.02505
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
